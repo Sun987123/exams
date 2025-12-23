@@ -1,4 +1,1513 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<head>
+    <meta name="theme-color" content="#1e1e2e">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=no">
+    <meta name="description" content="Dream-Link Official Exam Result Portal 2026">
+    <title>Result • MP</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* --- MODERN CSS VARS SYSTEM --- */
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #7c3aed;
+            --success: #059669;
+            --warning: #d97706;
+            --warning-bg: #fef3c7;
+            --raw-color: #475569;
+            --bg-body: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --input-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --header-h: 56px;
+            --radius-md: 10px;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-float: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+
+        body.dark-mode {
+            --primary: #3b82f6;
+            --bg-body: #0f172a;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --input-bg: #1e293b;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --warning-bg: #451a03;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-size: 13.5px;
+            line-height: 1.4;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* --- HEADER --- */
+        .app-header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            height: var(--header-h);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        body.dark-mode .app-header {
+            background: rgba(30, 41, 59, 0.9);
+        }
+
+        .brand {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: -0.02em;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .exam-selector {
+            appearance: none;
+            -webkit-appearance: none;
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 6px 28px 6px 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-main);
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 6px center;
+            background-size: 12px;
+        }
+
+        /* --- SEARCH SECTION --- */
+        .search-container {
+            background: var(--surface);
+            padding: 16px;
+            box-shadow: var(--shadow-sm);
+            border-bottom: 1px solid var(--border);
+            z-index: 10;
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 900px;
+            margin: 0 auto;
+            align-items: end;
+        }
+
+        .inp-group {
+            position: relative;
+            width: 100%;
+        }
+
+        .inp-modern {
+            width: 100%;
+            padding: 8px 10px;
+            font-size: 0.9rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: var(--input-bg);
+            color: var(--text-main);
+        }
+
+        .inp-modern:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .btn-clear {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: none;
+            padding: 4px;
+        }
+
+        .action-row {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .btn-base {
+            flex: 1;
+            height: 38px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            text-transform: uppercase;
+            border: none;
+        }
+
+        .btn-reset {
+            background: var(--bg-body);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+
+        .btn-search {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-search.universal-mode {
+            background: linear-gradient(135deg, #4f46e5 0%, #2563eb 100%);
+        }
+
+        @media (max-width: 700px) {
+            .search-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .inp-group:nth-child(1),
+            .inp-group:nth-child(2) {
+                grid-column: span 2;
+            }
+
+            .inp-group:nth-child(3),
+            .inp-group:nth-child(4) {
+                grid-column: span 1;
+            }
+
+            .action-row {
+                grid-column: span 2;
+            }
+        }
+
+        /* --- RESULTS LIST --- */
+        .results-area {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding-bottom: 40px;
+        }
+
+        .result-item {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 8px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            cursor: pointer;
+        }
+
+        .result-item:hover {
+            background: var(--surface-hover);
+        }
+
+        .ri-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ri-name {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .ri-details {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            gap: 10px;
+        }
+
+        .badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .b-patwar {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .b-vdo {
+            background: #f0fdf4;
+            color: #15803d;
+        }
+
+        .b-grade4 {
+            background: #faf5ff;
+            color: #7e22ce;
+        }
+
+        /* --- RECEIPT VIEW --- */
+        #resultView {
+            display: none;
+            width: 100%;
+            background: var(--bg-body);
+            position: absolute;
+            top: 0;
+            left: 0;
+            min-height: 100vh;
+            z-index: 200;
+        }
+
+        .view-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 16px;
+            padding-bottom: 40px;
+        }
+
+        .receipt-card {
+            background: #ffffff;
+            color: #0f172a;
+            width: 94%;
+            max-width: 500px;
+            border-radius: 0;
+            overflow: hidden;
+            box-shadow: var(--shadow-float);
+            margin-bottom: 20px;
+        }
+
+        .rc-head {
+            background: var(--success);
+            color: white;
+            padding: 18px 16px;
+            text-align: center;
+        }
+
+        .rc-title {
+            font-size: 1.2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .rc-sub {
+            font-size: 0.7rem;
+            font-weight: 500;
+            opacity: 0.9;
+            text-transform: uppercase;
+        }
+
+        .rc-content {
+            padding: 16px;
+            background: #fff;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 8px;
+            padding-bottom: 16px;
+            border-bottom: 2px dashed #e2e8f0;
+        }
+
+        .ig-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ig-lbl {
+            font-size: 0.6rem;
+            color: #64748b;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 1px;
+        }
+
+        .ig-val {
+            font-size: 0.85rem;
+            color: #0f172a;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .ig-full {
+            grid-column: 1 / -1;
+        }
+
+        #rName {
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        /* --- 5 BOX SCORES SECTION (SINGLE RESULT) --- */
+        .scores-wrapper {
+            margin-top: 16px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            /* 5 Columns */
+            gap: 4px;
+        }
+
+        @media (max-width: 450px) {
+            .scores-wrapper {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+
+            /* Mobile Wrap */
+        }
+
+        .score-pill {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 2px;
+            border-radius: 8px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .sp-val {
+            font-size: 1rem;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1;
+            margin-bottom: 3px;
+        }
+
+        .sp-lbl {
+            font-size: 0.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #64748b;
+        }
+
+        .text-raw {
+            color: var(--raw-color);
+        }
+
+        .text-score {
+            color: var(--success);
+        }
+
+        .text-catrank {
+            color: var(--text-main);
+        }
+
+        .text-rank {
+            color: var(--secondary);
+        }
+
+        /* --- UNIVERSAL CARDS (UPDATED FOR 6 COLUMNS) --- */
+        .uni-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 12px;
+            width: 100%;
+        }
+
+        .uni-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .uc-head {
+            background: #f1f5f9;
+            padding: 4px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .uc-title {
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-transform: uppercase;
+        }
+
+        .uc-body {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            /* 6 Columns for Universal */
+            padding: 6px 2px;
+            gap: 2px;
+            align-items: center;
+        }
+
+        .uc-cell {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .uc-lbl {
+            font-size: 0.45rem;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            white-space: nowrap;
+            margin-bottom: 2px;
+        }
+
+        .uc-val {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #334155;
+            font-family: 'JetBrains Mono';
+        }
+
+        @media (max-width: 420px) {
+            .uc-body {
+                grid-template-columns: 1fr 1fr 1fr;
+                /* 3 up, 3 down on mobile */
+                gap: 6px;
+                padding: 8px;
+            }
+        }
+
+        .rc-footer {
+            text-align: center;
+            font-size: 0.55rem;
+            color: #cbd5e1;
+            margin-top: 16px;
+            padding-top: 8px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .control-panel {
+            display: flex;
+            gap: 10px;
+            width: 94%;
+            max-width: 500px;
+            margin-top: 5px;
+        }
+
+        .btn-act {
+            flex: 1;
+            padding: 12px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .act-save {
+            background: var(--text-main);
+            color: var(--bg-body);
+        }
+
+        .act-back {
+            background: var(--surface);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+
+        .hide {
+            display: none !important;
+        }
+
+        .loader {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1e293b;
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            z-index: 999;
+            opacity: 0;
+            transition: 0.4s;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .empty-state {
+            text-align: center;
+            margin-top: 10px;
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+
+        /* --- OFFICIAL CUTOFF TABLE STYLE (LIGHT VERSION) --- */
+        .cutoff-container {
+            margin-top: 0px;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+
+        .cutoff-header {
+            background: #f8fafc;
+            color: #1e293b;
+            padding: 12px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            border-bottom: 1px solid #e2e8f0;
+            letter-spacing: 0.5px;
+        }
+
+        .co-table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #334155;
+            font-size: 0.85rem;
+        }
+
+        .co-table th {
+            background: #ffffff;
+            color: #64748b;
+            font-weight: 700;
+            padding: 10px;
+            text-align: center;
+            border-bottom: 2px solid #f1f5f9;
+            border-right: 1px solid #f1f5f9;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+        }
+
+        .co-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #f1f5f9;
+            border-right: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        .co-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .co-table th:last-child,
+        .co-table td:last-child {
+            border-right: none;
+        }
+
+        .cat-main {
+            font-weight: 700;
+            text-align: center;
+            color: #0f172a;
+            background-color: #ffffff;
+        }
+
+        .cat-sub {
+            text-align: left;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        .val-marks {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            text-align: center;
+            color: #2563eb;
+        }
+
+        .val-rem {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="app-header">
+        <div class="brand" onclick="toggleTheme()">DREAM-LINK</div>
+        <select id="examSelect" class="exam-selector" onchange="saveExamPref(this)">
+            <option value="patwari2025">PATWAR 2025</option>
+            <option value="vdo2025">VDO 2025</option>
+            <option value="fourthgrade2025">4TH GRADE</option>
+            <option value="all">UNIVERSAL SEARCH</option>
+        </select>
+    </header>
+
+    <main id="searchScreen">
+        <section class="search-container">
+            <div class="search-grid">
+                <div class="inp-group"><input type="number" id="inpRoll" class="inp-modern" placeholder="Roll No" onkeydown="handleEnter(event)" oninput="toggleClearBtn(this)"><i class="ph-bold ph-x btn-clear" onclick="clearField(this)"></i></div>
+                <div class="inp-group"><input type="text" id="inpName" class="inp-modern" placeholder="Name" onkeydown="handleEnter(event)" oninput="toggleClearBtn(this)"><i class="ph-bold ph-x btn-clear" onclick="clearField(this)"></i></div>
+                <div class="inp-group"><input type="text" id="inpFather" class="inp-modern" placeholder="Father Name" onkeydown="handleEnter(event)" oninput="toggleClearBtn(this)"><i class="ph-bold ph-x btn-clear" onclick="clearField(this)"></i></div>
+                <div class="inp-group"><input type="text" id="inpMother" class="inp-modern" placeholder="Mother Name" onkeydown="handleEnter(event)" oninput="toggleClearBtn(this)"><i class="ph-bold ph-x btn-clear" onclick="clearField(this)"></i></div>
+
+                <div class="action-row">
+                    <button class="btn-base btn-reset" onclick="resetAllFields()"><i class="ph-bold ph-arrow-counter-clockwise"></i> Reset</button>
+                    <button class="btn-base btn-search" onclick="multiFieldSearch()" id="sBtn" disabled><span id="btnTxt">SEARCH</span>
+                        <div class="loader" id="ldr"></div>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="results-area">
+            <div id="emptyState" class="empty-state">
+                <i class="ph-duotone ph-magnifying-glass" style="font-size: 48px; margin-bottom: 10px;"></i>
+                <p id="statusMsg">Enter details to search</p>
+            </div>
+            <div id="resultsList"></div>
+        </section>
+    </main>
+
+    <section id="resultView">
+        <div class="view-container">
+            <div id="receiptArea" class="receipt-card">
+                <div class="rc-head">
+                    <div class="rc-title" id="rTitle">EXAM NAME</div>
+                    <div class="rc-sub">RSSB SCORE CARD</div>
+                </div>
+                <div class="rc-content">
+                    <div class="info-grid">
+                        <div class="ig-item ig-full"><span class="ig-lbl">Candidate Name</span><span class="ig-val" id="rName">-</span></div>
+                        <div class="ig-item"><span class="ig-lbl">Father's Name</span><span class="ig-val" id="rFather">-</span></div>
+                        <div class="ig-item"><span class="ig-lbl">Mother's Name</span><span class="ig-val" id="rMother">-</span></div>
+                        <div class="ig-item"><span class="ig-lbl">Category</span><span class="ig-val" id="rCat">-</span></div>
+                        <div class="ig-item"><span class="ig-lbl">Gender</span><span class="ig-val" id="rGender">-</span></div>
+                        <div class="ig-item"><span class="ig-lbl">Area Status</span><span class="ig-val" id="rArea">-</span></div>
+                        <div class="ig-item"><span class="ig-lbl">Sub Category</span><span class="ig-val" id="rSubCat">-</span></div>
+                        <div class="ig-item ig-full" id="rRollBox" style="margin-top:4px;"><span class="ig-lbl">Roll Number</span><span class="ig-val" id="rRoll" style="font-family:'JetBrains Mono'; font-size: 1rem;">-</span></div>
+                    </div>
+
+                    <div id="singleScoreSection">
+                        <div class="scores-wrapper">
+                            <div class="score-pill">
+                                <span class="sp-val text-raw" id="rRaw">0.0000</span>
+                                <span class="sp-lbl">Raw Score</span>
+                            </div>
+                            <div class="score-pill">
+                                <span class="sp-val text-score" id="rFinal">0.0000</span>
+                                <span class="sp-lbl">Final Score</span>
+                            </div>
+                            <div class="score-pill">
+                                <span class="sp-val text-catrank" id="rCatRank">#--</span>
+                                <span class="sp-lbl">Cat. Rank</span>
+                            </div>
+                            <div class="score-pill">
+                                <span class="sp-val text-rank" id="rRank">#--</span>
+                                <span class="sp-lbl">Merit Rank</span>
+                            </div>
+                            <div class="score-pill">
+                                <span class="sp-val text-raw" id="rCutoff" style="color: #ea580c;">--</span>
+                                <span class="sp-lbl">Cutoff</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="uniTableSection" class="hide">
+                        <div id="uniCardsContainer" class="uni-list"></div>
+                    </div>
+                    <div id="graphSection" class="hide" style="margin-top: 16px; padding-top: 12px; border-top: 2px dashed #e2e8f0;">
+                        <div style="font-size: 0.8rem; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase; text-align: center;">Performance Analysis</div>
+                        <div style="position: relative; height: 160px; width: 100%;">
+                            <canvas id="densityChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="rc-footer">Generated: <span id="rDate"></span> • MP SALODIYA</div>
+                </div>
+            </div>
+<div id="viewUniBtnContainer" class="hide" style="width: 94%; max-width: 500px; margin-bottom: 10px;">
+    <button onclick="triggerUniversalSearch()" style="width: 100%; background: #3b82f6; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); text-transform: uppercase; letter-spacing: 0.5px;">
+        <i class="ph-bold ph-globe-hemisphere-west"></i> Check All Exams
+    </button>
+</div>
+            <div class="control-panel">
+                <button class="btn-act act-save" onclick="downloadImage()"><i class="ph-bold ph-download-simple"></i> Save</button>
+                <button class="btn-act act-back" onclick="closeResult()"><i class="ph-bold ph-arrow-left"></i> Back</button>
+            </div>
+        </div>
+    </section>
+
+    <div id="toast" class="toast">Message</div>
+    <script src="cutoff_data.js"></script>
+    <script>
+        const EXAM_LIST = [{
+                id: 'patwari2025',
+                name: 'PATWAR 2025',
+                code: 'PATWAR',
+                badge: 'b-patwar'
+            },
+            {
+                id: 'vdo2025',
+                name: 'VDO 2025',
+                code: 'VDO',
+                badge: 'b-vdo'
+            },
+            {
+                id: 'fourthgrade2025',
+                name: '4TH GRADE',
+                code: '4TH GRADE',
+                badge: 'b-grade4'
+            }
+        ];
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAiLtCapS9zH6JMA_S3EpRm84kR90IUALI",
+            authDomain: "examdata.firebaseapp.com",
+            databaseURL: "https://examdata-default-rtdb.firebaseio.com",
+            projectId: "examdata",
+            storageBucket: "examdata.firebasestorage.app",
+            messagingSenderId: "658962316072",
+            appId: "1:658962316072:web:9b78511acbe17f97a6ee1d"
+        };
+
+        let db = null;
+        let activeSearchId = 0;
+        let lastScrollY = 0;
+
+        // HELPER TO PREVENT "CANNOT SET PROPERTY OF NULL" ERRORS
+        function safeSetText(id, text) {
+            const el = document.getElementById(id);
+            if (el) el.innerText = text;
+        }
+
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
+            const savedExam = localStorage.getItem('lastExam') || 'patwari2025';
+            const sel = document.getElementById('examSelect');
+            if (sel) {
+                sel.value = savedExam;
+                checkUniversal(sel);
+            }
+            if (typeof updateEmptyStateContent === "function") updateEmptyStateContent(savedExam);
+
+            try {
+                if (typeof firebase !== 'undefined') {
+                    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+                    db = firebase.database();
+                    const sBtn = document.getElementById('sBtn');
+                    if (sBtn) sBtn.disabled = false;
+                }
+            } catch (error) {
+                console.log("DB Error");
+            }
+        });
+
+        window.addEventListener('popstate', function(event) {
+            const rView = document.getElementById('resultView');
+            const sScreen = document.getElementById('searchScreen');
+            if (rView) rView.style.display = 'none';
+            if (sScreen) sScreen.style.display = 'block';
+            window.scrollTo(0, lastScrollY);
+        });
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        }
+
+        function saveExamPref(select) {
+            localStorage.setItem('lastExam', select.value);
+            checkUniversal(select);
+            if (typeof updateEmptyStateContent === "function") updateEmptyStateContent(select.value);
+            if (hasInput()) multiFieldSearch();
+        }
+
+        function checkUniversal(select) {
+            const btn = document.getElementById('sBtn');
+            if (btn) btn.classList.toggle('universal-mode', select.value === 'all');
+        }
+
+        function hasInput() {
+            return ['inpRoll', 'inpName', 'inpFather', 'inpMother'].some(id => {
+                const el = document.getElementById(id);
+                return el && el.value.trim() !== '';
+            });
+        }
+
+        function toggleClearBtn(input) {
+            if (input.nextElementSibling) {
+                input.nextElementSibling.style.display = input.value.length > 0 ? 'block' : 'none';
+            }
+        }
+
+        function clearField(btn) {
+            const input = btn.previousElementSibling;
+            if (input) {
+                input.value = '';
+                input.focus();
+                btn.style.display = 'none';
+            }
+        }
+
+        function resetAllFields() {
+            activeSearchId++;
+            toggleLoad(false);
+            ['inpRoll', 'inpName', 'inpFather', 'inpMother'].forEach(id => {
+                const inp = document.getElementById(id);
+                if (inp) {
+                    inp.value = '';
+                    toggleClearBtn(inp);
+                }
+            });
+            const rList = document.getElementById('resultsList');
+            if (rList) rList.innerHTML = '';
+
+            const eState = document.getElementById('emptyState');
+            if (eState) eState.style.display = 'block';
+
+            const sel = document.getElementById('examSelect');
+            if (sel) {
+                const currentExam = sel.value;
+                if (typeof updateEmptyStateContent === "function") updateEmptyStateContent(currentExam);
+            }
+        }
+
+        function toast(msg) {
+            const t = document.getElementById('toast');
+            if (t) {
+                t.innerText = msg;
+                t.classList.add('show');
+                setTimeout(() => t.classList.remove('show'), 3000);
+            }
+        }
+
+        function toggleLoad(isLoading) {
+            const btn = document.getElementById('sBtn');
+            const txt = document.getElementById('btnTxt');
+            const ldr = document.getElementById('ldr');
+            if (btn && txt && ldr) {
+                if (isLoading) {
+                    btn.disabled = true;
+                    txt.style.display = 'none';
+                    ldr.style.display = 'block';
+                } else {
+                    btn.disabled = false;
+                    txt.style.display = 'block';
+                    ldr.style.display = 'none';
+                }
+            }
+        }
+
+        function handleEnter(e) {
+            if (e.key === 'Enter') multiFieldSearch();
+        }
+        const cleanStr = (s) => s ? s.trim().toLowerCase() : '';
+
+        async function multiFieldSearch() {
+            if (!db) return toast("DB not connected");
+            const rollEl = document.getElementById('inpRoll');
+            const nameEl = document.getElementById('inpName');
+            const fatherEl = document.getElementById('inpFather');
+            const motherEl = document.getElementById('inpMother');
+            const examSel = document.getElementById('examSelect');
+
+            const roll = rollEl ? rollEl.value.trim() : '';
+            const name = nameEl ? cleanStr(nameEl.value) : '';
+            const father = fatherEl ? cleanStr(fatherEl.value) : '';
+            const mother = motherEl ? cleanStr(motherEl.value) : '';
+            const examId = examSel ? examSel.value : 'patwari2025';
+
+            if (!roll && !name && !father && !mother) return toast("Enter details");
+
+            const mySearchId = ++activeSearchId;
+            toggleLoad(true);
+
+            const rList = document.getElementById('resultsList');
+            if (rList) rList.innerHTML = '';
+
+            const eState = document.getElementById('emptyState');
+            if (eState) eState.style.display = 'none';
+
+            try {
+                let finalResults = [];
+                if (examId === 'all') {
+                    const promises = EXAM_LIST.map(ex => searchSingleExam(ex.id, roll, name, father, mother));
+                    const rawResults = (await Promise.all(promises)).flat();
+                    if (mySearchId !== activeSearchId) return;
+
+                    const groups = {};
+                    rawResults.forEach(item => {
+                        const idKey = cleanStr(item.candidate) + "_" + cleanStr(item.father) + "_" + cleanStr(item.mother);
+                        if (!groups[idKey]) groups[idKey] = {
+                            ...item,
+                            exams: []
+                        };
+                        groups[idKey].exams.push(item);
+                    });
+                    finalResults = Object.values(groups);
+
+                } else {
+                    finalResults = await searchSingleExam(examId, roll, name, father, mother);
+                }
+
+                if (mySearchId !== activeSearchId) return;
+                toggleLoad(false);
+                if (finalResults.length === 0) {
+                    if (eState) eState.style.display = 'block';
+                    // FIX: Use safeSetText here to avoid the console error
+                    safeSetText('statusMsg', "No records found.");
+                } else {
+                    renderList(finalResults, examId === 'all');
+                }
+            } catch (err) {
+                if (mySearchId === activeSearchId) {
+                    console.error(err);
+                    toggleLoad(false);
+                    toast("Error");
+                }
+            }
+        }
+
+        async function searchSingleExam(examId, roll, name, father, mother) {
+            let results = [];
+            if (roll) {
+                try {
+                    const snap = await db.ref(`exams/${examId}/byroll/${roll}`).once('value');
+                    if (snap.exists()) results.push({
+                        ...snap.val(),
+                        roll: roll,
+                        examId
+                    });
+                } catch (e) {}
+            } else {
+                let indexRef = 'byname';
+                let queryVal = name;
+                if ((father.length > name.length) || (name.length < 3 && father.length > 0)) {
+                    indexRef = 'byfather';
+                    queryVal = father;
+                } else if (!name && !father && mother) {
+                    indexRef = 'bymother';
+                    queryVal = mother;
+                }
+                if (!queryVal) return [];
+                const dbKey = queryVal.replace(/\s+/g, '_');
+                const snap = await db.ref(`exams/${examId}/${indexRef}`).orderByKey().startAt(dbKey).endAt(dbKey + "\uf8ff").limitToFirst(1000).once('value');
+                if (snap.exists()) {
+                    let targetRolls = [];
+                    Object.values(snap.val()).forEach(val => {
+                        if (typeof val === 'object') targetRolls.push(...Object.keys(val));
+                        else targetRolls.push(val);
+                    });
+                    targetRolls = [...new Set(targetRolls)];
+                    const dataSnaps = await Promise.all(targetRolls.map(r => db.ref(`exams/${examId}/byroll/${r}`).once('value')));
+                    dataSnaps.forEach(s => {
+                        if (s.exists()) {
+                            const d = s.val();
+                            const mName = !name || (d.candidate && d.candidate.toLowerCase().startsWith(name));
+                            const mFather = !father || (d.father && d.father.toLowerCase().startsWith(father));
+                            const mMother = !mother || (d.mother && d.mother.toLowerCase().startsWith(mother));
+                            if (mName && mFather && mMother) results.push({
+                                ...d,
+                                roll: s.key,
+                                examId
+                            });
+                        }
+                    });
+                }
+            }
+            return results;
+        }
+
+        function renderList(data, isUniversal) {
+            const list = document.getElementById('resultsList');
+            if (!list) return;
+
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'result-item';
+                let tagHtml = isUniversal ? item.exams.map(e => `<span class="badge ${EXAM_LIST.find(x=>x.id===e.examId).badge}">${EXAM_LIST.find(x=>x.id===e.examId).code}</span>`).join(' ') : `<span class="badge ${EXAM_LIST.find(x=>x.id===item.examId).badge}">${EXAM_LIST.find(x=>x.id===item.examId).code}</span>`;
+                div.innerHTML = `<div class="ri-top"><div class="ri-name">${item.candidate}</div><div>${tagHtml}</div></div><div class="ri-details"><span>F: ${item.father}</span><span>M: ${item.mother}</span></div>`;
+                div.onclick = () => showReceipt(item, isUniversal);
+                list.appendChild(div);
+            });
+        }
+
+        // --- CUTOFF FINDER LOGIC ---
+        function getMyCutoff(examId, category, gender, subcat) {
+            if (typeof CUTOFF_DATA === 'undefined' || !CUTOFF_DATA[examId]) return "NA";
+            const list = CUTOFF_DATA[examId];
+            let myCat = (category || "").toUpperCase().trim();
+            let mySub = "";
+            const s = (subcat || "").toUpperCase();
+            const g = (gender || "").toUpperCase();
+
+            if (s.includes("SPORT") || s.includes("SP")) {
+                myCat = "SP";
+                mySub = "";
+            } else if (s.includes("LD") || s.includes("CP") || s.includes("PH")) {
+                myCat = "LD/CP";
+                mySub = "";
+            } else if (s.includes("BLV")) {
+                myCat = "BLV";
+                mySub = "";
+            } else if (s.includes("HI")) {
+                myCat = "HI";
+                mySub = "";
+            } else {
+                if (s.includes("WID")) {
+                    mySub = "WID.";
+                } else if (s.includes("DIV")) {
+                    mySub = "DIV.";
+                } else if (s.includes("EX")) {
+                    mySub = "EX";
+                } else if (g === "FEMALE" || g === "F" || g === "FEM") {
+                    mySub = "FEM";
+                } else {
+                    mySub = "GEN";
+                }
+            }
+            const found = list.find(item => item.cat === myCat && item.sub === mySub);
+            return found ? found.marks : "NA";
+        }
+
+        function showReceipt(data, isUniversal) {
+            history.pushState({
+                view: 'result'
+            }, '', '#result');
+            lastScrollY = window.scrollY;
+            const sScreen = document.getElementById('searchScreen');
+            const rView = document.getElementById('resultView');
+            if (sScreen) sScreen.style.display = 'none';
+            if (rView) rView.style.display = 'block';
+            window.scrollTo(0, 0);
+
+            safeSetText('rDate', new Date().toLocaleDateString('en-GB'));
+            safeSetText('rName', data.candidate || '-');
+            safeSetText('rFather', data.father || '-');
+            safeSetText('rMother', data.mother || '-');
+            safeSetText('rCat', data.category || '-');
+            safeSetText('rGender', data.gender || '-');
+
+            const isTsp = (data.tsp && (data.tsp === true || String(data.tsp).toLowerCase() === 'yes'));
+            safeSetText('rArea', isTsp ? "TSP" : "NTSP");
+            safeSetText('rSubCat', (data.subcat && data.subcat.trim() !== "") ? data.subcat : "-");
+
+            const uniSec = document.getElementById('uniTableSection');
+            const singleSec = document.getElementById('singleScoreSection');
+            const rRollBox = document.getElementById('rRollBox');
+
+            if (isUniversal) {
+                safeSetText('rTitle', "CANDIDATE PROFILE");
+                if (singleSec) singleSec.classList.add('hide');
+                if (uniSec) uniSec.classList.remove('hide');
+                if (rRollBox) rRollBox.classList.add('hide');
+
+                const cont = document.getElementById('uniCardsContainer');
+                if (cont) {
+                    cont.innerHTML = '';
+                  data.exams.forEach((ex, index) => {
+                        const final = ex.examId === 'patwari2025' ? (ex.normalized || ex.raw || 0) : (ex.raw || 0);
+                        const raw = ex.raw ? parseFloat(ex.raw).toFixed(4) : '-';
+                        const finalFmt = parseFloat(final).toFixed(4);
+                        const meritVal = ex.merit ? `#${ex.merit}` : '-';
+                        const meritHtml = meritVal;
+                        const catRank = ex.catrank ? `#${ex.catrank}` : '-';
+                        const examInfo = EXAM_LIST.find(x => x.id === ex.examId);
+                        const examName = examInfo ? examInfo.name : ex.examId;
+
+                        const uniCutoff = getMyCutoff(
+                            ex.examId,
+                            ex.category || data.category,
+                            ex.gender || data.gender,
+                            ex.subcat || data.subcat
+                        );
+
+                        // Canvas ID unique for each card
+                        const canvasId = `chart_uni_${index}_${ex.examId}`;
+                        // Check if this exam has graph data
+                        const hasGraph = (ex.examId === 'patwari2025' || ex.examId === 'vdo2025');
+
+                        const card = document.createElement('div');
+                        card.className = 'uni-card';
+                        
+                        let graphHtml = '';
+                        if(hasGraph) {
+                            graphHtml = `
+                                <div style="margin-top:12px; padding-top:8px; border-top:1px dashed rgba(255,255,255,0.1);">
+                                    <div style="font-size:0.7rem; color:#64748b; text-align:center; margin-bottom:4px;">PERFORMANCE GRAPH</div>
+                                    <div style="position: relative; height: 120px; width: 100%;">
+                                        <canvas id="${canvasId}"></canvas>
+                                    </div>
+                                </div>
+                            `;
+                        }
+
+                        card.innerHTML = `
+                            <div class="uc-head"><span class="uc-title">${examName}</span></div>
+                            <div class="uc-body">
+                                <div class="uc-cell"><span class="uc-lbl">Roll</span><span class="uc-val">${ex.roll}</span></div>
+                                <div class="uc-cell"><span class="uc-lbl">Raw</span><span class="uc-val text-raw">${raw}</span></div>
+                                <div class="uc-cell"><span class="uc-lbl">Final</span><span class="uc-val text-score">${finalFmt}</span></div>
+                                <div class="uc-cell"><span class="uc-lbl" style="color:var(--text-main);">CatRank</span><span class="uc-val text-catrank">${catRank}</span></div>
+                                <div class="uc-cell"><span class="uc-lbl">Merit</span><span class="uc-val text-catrank">${meritHtml}</span></div>
+                                <div class="uc-cell"><span class="uc-lbl" style="color: #ea580c;">Cutoff</span><span class="uc-val" style="color: #ea580c; font-weight:800;">${uniCutoff}</span></div>
+                            </div>
+                            ${graphHtml}
+                        `;
+                        cont.appendChild(card);
+
+                        // Render graph if applicable
+                        if(hasGraph) {
+                            // Slight delay to ensure DOM update
+                            setTimeout(() => {
+                                renderDensityChart(canvasId, ex.examId, final, uniCutoff);
+                            }, 50);
+                        }
+                    });
+                }
+
+            } else {
+                const examObj = EXAM_LIST.find(e => e.id === data.examId);
+                safeSetText('rTitle', examObj.name);
+
+                if (singleSec) singleSec.classList.remove('hide');
+                if (uniSec) uniSec.classList.add('hide');
+                if (rRollBox) rRollBox.classList.remove('hide');
+
+                safeSetText('rRoll', data.roll);
+                let finalScore = data.examId === 'patwari2025' ? (data.normalized || data.raw || 0) : (data.raw || 0);
+
+                safeSetText('rRaw', data.raw ? parseFloat(data.raw).toFixed(4) : '-');
+                safeSetText('rFinal', parseFloat(finalScore).toFixed(4));
+                safeSetText('rRank', data.merit ? `#${data.merit}` : 'N/A');
+                safeSetText('rCatRank', data.catrank ? `#${data.catrank}` : 'N/A');
+
+                const cutoffMarks = getMyCutoff(data.examId, data.category, data.gender, data.subcat);
+                safeSetText('rCutoff', cutoffMarks);
+            }
+
+           // --- GRAPH SECTION LOGIC START (UPDATED) ---
+            // Only for Individual Search View (Result Receipt)
+            const graphSec = document.getElementById('graphSection');
+            
+            if (!isUniversal && graphSec) {
+                // Determine if current exam has data
+                const currentExamId = data.examId;
+                if (currentExamId === 'patwari2025' || currentExamId === 'vdo2025') {
+                    graphSec.classList.remove('hide');
+                    
+                    let finalScore = (currentExamId === 'patwari2025') ? (data.normalized || data.raw || 0) : (data.raw || 0);
+                    let myCutoff = getMyCutoff(currentExamId, data.category, data.gender, data.subcat);
+
+                    setTimeout(() => {
+                        renderDensityChart('densityChart', currentExamId, finalScore, myCutoff);
+                    }, 100);
+                } else {
+                    graphSec.classList.add('hide');
+                }
+            } else {
+                // In universal mode, main receipt graph is hidden (graphs are inside cards)
+                if(graphSec) graphSec.classList.add('hide');
+            }
+            // --- GRAPH SECTION LOGIC END ---
+          // --- UNIVERSAL BUTTON VISIBILITY ---
+            const uniBtnCont = document.getElementById('viewUniBtnContainer');
+            if (uniBtnCont) {
+                // Agar ye pehle se Universal result hai, to button chupao
+                if (isUniversal) {
+                    uniBtnCont.classList.add('hide');
+                } else {
+                    uniBtnCont.classList.remove('hide');
+                }
+            }
+        }
+        // --- GRAPH RENDER LOGIC ---
+        let myDensityChart = null;
+
+      // --- FINAL & FIXED GRAPH RENDER LOGIC ---
+let activeCharts = {}; 
+
+function renderDensityChart(canvasId, examId, userScore, cutoffScore) {
+    const canvasElement = document.getElementById(canvasId);
+    if (!canvasElement) return;
+    
+    const ctx = canvasElement.getContext('2d');
+    
+    // Select Data & Max Marks based on Exam ID
+    let marksData, densityData, maxExamMarks;
+    
+    if (examId === 'patwari2025' && typeof PATWAR_DENSITY !== 'undefined') {
+        marksData = PATWAR_DENSITY.marks;
+        densityData = PATWAR_DENSITY.density;
+        maxExamMarks = 300; 
+    } else if (examId === 'vdo2025' && typeof VDO_DENSITY !== 'undefined') {
+        marksData = VDO_DENSITY.marks;
+        densityData = VDO_DENSITY.density;
+        maxExamMarks = 200; 
+    } else {
+        if(canvasElement.parentElement) canvasElement.parentElement.style.display = 'none';
+        return;
+    }
+
+    // MAP DATA CORRECTLY (X=Mark, Y=Density)
+    // Both arrays are sorted high-to-low, so index matching is perfect.
+    const scatterData = marksData.map((m, i) => ({ x: m, y: densityData[i] }));
+    const uScoreNum = parseFloat(userScore);
+    
+    // Find density for user point logic
+    let userDensity = 0;
+    const closestIdx = marksData.findIndex(m => m <= uScoreNum); 
+    if(closestIdx !== -1) userDensity = densityData[closestIdx];
+
+    // Cutoff Line Data
+    let cutoffData = [];
+    if (cutoffScore && cutoffScore !== "NA") {
+        const cScoreNum = parseFloat(cutoffScore);
+        const maxDensity = Math.max(...densityData);
+        cutoffData = [
+            { x: cScoreNum, y: 0 },
+            { x: cScoreNum, y: maxDensity }
+        ];
+    }
+
+    if (activeCharts[canvasId]) {
+        activeCharts[canvasId].destroy();
+    }
+
+    activeCharts[canvasId] = new Chart(ctx, {
+        type: 'line',
+        data: {
+            datasets: [
+                {
+                    label: 'Density',
+                    data: scatterData,
+                    borderColor: '#60a5fa',
+                    backgroundColor: 'rgba(96, 165, 250, 0.2)',
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    fill: true,
+                    tension: 0.4, // Smoother curve
+                    order: 2
+                },
+                {
+                    label: 'You',
+                    data: [{x: uScoreNum, y: userDensity}],
+                    borderColor: '#2563eb',
+                    backgroundColor: '#2563eb',
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    pointBorderWidth: 2,
+                    pointBorderColor: '#fff',
+                    type: 'scatter',
+                    order: 0
+                },
+                {
+                    label: 'Cutoff',
+                    data: cutoffData,
+                    borderColor: '#ea580c',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    pointRadius: 0,
+                    showLine: true,
+                    fill: false,
+                    order: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'nearest', intersect: false },
+            scales: {
+                x: {
+                    type: 'linear',
+                    reverse: true, // High (Left) to Low (Right)
+                    min: 0,            
+                    max: maxExamMarks, 
+                    title: { display: true, text: `Final Marks (${maxExamMarks} → 0)`, font: {size: 10, weight:'bold'} },
+                    grid: { display: false }
+                },
+                y: { display: false, beginAtZero: true }
+            },
+            plugins: { legend: { display: false } }
+        }
+    });
+}
+      // --- AUTO UNIVERSAL SEARCH LOGIC (FIXED) ---
+function triggerUniversalSearch() {
+    try {
+        // 1. Data Nikalo (Safe check ke sath)
+        const nameEl = document.getElementById('rName');
+        const fatherEl = document.getElementById('rFather');
+        const motherEl = document.getElementById('rMother');
+
+        const name = nameEl ? nameEl.innerText.trim() : '-';
+        const father = fatherEl ? fatherEl.innerText.trim() : '-';
+        const mother = motherEl ? motherEl.innerText.trim() : '-';
+
+        if (!name || name === '-' || name === '') {
+            toast("No candidate name found!");
+            return;
+        }
+
+        toast("Searching history...");
+
+        // 2. View Switch Karo
+        const rView = document.getElementById('resultView');
+        const sScreen = document.getElementById('searchScreen');
+        if(rView) rView.style.display = 'none';
+        if(sScreen) sScreen.style.display = 'block';
+
+        // 3. Inputs me values bharo
+        const inpName = document.getElementById('inpName');
+        const inpFather = document.getElementById('inpFather');
+        const inpMother = document.getElementById('inpMother');
+        const inpRoll = document.getElementById('inpRoll');
+
+        if(inpRoll) inpRoll.value = ''; // Roll no clear karna jaruri h
+        if(inpName) inpName.value = (name === '-' ? '' : name);
+        if(inpFather) inpFather.value = (father === '-' ? '' : father);
+        if(inpMother) inpMother.value = (mother === '-' ? '' : mother);
+
+        // 4. Input 'Clear Buttons' (X) ko update karo
+        [inpName, inpFather, inpMother].forEach(el => {
+            if(el && typeof toggleClearBtn === 'function') toggleClearBtn(el);
+        });
+
+        // 5. Dropdown 'Universal' set karo
+        const examSelect = document.getElementById('examSelect');
+        if (examSelect) {
+            examSelect.value = 'all';
+            // Button color update function call
+            if(typeof checkUniversal === 'function') checkUniversal(examSelect);
+            // Local storage update taaki refresh par yaad rahe
+            if(typeof saveExamPref === 'function') localStorage.setItem('lastExam', 'all');
+        }
+
+        // 6. Search Trigger (Thoda ruk kar taaki DOM ready ho)
+        setTimeout(() => {
+            if(typeof multiFieldSearch === 'function') {
+                multiFieldSearch();
+            } else {
+                console.error("Search function not found");
+                toast("Error: Search function missing");
+            }
+        }, 100);
+
+    } catch (e) {
+        console.error("Universal Search Error:", e);
+        toast("Something went wrong");
+    }
+}
+        function closeResult() {
+            history.back();
+        }
+
+        function downloadImage() {
+            toast("Generating High Quality Image...");
+            const element = document.getElementById('receiptArea');
+            if (!element) return;
+
+            const originalShadow = element.style.boxShadow;
+            element.style.boxShadow = "none";
+            const options = {
+                scale: 8,
+                useCORS: true,
+                backgroundColor: "#ffffff",
+                logging: false,
+                allowTaint: true,
+                windowWidth: element.scrollWidth,
+                windowHeight: element.scrollHeight
+            };
+            html2canvas(element, options).then(canvas => {
+                element.style.boxShadow = originalShadow;
+                let candidateName = document.getElementById('rName') ? document.getElementById('rName').innerText.trim() : '-';
+                const link = document.createElement('a');
+                if (candidateName && candidateName !== '-') {
+                    link.download = `${candidateName}.png`;
+                } else {
+                    link.download = `DreamLink_Result_${Date.now()}.png`;
+                }
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            });
+        }
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) navigator.serviceWorker.register('service-worker.js');
+    </script>
+</body>
+
 </html>
