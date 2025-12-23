@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=no">
     <meta name="description" content="Dream-Link Official Exam Result Portal 2026">
-    <title>Result • MP</title>
+    <title>Dream-Link • 2026</title>
     <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -394,7 +394,6 @@
             margin-top: 16px;
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            /* 5 Columns */
             gap: 4px;
         }
 
@@ -402,8 +401,6 @@
             .scores-wrapper {
                 grid-template-columns: 1fr 1fr 1fr;
             }
-
-            /* Mobile Wrap */
         }
 
         .score-pill {
@@ -449,7 +446,7 @@
             color: var(--secondary);
         }
 
-        /* --- UNIVERSAL CARDS (UPDATED FOR 6 COLUMNS) --- */
+        /* --- UNIVERSAL CARDS --- */
         .uni-list {
             display: flex;
             flex-direction: column;
@@ -484,7 +481,6 @@
         .uc-body {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            /* 6 Columns for Universal */
             padding: 6px 2px;
             gap: 2px;
             align-items: center;
@@ -517,7 +513,6 @@
         @media (max-width: 420px) {
             .uc-body {
                 grid-template-columns: 1fr 1fr 1fr;
-                /* 3 up, 3 down on mobile */
                 gap: 6px;
                 padding: 8px;
             }
@@ -612,7 +607,6 @@
             color: var(--text-muted);
             opacity: 0.6;
         }
-
         /* --- OFFICIAL CUTOFF TABLE STYLE (LIGHT VERSION) --- */
         .cutoff-container {
             margin-top: 0px;
@@ -797,11 +791,11 @@
                     <div class="rc-footer">Generated: <span id="rDate"></span> • MP SALODIYA</div>
                 </div>
             </div>
-<div id="viewUniBtnContainer" class="hide" style="width: 94%; max-width: 500px; margin-bottom: 10px;">
-    <button onclick="triggerUniversalSearch()" style="width: 100%; background: #3b82f6; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); text-transform: uppercase; letter-spacing: 0.5px;">
-        <i class="ph-bold ph-globe-hemisphere-west"></i> Check All Exams
-    </button>
-</div>
+            <div id="viewUniBtnContainer" class="hide" style="width: 94%; max-width: 500px; margin-bottom: 10px;">
+                <button onclick="triggerUniversalSearch()" style="width: 100%; background: #3b82f6; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); text-transform: uppercase; letter-spacing: 0.5px;">
+                    <i class="ph-bold ph-globe-hemisphere-west"></i> Check All Exams
+                </button>
+            </div>
             <div class="control-panel">
                 <button class="btn-act act-save" onclick="downloadImage()"><i class="ph-bold ph-download-simple"></i> Save</button>
                 <button class="btn-act act-back" onclick="closeResult()"><i class="ph-bold ph-arrow-left"></i> Back</button>
@@ -846,7 +840,6 @@
         let activeSearchId = 0;
         let lastScrollY = 0;
 
-        // HELPER TO PREVENT "CANNOT SET PROPERTY OF NULL" ERRORS
         function safeSetText(id, text) {
             const el = document.getElementById(id);
             if (el) el.innerText = text;
@@ -973,7 +966,10 @@
         function handleEnter(e) {
             if (e.key === 'Enter') multiFieldSearch();
         }
+
         const cleanStr = (s) => s ? s.trim().toLowerCase() : '';
+        // NEW HELPER: Handles double spaces for robust grouping
+        const cleanAndNormalize = (s) => s ? s.trim().toLowerCase().replace(/\s+/g, ' ') : '';
 
         async function multiFieldSearch() {
             if (!db) return toast("DB not connected");
@@ -1009,7 +1005,8 @@
 
                     const groups = {};
                     rawResults.forEach(item => {
-                        const idKey = cleanStr(item.candidate) + "_" + cleanStr(item.father) + "_" + cleanStr(item.mother);
+                        // FIXED: Use normalized string to group (ignoring extra spaces)
+                        const idKey = cleanAndNormalize(item.candidate) + "_" + cleanAndNormalize(item.father) + "_" + cleanAndNormalize(item.mother);
                         if (!groups[idKey]) groups[idKey] = {
                             ...item,
                             exams: []
@@ -1026,7 +1023,6 @@
                 toggleLoad(false);
                 if (finalResults.length === 0) {
                     if (eState) eState.style.display = 'block';
-                    // FIX: Use safeSetText here to avoid the console error
                     safeSetText('statusMsg', "No records found.");
                 } else {
                     renderList(finalResults, examId === 'all');
@@ -1054,13 +1050,17 @@
             } else {
                 let indexRef = 'byname';
                 let queryVal = name;
-                if ((father.length > name.length) || (name.length < 3 && father.length > 0)) {
+
+                // FIXED LOGIC: Prefer Name search unless it's empty or too short.
+                // Old logic prioritized Father if Father name was longer, causing issues.
+                if ((!name || name.length < 3) && father.length > 0) {
                     indexRef = 'byfather';
                     queryVal = father;
                 } else if (!name && !father && mother) {
                     indexRef = 'bymother';
                     queryVal = mother;
                 }
+                
                 if (!queryVal) return [];
                 const dbKey = queryVal.replace(/\s+/g, '_');
                 const snap = await db.ref(`exams/${examId}/${indexRef}`).orderByKey().startAt(dbKey).endAt(dbKey + "\uf8ff").limitToFirst(1000).once('value');
@@ -1075,6 +1075,7 @@
                     dataSnaps.forEach(s => {
                         if (s.exists()) {
                             const d = s.val();
+                            // Client-side filtering
                             const mName = !name || (d.candidate && d.candidate.toLowerCase().startsWith(name));
                             const mFather = !father || (d.father && d.father.toLowerCase().startsWith(father));
                             const mMother = !mother || (d.mother && d.mother.toLowerCase().startsWith(mother));
@@ -1104,7 +1105,6 @@
             });
         }
 
-        // --- CUTOFF FINDER LOGIC ---
         function getMyCutoff(examId, category, gender, subcat) {
             if (typeof CUTOFF_DATA === 'undefined' || !CUTOFF_DATA[examId]) return "NA";
             const list = CUTOFF_DATA[examId];
@@ -1177,7 +1177,7 @@
                 const cont = document.getElementById('uniCardsContainer');
                 if (cont) {
                     cont.innerHTML = '';
-                  data.exams.forEach((ex, index) => {
+                    data.exams.forEach((ex, index) => {
                         const final = ex.examId === 'patwari2025' ? (ex.normalized || ex.raw || 0) : (ex.raw || 0);
                         const raw = ex.raw ? parseFloat(ex.raw).toFixed(4) : '-';
                         const finalFmt = parseFloat(final).toFixed(4);
@@ -1194,16 +1194,14 @@
                             ex.subcat || data.subcat
                         );
 
-                        // Canvas ID unique for each card
                         const canvasId = `chart_uni_${index}_${ex.examId}`;
-                        // Check if this exam has graph data
                         const hasGraph = (ex.examId === 'patwari2025' || ex.examId === 'vdo2025');
 
                         const card = document.createElement('div');
                         card.className = 'uni-card';
-                        
+
                         let graphHtml = '';
-                        if(hasGraph) {
+                        if (hasGraph) {
                             graphHtml = `
                                 <div style="margin-top:12px; padding-top:8px; border-top:1px dashed rgba(255,255,255,0.1);">
                                     <div style="font-size:0.7rem; color:#64748b; text-align:center; margin-bottom:4px;">PERFORMANCE GRAPH</div>
@@ -1228,9 +1226,7 @@
                         `;
                         cont.appendChild(card);
 
-                        // Render graph if applicable
-                        if(hasGraph) {
-                            // Slight delay to ensure DOM update
+                        if (hasGraph) {
                             setTimeout(() => {
                                 renderDensityChart(canvasId, ex.examId, final, uniCutoff);
                             }, 50);
@@ -1258,16 +1254,13 @@
                 safeSetText('rCutoff', cutoffMarks);
             }
 
-           // --- GRAPH SECTION LOGIC START (UPDATED) ---
-            // Only for Individual Search View (Result Receipt)
             const graphSec = document.getElementById('graphSection');
-            
+
             if (!isUniversal && graphSec) {
-                // Determine if current exam has data
                 const currentExamId = data.examId;
                 if (currentExamId === 'patwari2025' || currentExamId === 'vdo2025') {
                     graphSec.classList.remove('hide');
-                    
+
                     let finalScore = (currentExamId === 'patwari2025') ? (data.normalized || data.raw || 0) : (data.raw || 0);
                     let myCutoff = getMyCutoff(currentExamId, data.category, data.gender, data.subcat);
 
@@ -1278,14 +1271,11 @@
                     graphSec.classList.add('hide');
                 }
             } else {
-                // In universal mode, main receipt graph is hidden (graphs are inside cards)
-                if(graphSec) graphSec.classList.add('hide');
+                if (graphSec) graphSec.classList.add('hide');
             }
-            // --- GRAPH SECTION LOGIC END ---
-          // --- UNIVERSAL BUTTON VISIBILITY ---
+            
             const uniBtnCont = document.getElementById('viewUniBtnContainer');
             if (uniBtnCont) {
-                // Agar ye pehle se Universal result hai, to button chupao
                 if (isUniversal) {
                     uniBtnCont.classList.add('hide');
                 } else {
@@ -1293,184 +1283,198 @@
                 }
             }
         }
-        // --- GRAPH RENDER LOGIC ---
-        let myDensityChart = null;
 
-      // --- FINAL & FIXED GRAPH RENDER LOGIC ---
-let activeCharts = {}; 
+        let activeCharts = {};
 
-function renderDensityChart(canvasId, examId, userScore, cutoffScore) {
-    const canvasElement = document.getElementById(canvasId);
-    if (!canvasElement) return;
-    
-    const ctx = canvasElement.getContext('2d');
-    
-    // Select Data & Max Marks based on Exam ID
-    let marksData, densityData, maxExamMarks;
-    
-    if (examId === 'patwari2025' && typeof PATWAR_DENSITY !== 'undefined') {
-        marksData = PATWAR_DENSITY.marks;
-        densityData = PATWAR_DENSITY.density;
-        maxExamMarks = 300; 
-    } else if (examId === 'vdo2025' && typeof VDO_DENSITY !== 'undefined') {
-        marksData = VDO_DENSITY.marks;
-        densityData = VDO_DENSITY.density;
-        maxExamMarks = 200; 
-    } else {
-        if(canvasElement.parentElement) canvasElement.parentElement.style.display = 'none';
-        return;
-    }
+        function renderDensityChart(canvasId, examId, userScore, cutoffScore) {
+            const canvasElement = document.getElementById(canvasId);
+            if (!canvasElement) return;
 
-    // MAP DATA CORRECTLY (X=Mark, Y=Density)
-    // Both arrays are sorted high-to-low, so index matching is perfect.
-    const scatterData = marksData.map((m, i) => ({ x: m, y: densityData[i] }));
-    const uScoreNum = parseFloat(userScore);
-    
-    // Find density for user point logic
-    let userDensity = 0;
-    const closestIdx = marksData.findIndex(m => m <= uScoreNum); 
-    if(closestIdx !== -1) userDensity = densityData[closestIdx];
+            const ctx = canvasElement.getContext('2d');
 
-    // Cutoff Line Data
-    let cutoffData = [];
-    if (cutoffScore && cutoffScore !== "NA") {
-        const cScoreNum = parseFloat(cutoffScore);
-        const maxDensity = Math.max(...densityData);
-        cutoffData = [
-            { x: cScoreNum, y: 0 },
-            { x: cScoreNum, y: maxDensity }
-        ];
-    }
+            let marksData, densityData, maxExamMarks;
 
-    if (activeCharts[canvasId]) {
-        activeCharts[canvasId].destroy();
-    }
-
-    activeCharts[canvasId] = new Chart(ctx, {
-        type: 'line',
-        data: {
-            datasets: [
-                {
-                    label: 'Density',
-                    data: scatterData,
-                    borderColor: '#60a5fa',
-                    backgroundColor: 'rgba(96, 165, 250, 0.2)',
-                    borderWidth: 2,
-                    pointRadius: 0,
-                    fill: true,
-                    tension: 0.4, // Smoother curve
-                    order: 2
-                },
-                {
-                    label: 'You',
-                    data: [{x: uScoreNum, y: userDensity}],
-                    borderColor: '#2563eb',
-                    backgroundColor: '#2563eb',
-                    pointRadius: 6,
-                    pointHoverRadius: 8,
-                    pointBorderWidth: 2,
-                    pointBorderColor: '#fff',
-                    type: 'scatter',
-                    order: 0
-                },
-                {
-                    label: 'Cutoff',
-                    data: cutoffData,
-                    borderColor: '#ea580c',
-                    borderWidth: 2,
-                    borderDash: [5, 5],
-                    pointRadius: 0,
-                    showLine: true,
-                    fill: false,
-                    order: 1
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: { mode: 'nearest', intersect: false },
-            scales: {
-                x: {
-                    type: 'linear',
-                    reverse: true, // High (Left) to Low (Right)
-                    min: 0,            
-                    max: maxExamMarks, 
-                    title: { display: true, text: `Final Marks (${maxExamMarks} → 0)`, font: {size: 10, weight:'bold'} },
-                    grid: { display: false }
-                },
-                y: { display: false, beginAtZero: true }
-            },
-            plugins: { legend: { display: false } }
-        }
-    });
-}
-      // --- AUTO UNIVERSAL SEARCH LOGIC (FIXED) ---
-function triggerUniversalSearch() {
-    try {
-        // 1. Data Nikalo (Safe check ke sath)
-        const nameEl = document.getElementById('rName');
-        const fatherEl = document.getElementById('rFather');
-        const motherEl = document.getElementById('rMother');
-
-        const name = nameEl ? nameEl.innerText.trim() : '-';
-        const father = fatherEl ? fatherEl.innerText.trim() : '-';
-        const mother = motherEl ? motherEl.innerText.trim() : '-';
-
-        if (!name || name === '-' || name === '') {
-            toast("No candidate name found!");
-            return;
-        }
-
-        toast("Searching history...");
-
-        // 2. View Switch Karo
-        const rView = document.getElementById('resultView');
-        const sScreen = document.getElementById('searchScreen');
-        if(rView) rView.style.display = 'none';
-        if(sScreen) sScreen.style.display = 'block';
-
-        // 3. Inputs me values bharo
-        const inpName = document.getElementById('inpName');
-        const inpFather = document.getElementById('inpFather');
-        const inpMother = document.getElementById('inpMother');
-        const inpRoll = document.getElementById('inpRoll');
-
-        if(inpRoll) inpRoll.value = ''; // Roll no clear karna jaruri h
-        if(inpName) inpName.value = (name === '-' ? '' : name);
-        if(inpFather) inpFather.value = (father === '-' ? '' : father);
-        if(inpMother) inpMother.value = (mother === '-' ? '' : mother);
-
-        // 4. Input 'Clear Buttons' (X) ko update karo
-        [inpName, inpFather, inpMother].forEach(el => {
-            if(el && typeof toggleClearBtn === 'function') toggleClearBtn(el);
-        });
-
-        // 5. Dropdown 'Universal' set karo
-        const examSelect = document.getElementById('examSelect');
-        if (examSelect) {
-            examSelect.value = 'all';
-            // Button color update function call
-            if(typeof checkUniversal === 'function') checkUniversal(examSelect);
-            // Local storage update taaki refresh par yaad rahe
-            if(typeof saveExamPref === 'function') localStorage.setItem('lastExam', 'all');
-        }
-
-        // 6. Search Trigger (Thoda ruk kar taaki DOM ready ho)
-        setTimeout(() => {
-            if(typeof multiFieldSearch === 'function') {
-                multiFieldSearch();
+            if (examId === 'patwari2025' && typeof PATWAR_DENSITY !== 'undefined') {
+                marksData = PATWAR_DENSITY.marks;
+                densityData = PATWAR_DENSITY.density;
+                maxExamMarks = 300;
+            } else if (examId === 'vdo2025' && typeof VDO_DENSITY !== 'undefined') {
+                marksData = VDO_DENSITY.marks;
+                densityData = VDO_DENSITY.density;
+                maxExamMarks = 200;
             } else {
-                console.error("Search function not found");
-                toast("Error: Search function missing");
+                if (canvasElement.parentElement) canvasElement.parentElement.style.display = 'none';
+                return;
             }
-        }, 100);
 
-    } catch (e) {
-        console.error("Universal Search Error:", e);
-        toast("Something went wrong");
-    }
-}
+            const scatterData = marksData.map((m, i) => ({
+                x: m,
+                y: densityData[i]
+            }));
+            const uScoreNum = parseFloat(userScore);
+
+            let userDensity = 0;
+            const closestIdx = marksData.findIndex(m => m <= uScoreNum);
+            if (closestIdx !== -1) userDensity = densityData[closestIdx];
+
+            let cutoffData = [];
+            if (cutoffScore && cutoffScore !== "NA") {
+                const cScoreNum = parseFloat(cutoffScore);
+                const maxDensity = Math.max(...densityData);
+                cutoffData = [{
+                        x: cScoreNum,
+                        y: 0
+                    },
+                    {
+                        x: cScoreNum,
+                        y: maxDensity
+                    }
+                ];
+            }
+
+            if (activeCharts[canvasId]) {
+                activeCharts[canvasId].destroy();
+            }
+
+            activeCharts[canvasId] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                            label: 'Density',
+                            data: scatterData,
+                            borderColor: '#60a5fa',
+                            backgroundColor: 'rgba(96, 165, 250, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            fill: true,
+                            tension: 0.4,
+                            order: 2
+                        },
+                        {
+                            label: 'You',
+                            data: [{
+                                x: uScoreNum,
+                                y: userDensity
+                            }],
+                            borderColor: '#2563eb',
+                            backgroundColor: '#2563eb',
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            pointBorderWidth: 2,
+                            pointBorderColor: '#fff',
+                            type: 'scatter',
+                            order: 0
+                        },
+                        {
+                            label: 'Cutoff',
+                            data: cutoffData,
+                            borderColor: '#ea580c',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            pointRadius: 0,
+                            showLine: true,
+                            fill: false,
+                            order: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'nearest',
+                        intersect: false
+                    },
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            reverse: true,
+                            min: 0,
+                            max: maxExamMarks,
+                            title: {
+                                display: true,
+                                text: `Final Marks (${maxExamMarks} → 0)`,
+                                font: {
+                                    size: 10,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            display: false,
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        function triggerUniversalSearch() {
+            try {
+                const nameEl = document.getElementById('rName');
+                const fatherEl = document.getElementById('rFather');
+                const motherEl = document.getElementById('rMother');
+
+                const name = nameEl ? nameEl.innerText.trim() : '-';
+                const father = fatherEl ? fatherEl.innerText.trim() : '-';
+                const mother = motherEl ? motherEl.innerText.trim() : '-';
+
+                if (!name || name === '-' || name === '') {
+                    toast("No candidate name found!");
+                    return;
+                }
+
+                toast("Searching history...");
+
+                const rView = document.getElementById('resultView');
+                const sScreen = document.getElementById('searchScreen');
+                if (rView) rView.style.display = 'none';
+                if (sScreen) sScreen.style.display = 'block';
+
+                const inpName = document.getElementById('inpName');
+                const inpFather = document.getElementById('inpFather');
+                const inpMother = document.getElementById('inpMother');
+                const inpRoll = document.getElementById('inpRoll');
+
+                if (inpRoll) inpRoll.value = '';
+                if (inpName) inpName.value = (name === '-' ? '' : name);
+                if (inpFather) inpFather.value = (father === '-' ? '' : father);
+                if (inpMother) inpMother.value = (mother === '-' ? '' : mother);
+
+                [inpName, inpFather, inpMother].forEach(el => {
+                    if (el && typeof toggleClearBtn === 'function') toggleClearBtn(el);
+                });
+
+                const examSelect = document.getElementById('examSelect');
+                if (examSelect) {
+                    examSelect.value = 'all';
+                    if (typeof checkUniversal === 'function') checkUniversal(examSelect);
+                    if (typeof saveExamPref === 'function') localStorage.setItem('lastExam', 'all');
+                }
+
+                setTimeout(() => {
+                    if (typeof multiFieldSearch === 'function') {
+                        multiFieldSearch();
+                    } else {
+                        console.error("Search function not found");
+                        toast("Error: Search function missing");
+                    }
+                }, 100);
+
+            } catch (e) {
+                console.error("Universal Search Error:", e);
+                toast("Something went wrong");
+            }
+        }
+
         function closeResult() {
             history.back();
         }
