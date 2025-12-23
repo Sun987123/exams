@@ -737,6 +737,92 @@ input[type=number]::-webkit-outer-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+  /* --- PRINT SETTINGS (FIXED LAYOUT & NO GHOST GRAPH) --- */
+@media print {
+    @page {
+        margin: 5mm; /* Margin kam ki taaki content zyada aaye */
+        size: A4;
+    }
+
+    /* Body aur faltu cheezein chupao */
+    body { background: #fff; color: #000; visibility: hidden; }
+    .app-header, .search-container, .control-panel, #viewUniBtnContainer, .toast, .btn-clear {
+        display: none !important;
+    }
+
+    /* Sirf Result Area dikhao */
+    #resultView, #receiptArea, #receiptArea * {
+        visibility: visible;
+    }
+
+    #resultView {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: white;
+    }
+
+    /* Card Layout Compact Karo */
+    .receipt-card {
+        position: relative;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 10px !important; /* Padding kam ki */
+        box-shadow: none !important;
+        border: 2px solid #000;
+    }
+
+    /* Header Color Fix */
+    .rc-head {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        background: #059669 !important;
+        color: white !important;
+        padding: 10px !important; /* Header chhota kiya */
+    }
+
+    /* Font Sizes Thode Chhote Karo Print Ke Liye */
+    .ig-val { font-size: 0.8rem !important; }
+    .sp-val { font-size: 0.9rem !important; }
+
+    /* --- GRAPH SETTINGS (CRITICAL FIX) --- */
+    
+    /* Agar JS ne graph ko 'hide' class di hai, to use mat dikhao */
+    #graphSection.hide {
+        display: none !important;
+    }
+
+    /* Sirf tab dikhao jab wo hide NA ho */
+    #graphSection:not(.hide) {
+        display: block !important;
+        width: 100% !important;
+        margin-top: 10px !important;
+        border-top: 1px solid #ccc !important;
+        page-break-inside: avoid; /* Graph ko tutne se roko */
+    }
+
+    /* Graph Height Adjustment (Fit on 1 page) */
+    #graphSection > div {
+        width: 100% !important;
+        height: 280px !important; /* Height 400 se kam karke 280 ki */
+    }
+
+    canvas {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    /* --- UNIVERSAL CARDS FIX --- */
+    .uni-card {
+        break-inside: avoid; /* Card beech se na kate */
+        page-break-inside: avoid;
+        border: 1px solid #000 !important;
+        margin-bottom: 5px !important;
+    }
+}
+   
     </style>
 </head>
 
@@ -853,11 +939,15 @@ input[type=number] {
                     <div class="rc-footer">Generated: <span id="rDate"></span> • MP SALODIYA</div>
                 </div>
             </div>
-            <div id="viewUniBtnContainer" class="hide" style="width: 94%; max-width: 500px; margin-bottom: 10px;">
-                <button onclick="triggerUniversalSearch()" style="width: 100%; background: #3b82f6; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); text-transform: uppercase; letter-spacing: 0.5px;">
-                    <i class="ph-bold ph-globe-hemisphere-west"></i> Check All Exams
-                </button>
-            </div>
+         <div id="viewUniBtnContainer" class="hide" style="width: 94%; max-width: 500px; margin-bottom: 10px; display: flex; gap: 10px;">
+    <button onclick="printResult()" style="flex: 1; background: #475569; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); text-transform: uppercase;">
+        <i class="ph-bold ph-printer"></i> Print PDF
+    </button>
+    
+    <button id="btnCheckAll" onclick="triggerUniversalSearch()" style="flex: 1; background: #3b82f6; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); text-transform: uppercase;">
+        <i class="ph-bold ph-globe-hemisphere-west"></i> Check All
+    </button>
+</div>
             <div class="control-panel">
                 <button class="btn-act act-save" onclick="downloadImage()"><i class="ph-bold ph-download-simple"></i> Save</button>
                 <button class="btn-act act-back" onclick="closeResult()"><i class="ph-bold ph-arrow-left"></i> Back</button>
@@ -1342,12 +1432,20 @@ function clearField(btn) {
                 if (graphSec) graphSec.classList.add('hide');
             }
             
+          // --- SMART BUTTON LOGIC ---
             const uniBtnCont = document.getElementById('viewUniBtnContainer');
+            const btnCheckAll = document.getElementById('btnCheckAll');
+
             if (uniBtnCont) {
+                // Container ko hamesha dikhao (taki Print button dikhe)
+                uniBtnCont.classList.remove('hide');
+
                 if (isUniversal) {
-                    uniBtnCont.classList.add('hide');
+                    // Agar Universal Result hai, to 'Check All' button chupao
+                    if (btnCheckAll) btnCheckAll.style.display = 'none';
                 } else {
-                    uniBtnCont.classList.remove('hide');
+                    // Agar Single Result hai, to 'Check All' button dikhao
+                    if (btnCheckAll) btnCheckAll.style.display = 'flex';
                 }
             }
         }
@@ -1542,7 +1640,9 @@ function clearField(btn) {
                 toast("Something went wrong");
             }
         }
-
+function printResult() {
+    window.print();
+}
         function closeResult() {
             history.back();
         }
