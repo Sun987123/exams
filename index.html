@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=no">
     <meta name="description" content="Dream-Link Official Exam Result Portal 2026">
-    <title>Dream-Link • 2026 Print</title>
+    <title>Dream-Link • 2026</title>
     <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1620,33 +1620,38 @@
                                 return tooltipItem.raw.y > 0.0001; 
                             },
 
-                            callbacks: {
-                                // Title me Marks dikhayenge
-                                title: function(tooltipItems) {
-                                    if (!tooltipItems || tooltipItems.length === 0) return '';
-                                    const item = tooltipItems[0];
-                                    // Agar User ya Cutoff hai, to Title customize karein
-                                    if (item.dataset.label === 'You') return 'YOUR SCORE';
-                                    if (item.dataset.label === 'Cutoff') return 'CUTOFF MARK';
-                                    return 'Marks: ' + item.parsed.x.toFixed(2);
-                                },
-                                // Label me Density aur Marks details
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    const val = context.parsed.y;
-                                    const marks = context.parsed.x;
+                          callbacks: {
+    // Title me Marks dikhayenge
+    title: function(tooltipItems) {
+        if (!tooltipItems || tooltipItems.length === 0) return '';
+        const item = tooltipItems[0];
 
-                                    if (label === 'You' || label === 'Cutoff') {
-                                        // Specific requirement: Density bina decimal ke
-                                        return [
-                                            `Marks: ${marks.toFixed(2)}`,
-                                            `Density: ${Math.round(val)}` // No decimals
-                                        ];
-                                    }
-                                    // Normal Density Curve ke liye
-                                    return `Density: ${Math.round(val)}`;
-                                }
-                            }
+        // 1. Agar User ya Cutoff hai, to Title Custom Rakho
+        if (item.dataset.label === 'You') return 'YOUR SCORE';
+        if (item.dataset.label === 'Cutoff') return 'CUTOFF MARK';
+
+        // 2. Normal Graph ke liye Marks ko Purnank (Integer) bana diya
+        return 'Marks: ' + Math.round(item.parsed.x);
+    },
+    
+    // Label me Density aur Marks details
+    label: function(context) {
+        let label = context.dataset.label || '';
+        const val = context.parsed.y;
+        const marks = context.parsed.x;
+
+        if (label === 'You' || label === 'Cutoff') {
+            return [
+                // 3. Yahan Special Change: Khud ke marks aur Cutoff 4 decimal tak
+                `Marks: ${marks.toFixed(4)}`,
+                `Density: ${Math.round(val)}`
+            ];
+        }
+        
+        // 4. Normal Density Curve ke liye Density Purnank me
+        return `Density: ${Math.round(val)}`;
+    }
+}
                         },
                         legend: {
                             display: false
