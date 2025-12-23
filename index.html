@@ -140,25 +140,57 @@
             align-items: end;
         }
 
-        .inp-group {
-            position: relative;
-            width: 100%;
-        }
+      .inp-group {
+    position: relative;
+    width: 100%;
+    height: 48px; /* Height thodi badha di */
+}
 
-        .inp-modern {
-            width: 100%;
-            padding: 8px 10px;
-            font-size: 0.9rem;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            background: var(--input-bg);
-            color: var(--text-main);
-        }
+/* 2. Input ka background transparent aur padding adjust karo */
+.inp-modern {
+    width: 100%;
+    height: 100%;
+    padding: 12px 40px 12px 12px; /* Right padding 40px taaki cross ke neeche text na aaye */
+    font-size: 0.95rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: transparent; /* Transparent zaroori hai tabhi label border par dikhega */
+    color: var(--text-main);
+    outline: none;
+    z-index: 2;
+}
+.floating-label {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--surface); /* Line ko chupane ke liye background match hona chahiye */
+    padding: 0 4px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    transition: all 0.2s ease-in-out;
+    pointer-events: none; /* Mouse click input par jaye, label par nahi */
+    z-index: 1;
+}
 
-        .inp-modern:focus {
-            border-color: var(--primary);
-            outline: none;
-        }
+/* Dark mode fix */
+body.dark-mode .floating-label {
+    background-color: var(--surface); 
+}
+
+/* 4. Magic: Jab focus ho ya text likha ho tab label upar jaye */
+.inp-modern:focus ~ .floating-label,
+.inp-modern:not(:placeholder-shown) ~ .floating-label {
+    top: 0;
+    left: 10px;
+    font-size: 0.7rem;
+    color: var(--primary);
+    font-weight: 700;
+    z-index: 3;
+}
+.inp-modern:focus {
+    border-color: var(--primary);
+}
 
         .btn-clear {
             position: absolute;
@@ -694,6 +726,17 @@
             font-size: 0.7rem;
             color: #94a3b8;
         }
+      /* Roll Number se Up-Down Arrows Hatane ka Code */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+/* Firefox ke liye */
+input[type=number] {
+  -moz-appearance: textfield;
+}
     </style>
 </head>
 
@@ -712,18 +755,37 @@
     <main id="searchScreen">
         <section class="search-container">
             <div class="search-grid">
-                <div class="inp-group"><input type="number" id="inpRoll" class="inp-modern" placeholder="Roll No" onkeydown="handleEnter(event)" oninput="toggleClearBtn(this)"><i class="ph-bold ph-x btn-clear" onclick="clearField(this)"></i></div>
-                <div class="inp-group"><input type="text" id="inpName" class="inp-modern" placeholder="Name" onkeydown="handleEnter(event)" oninput="toggleClearBtn(this)"><i class="ph-bold ph-x btn-clear" onclick="clearField(this)"></i></div>
-                <div class="inp-group"><input type="text" id="inpFather" class="inp-modern" placeholder="Father Name" onkeydown="handleEnter(event)" oninput="toggleClearBtn(this)"><i class="ph-bold ph-x btn-clear" onclick="clearField(this)"></i></div>
-                <div class="inp-group"><input type="text" id="inpMother" class="inp-modern" placeholder="Mother Name" onkeydown="handleEnter(event)" oninput="toggleClearBtn(this)"><i class="ph-bold ph-x btn-clear" onclick="clearField(this)"></i></div>
+    <div class="inp-group">
+        <input type="number" id="inpRoll" class="inp-modern" placeholder=" " onkeydown="handleEnter(event)" oninput="toggleClearBtn(this)">
+        <label class="floating-label">Roll No</label>
+        <i class="ph-bold ph-x btn-clear" onclick="clearField(this)"></i>
+    </div>
 
-                <div class="action-row">
-                    <button class="btn-base btn-reset" onclick="resetAllFields()"><i class="ph-bold ph-arrow-counter-clockwise"></i> Reset</button>
-                    <button class="btn-base btn-search" onclick="multiFieldSearch()" id="sBtn" disabled><span id="btnTxt">SEARCH</span>
-                        <div class="loader" id="ldr"></div>
-                    </button>
-                </div>
-            </div>
+    <div class="inp-group">
+        <input type="text" id="inpName" class="inp-modern" placeholder=" " onkeydown="handleEnter(event)" oninput="toggleClearBtn(this)">
+        <label class="floating-label">Name</label>
+        <i class="ph-bold ph-x btn-clear" onclick="clearField(this)"></i>
+    </div>
+
+    <div class="inp-group">
+        <input type="text" id="inpFather" class="inp-modern" placeholder=" " onkeydown="handleEnter(event)" oninput="toggleClearBtn(this)">
+        <label class="floating-label">Father Name</label>
+        <i class="ph-bold ph-x btn-clear" onclick="clearField(this)"></i>
+    </div>
+
+    <div class="inp-group">
+        <input type="text" id="inpMother" class="inp-modern" placeholder=" " onkeydown="handleEnter(event)" oninput="toggleClearBtn(this)">
+        <label class="floating-label">Mother Name</label>
+        <i class="ph-bold ph-x btn-clear" onclick="clearField(this)"></i>
+    </div>
+
+    <div class="action-row">
+        <button class="btn-base btn-reset" onclick="resetAllFields()"><i class="ph-bold ph-arrow-counter-clockwise"></i> Reset</button>
+        <button class="btn-base btn-search" onclick="multiFieldSearch()" id="sBtn" disabled><span id="btnTxt">SEARCH</span>
+            <div class="loader" id="ldr"></div>
+        </button>
+    </div>
+</div>
         </section>
 
         <section class="results-area">
@@ -899,20 +961,26 @@
             });
         }
 
-        function toggleClearBtn(input) {
-            if (input.nextElementSibling) {
-                input.nextElementSibling.style.display = input.value.length > 0 ? 'block' : 'none';
-            }
-        }
+    // --- NEW CLEVER LOGIC FOR CROSS BUTTON ---
 
-        function clearField(btn) {
-            const input = btn.previousElementSibling;
-            if (input) {
-                input.value = '';
-                input.focus();
-                btn.style.display = 'none';
-            }
-        }
+function toggleClearBtn(input) {
+    // Input ke parent box (.inp-group) me jao aur .btn-clear dhundo
+    const btn = input.parentElement.querySelector('.btn-clear');
+    if (btn) {
+        // Agar kuch likha h to button dikhao, nahi to chupao
+        btn.style.display = input.value.length > 0 ? 'block' : 'none';
+    }
+}
+
+function clearField(btn) {
+    // Button ke parent box me jao aur input dhundo
+    const input = btn.parentElement.querySelector('input');
+    if (input) {
+        input.value = ''; // Text saaf karo
+        input.focus();    // Cursor wapas input me lao
+        btn.style.display = 'none'; // Button chupao
+    }
+}
 
         function resetAllFields() {
             activeSearchId++;
