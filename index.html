@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=no">
     <meta name="description" content="Dream-Link Official Exam Result Portal 2026">
-    <title>Dream-Link • 2026</title>
+    <title>Dream-Link • 2026 Print</title>
     <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -140,57 +140,64 @@
             align-items: end;
         }
 
-      .inp-group {
-    position: relative;
-    width: 100%;
-    height: 48px; /* Height thodi badha di */
-}
+        .inp-group {
+            position: relative;
+            width: 100%;
+            height: 48px;
+            /* Height thodi badha di */
+        }
 
-/* 2. Input ka background transparent aur padding adjust karo */
-.inp-modern {
-    width: 100%;
-    height: 100%;
-    padding: 12px 40px 12px 12px; /* Right padding 40px taaki cross ke neeche text na aaye */
-    font-size: 0.95rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    background: transparent; /* Transparent zaroori hai tabhi label border par dikhega */
-    color: var(--text-main);
-    outline: none;
-    z-index: 2;
-}
-.floating-label {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: var(--surface); /* Line ko chupane ke liye background match hona chahiye */
-    padding: 0 4px;
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    transition: all 0.2s ease-in-out;
-    pointer-events: none; /* Mouse click input par jaye, label par nahi */
-    z-index: 1;
-}
+        /* 2. Input ka background transparent aur padding adjust karo */
+        .inp-modern {
+            width: 100%;
+            height: 100%;
+            padding: 12px 40px 12px 12px;
+            /* Right padding 40px taaki cross ke neeche text na aaye */
+            font-size: 0.95rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: transparent;
+            /* Transparent zaroori hai tabhi label border par dikhega */
+            color: var(--text-main);
+            outline: none;
+            z-index: 2;
+        }
 
-/* Dark mode fix */
-body.dark-mode .floating-label {
-    background-color: var(--surface); 
-}
+        .floating-label {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--surface);
+            /* Line ko chupane ke liye background match hona chahiye */
+            padding: 0 4px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            transition: all 0.2s ease-in-out;
+            pointer-events: none;
+            /* Mouse click input par jaye, label par nahi */
+            z-index: 1;
+        }
 
-/* 4. Magic: Jab focus ho ya text likha ho tab label upar jaye */
-.inp-modern:focus ~ .floating-label,
-.inp-modern:not(:placeholder-shown) ~ .floating-label {
-    top: 0;
-    left: 10px;
-    font-size: 0.7rem;
-    color: var(--primary);
-    font-weight: 700;
-    z-index: 3;
-}
-.inp-modern:focus {
-    border-color: var(--primary);
-}
+        /* Dark mode fix */
+        body.dark-mode .floating-label {
+            background-color: var(--surface);
+        }
+
+        /* 4. Magic: Jab focus ho ya text likha ho tab label upar jaye */
+        .inp-modern:focus~.floating-label,
+        .inp-modern:not(:placeholder-shown)~.floating-label {
+            top: 0;
+            left: 10px;
+            font-size: 0.7rem;
+            color: var(--primary);
+            font-weight: 700;
+            z-index: 3;
+        }
+
+        .inp-modern:focus {
+            border-color: var(--primary);
+        }
 
         .btn-clear {
             position: absolute;
@@ -639,6 +646,7 @@ body.dark-mode .floating-label {
             color: var(--text-muted);
             opacity: 0.6;
         }
+
         /* --- OFFICIAL CUTOFF TABLE STYLE (LIGHT VERSION) --- */
         .cutoff-container {
             margin-top: 0px;
@@ -726,103 +734,125 @@ body.dark-mode .floating-label {
             font-size: 0.7rem;
             color: #94a3b8;
         }
-      /* Roll Number se Up-Down Arrows Hatane ka Code */
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
-}
 
-/* Firefox ke liye */
-input[type=number] {
-  -moz-appearance: textfield;
-}
-  /* --- PRINT SETTINGS (FIXED LAYOUT & NO GHOST GRAPH) --- */
-@media print {
-    @page {
-        margin: 5mm; /* Margin kam ki taaki content zyada aaye */
-        size: A4;
+        /* Roll Number se Up-Down Arrows Hatane ka Code */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox ke liye */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        /* --- IMPROVED PRINT SETTINGS (RECEIPT STYLE) --- */
+   /* --- FINAL PRINT SETTINGS (FIXED OVERLAP & LAYOUT) --- */
+    @media print {
+        @page {
+            margin: 10px;
+            size: auto;
+        }
+
+        body {
+            background-color: #ffffff;
+            visibility: hidden;
+            height: auto !important;
+            overflow: visible !important;
+        }
+
+        /* Sab kuch chupao */
+        .app-header, .search-container, .control-panel, .toast, .btn-clear, #viewUniBtnContainer {
+            display: none !important;
+        }
+
+        /* Sirf Result dikhao */
+        #resultView, #receiptArea, #receiptArea * {
+            visibility: visible;
+        }
+
+        /* Layout Container */
+        #resultView {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: auto !important;
+            min-height: 0 !important;
+            display: block !important;
+            background: white;
+            padding: 0 !important;
+            margin: 0 !important;
+            z-index: 9999;
+        }
+
+        /* Receipt Card Size */
+        .receipt-card {
+            width: 500px !important;
+            max-width: 100% !important;
+            margin: 5px auto !important;
+            border: 2px solid #0f172a !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            break-inside: avoid;
+        }
+
+        .rc-head {
+            background: #059669 !important;
+            color: white !important;
+            padding: 10px !important;
+        }
+
+        .ig-val { font-size: 0.85rem !important; }
+        .sp-val { font-size: 1rem !important; }
+
+        /* --- GRAPH SECTION FIX (GAP ADDED) --- */
+        #graphSection:not(.hide) {
+            display: block !important;
+            width: 100% !important;
+            height: 170px !important; /* Height thodi badhai */
+            margin-top: 16px !important;
+            
+            /* Yeh line overlap rokegi - Bottom me gap diya */
+            margin-bottom: 30px !important; 
+            padding-bottom: 10px !important;
+            
+            border-top: 1px solid #ccc !important;
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+
+        /* --- FOOTER FIX --- */
+        .rc-footer {
+            /* Footer ke upar bhi gap ensure kiya */
+            margin-top: 20px !important;
+            padding-top: 10px !important;
+            border-top: 1px solid #ccc !important;
+            color: #64748b !important; /* Text dark kiya taaki print me saaf dikhe */
+        }
+
+        /* Agar JS ne hide kiya hai to print me bhi chupao */
+        .hide {
+            display: none !important;
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .uni-card {
+            break-inside: avoid;
+            page-break-inside: avoid;
+            border: 1px solid #000 !important;
+            margin-bottom: 5px !important;
+        }
+        
+        a[href]:after { content: none !important; }
     }
-
-    /* Body aur faltu cheezein chupao */
-    body { background: #fff; color: #000; visibility: hidden; }
-    .app-header, .search-container, .control-panel, #viewUniBtnContainer, .toast, .btn-clear {
-        display: none !important;
-    }
-
-    /* Sirf Result Area dikhao */
-    #resultView, #receiptArea, #receiptArea * {
-        visibility: visible;
-    }
-
-    #resultView {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        background: white;
-    }
-
-    /* Card Layout Compact Karo */
-    .receipt-card {
-        position: relative;
-        width: 100% !important;
-        max-width: 100% !important;
-        margin: 0 !important;
-        padding: 10px !important; /* Padding kam ki */
-        box-shadow: none !important;
-        border: 2px solid #000;
-    }
-
-    /* Header Color Fix */
-    .rc-head {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-        background: #059669 !important;
-        color: white !important;
-        padding: 10px !important; /* Header chhota kiya */
-    }
-
-    /* Font Sizes Thode Chhote Karo Print Ke Liye */
-    .ig-val { font-size: 0.8rem !important; }
-    .sp-val { font-size: 0.9rem !important; }
-
-    /* --- GRAPH SETTINGS (CRITICAL FIX) --- */
-    
-    /* Agar JS ne graph ko 'hide' class di hai, to use mat dikhao */
-    #graphSection.hide {
-        display: none !important;
-    }
-
-    /* Sirf tab dikhao jab wo hide NA ho */
-    #graphSection:not(.hide) {
-        display: block !important;
-        width: 100% !important;
-        margin-top: 10px !important;
-        border-top: 1px solid #ccc !important;
-        page-break-inside: avoid; /* Graph ko tutne se roko */
-    }
-
-    /* Graph Height Adjustment (Fit on 1 page) */
-    #graphSection > div {
-        width: 100% !important;
-        height: 280px !important; /* Height 400 se kam karke 280 ki */
-    }
-
-    canvas {
-        width: 100% !important;
-        height: 100% !important;
-    }
-
-    /* --- UNIVERSAL CARDS FIX --- */
-    .uni-card {
-        break-inside: avoid; /* Card beech se na kate */
-        page-break-inside: avoid;
-        border: 1px solid #000 !important;
-        margin-bottom: 5px !important;
-    }
-}
-   
     </style>
 </head>
 
@@ -841,37 +871,37 @@ input[type=number] {
     <main id="searchScreen">
         <section class="search-container">
             <div class="search-grid">
-    <div class="inp-group">
-        <input type="number" id="inpRoll" class="inp-modern" placeholder=" " onkeydown="handleEnter(event)" oninput="toggleClearBtn(this)">
-        <label class="floating-label">Roll No</label>
-        <i class="ph-bold ph-x btn-clear" onclick="clearField(this)"></i>
-    </div>
+                <div class="inp-group">
+                    <input type="number" id="inpRoll" class="inp-modern" placeholder=" " onkeydown="handleEnter(event)" oninput="toggleClearBtn(this)">
+                    <label class="floating-label">Roll No</label>
+                    <i class="ph-bold ph-x btn-clear" onclick="clearField(this)"></i>
+                </div>
 
-    <div class="inp-group">
-        <input type="text" id="inpName" class="inp-modern" placeholder=" " onkeydown="handleEnter(event)" oninput="toggleClearBtn(this)">
-        <label class="floating-label">Name</label>
-        <i class="ph-bold ph-x btn-clear" onclick="clearField(this)"></i>
-    </div>
+                <div class="inp-group">
+                    <input type="text" id="inpName" class="inp-modern" placeholder=" " onkeydown="handleEnter(event)" oninput="toggleClearBtn(this)">
+                    <label class="floating-label">Name</label>
+                    <i class="ph-bold ph-x btn-clear" onclick="clearField(this)"></i>
+                </div>
 
-    <div class="inp-group">
-        <input type="text" id="inpFather" class="inp-modern" placeholder=" " onkeydown="handleEnter(event)" oninput="toggleClearBtn(this)">
-        <label class="floating-label">Father Name</label>
-        <i class="ph-bold ph-x btn-clear" onclick="clearField(this)"></i>
-    </div>
+                <div class="inp-group">
+                    <input type="text" id="inpFather" class="inp-modern" placeholder=" " onkeydown="handleEnter(event)" oninput="toggleClearBtn(this)">
+                    <label class="floating-label">Father Name</label>
+                    <i class="ph-bold ph-x btn-clear" onclick="clearField(this)"></i>
+                </div>
 
-    <div class="inp-group">
-        <input type="text" id="inpMother" class="inp-modern" placeholder=" " onkeydown="handleEnter(event)" oninput="toggleClearBtn(this)">
-        <label class="floating-label">Mother Name</label>
-        <i class="ph-bold ph-x btn-clear" onclick="clearField(this)"></i>
-    </div>
+                <div class="inp-group">
+                    <input type="text" id="inpMother" class="inp-modern" placeholder=" " onkeydown="handleEnter(event)" oninput="toggleClearBtn(this)">
+                    <label class="floating-label">Mother Name</label>
+                    <i class="ph-bold ph-x btn-clear" onclick="clearField(this)"></i>
+                </div>
 
-    <div class="action-row">
-        <button class="btn-base btn-reset" onclick="resetAllFields()"><i class="ph-bold ph-arrow-counter-clockwise"></i> Reset</button>
-        <button class="btn-base btn-search" onclick="multiFieldSearch()" id="sBtn" disabled><span id="btnTxt">SEARCH</span>
-            <div class="loader" id="ldr"></div>
-        </button>
-    </div>
-</div>
+                <div class="action-row">
+                    <button class="btn-base btn-reset" onclick="resetAllFields()"><i class="ph-bold ph-arrow-counter-clockwise"></i> Reset</button>
+                    <button class="btn-base btn-search" onclick="multiFieldSearch()" id="sBtn" disabled><span id="btnTxt">SEARCH</span>
+                        <div class="loader" id="ldr"></div>
+                    </button>
+                </div>
+            </div>
         </section>
 
         <section class="results-area">
@@ -939,15 +969,15 @@ input[type=number] {
                     <div class="rc-footer">Generated: <span id="rDate"></span> • MP SALODIYA</div>
                 </div>
             </div>
-         <div id="viewUniBtnContainer" class="hide" style="width: 94%; max-width: 500px; margin-bottom: 10px; display: flex; gap: 10px;">
-    <button onclick="printResult()" style="flex: 1; background: #475569; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); text-transform: uppercase;">
-        <i class="ph-bold ph-printer"></i> Print PDF
-    </button>
-    
-    <button id="btnCheckAll" onclick="triggerUniversalSearch()" style="flex: 1; background: #3b82f6; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); text-transform: uppercase;">
-        <i class="ph-bold ph-globe-hemisphere-west"></i> Check All
-    </button>
-</div>
+            <div id="viewUniBtnContainer" class="hide" style="width: 94%; max-width: 500px; margin-bottom: 10px; display: flex; gap: 10px;">
+                <button onclick="printResult()" style="flex: 1; background: #475569; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); text-transform: uppercase;">
+                    <i class="ph-bold ph-printer"></i> Print PDF
+                </button>
+
+                <button id="btnCheckAll" onclick="triggerUniversalSearch()" style="flex: 1; background: #3b82f6; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); text-transform: uppercase;">
+                    <i class="ph-bold ph-globe-hemisphere-west"></i> Check All
+                </button>
+            </div>
             <div class="control-panel">
                 <button class="btn-act act-save" onclick="downloadImage()"><i class="ph-bold ph-download-simple"></i> Save</button>
                 <button class="btn-act act-back" onclick="closeResult()"><i class="ph-bold ph-arrow-left"></i> Back</button>
@@ -1051,26 +1081,26 @@ input[type=number] {
             });
         }
 
-    // --- NEW CLEVER LOGIC FOR CROSS BUTTON ---
+        // --- NEW CLEVER LOGIC FOR CROSS BUTTON ---
 
-function toggleClearBtn(input) {
-    // Input ke parent box (.inp-group) me jao aur .btn-clear dhundo
-    const btn = input.parentElement.querySelector('.btn-clear');
-    if (btn) {
-        // Agar kuch likha h to button dikhao, nahi to chupao
-        btn.style.display = input.value.length > 0 ? 'block' : 'none';
-    }
-}
+        function toggleClearBtn(input) {
+            // Input ke parent box (.inp-group) me jao aur .btn-clear dhundo
+            const btn = input.parentElement.querySelector('.btn-clear');
+            if (btn) {
+                // Agar kuch likha h to button dikhao, nahi to chupao
+                btn.style.display = input.value.length > 0 ? 'block' : 'none';
+            }
+        }
 
-function clearField(btn) {
-    // Button ke parent box me jao aur input dhundo
-    const input = btn.parentElement.querySelector('input');
-    if (input) {
-        input.value = ''; // Text saaf karo
-        input.focus();    // Cursor wapas input me lao
-        btn.style.display = 'none'; // Button chupao
-    }
-}
+        function clearField(btn) {
+            // Button ke parent box me jao aur input dhundo
+            const input = btn.parentElement.querySelector('input');
+            if (input) {
+                input.value = ''; // Text saaf karo
+                input.focus(); // Cursor wapas input me lao
+                btn.style.display = 'none'; // Button chupao
+            }
+        }
 
         function resetAllFields() {
             activeSearchId++;
@@ -1218,7 +1248,7 @@ function clearField(btn) {
                     indexRef = 'bymother';
                     queryVal = mother;
                 }
-                
+
                 if (!queryVal) return [];
                 const dbKey = queryVal.replace(/\s+/g, '_');
                 const snap = await db.ref(`exams/${examId}/${indexRef}`).orderByKey().startAt(dbKey).endAt(dbKey + "\uf8ff").limitToFirst(1000).once('value');
@@ -1335,6 +1365,20 @@ function clearField(btn) {
                 const cont = document.getElementById('uniCardsContainer');
                 if (cont) {
                     cont.innerHTML = '';
+                    // --- SORTING LOGIC START ---
+                    // Jiska number chhota, wo pehle dikhega
+                    const examOrder = {
+                        'fourthgrade2025': 1,                          // Sabse pehle
+                        'vdo2025': 2,                                  // Beech me
+                        'patwari2025': 3                               // Last me
+                    };
+
+                    data.exams.sort((a, b) => {
+                        let orderA = examOrder[a.examId] || 99; // Agar ID na mile to last me dale
+                        let orderB = examOrder[b.examId] || 99;
+                        return orderA - orderB;
+                    });
+                    // --- SORTING LOGIC END ---
                     data.exams.forEach((ex, index) => {
                         const final = ex.examId === 'patwari2025' ? (ex.normalized || ex.raw || 0) : (ex.raw || 0);
                         const raw = ex.raw ? parseFloat(ex.raw).toFixed(4) : '-';
@@ -1431,8 +1475,8 @@ function clearField(btn) {
             } else {
                 if (graphSec) graphSec.classList.add('hide');
             }
-            
-          // --- SMART BUTTON LOGIC ---
+
+            // --- SMART BUTTON LOGIC ---
             const uniBtnCont = document.getElementById('viewUniBtnContainer');
             const btnCheckAll = document.getElementById('btnCheckAll');
 
@@ -1452,9 +1496,13 @@ function clearField(btn) {
 
         let activeCharts = {};
 
-        function renderDensityChart(canvasId, examId, userScore, cutoffScore) {
+     function renderDensityChart(canvasId, examId, userScore, cutoffScore) {
             const canvasElement = document.getElementById(canvasId);
             if (!canvasElement) return;
+
+            if (activeCharts[canvasId]) {
+                activeCharts[canvasId].destroy();
+            }
 
             const ctx = canvasElement.getContext('2d');
 
@@ -1477,29 +1525,29 @@ function clearField(btn) {
                 x: m,
                 y: densityData[i]
             }));
+            
             const uScoreNum = parseFloat(userScore);
-
             let userDensity = 0;
+            const maxDensity = Math.max(...densityData);
+
+            // User ka density point dhundein
             const closestIdx = marksData.findIndex(m => m <= uScoreNum);
             if (closestIdx !== -1) userDensity = densityData[closestIdx];
 
+            // --- USER LINE DATA ---
+            const userData = [
+                { x: uScoreNum, y: 0 }, 
+                { x: uScoreNum, y: userDensity }
+            ];
+
+            // --- CUTOFF LINE DATA ---
             let cutoffData = [];
             if (cutoffScore && cutoffScore !== "NA") {
                 const cScoreNum = parseFloat(cutoffScore);
-                const maxDensity = Math.max(...densityData);
-                cutoffData = [{
-                        x: cScoreNum,
-                        y: 0
-                    },
-                    {
-                        x: cScoreNum,
-                        y: maxDensity
-                    }
+                cutoffData = [
+                    { x: cScoreNum, y: 0 },
+                    { x: cScoreNum, y: maxDensity * 1.1 }
                 ];
-            }
-
-            if (activeCharts[canvasId]) {
-                activeCharts[canvasId].destroy();
             }
 
             activeCharts[canvasId] = new Chart(ctx, {
@@ -1512,35 +1560,38 @@ function clearField(btn) {
                             backgroundColor: 'rgba(96, 165, 250, 0.2)',
                             borderWidth: 2,
                             pointRadius: 0,
+                            pointHoverRadius: 4,
                             fill: true,
                             tension: 0.4,
-                            order: 2
+                            order: 3
                         },
                         {
                             label: 'You',
-                            data: [{
-                                x: uScoreNum,
-                                y: userDensity
-                            }],
-                            borderColor: '#2563eb',
+                            data: userData,
+                            borderColor: '#2563eb', 
                             backgroundColor: '#2563eb',
-                            pointRadius: 6,
-                            pointHoverRadius: 8,
-                            pointBorderWidth: 2,
-                            pointBorderColor: '#fff',
-                            type: 'scatter',
-                            order: 0
+                            borderWidth: 1.5,
+                            // Sirf Top Point (Index 1) ko bada dikhayenge, Bottom (Index 0) ko gayab
+                            pointRadius: ctx => ctx.dataIndex === 1 ? 5 : 0, 
+                            pointHoverRadius: 7,
+                            // MAGIC: HitRadius badha diya taaki mouse dur se hi 'Catch' kar le
+                            hitRadius: ctx => ctx.dataIndex === 1 ? 30 : 0,
+                            showLine: true,
+                            order: 1
                         },
                         {
                             label: 'Cutoff',
                             data: cutoffData,
                             borderColor: '#ea580c',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
+                            borderWidth: 1.5,
+                            borderDash: [4, 4],
                             pointRadius: 0,
+                            // Cutoff line ke top area ko bhi catch karne layk banaya
+                            hitRadius: ctx => ctx.dataIndex === 1 ? 30 : 0,
+                            pointHoverRadius: 0, // Cutoff par point nahi dikhega, bas tooltip aayega
                             showLine: true,
                             fill: false,
-                            order: 1
+                            order: 2
                         }
                     ]
                 },
@@ -1548,8 +1599,59 @@ function clearField(btn) {
                     responsive: true,
                     maintainAspectRatio: false,
                     interaction: {
-                        mode: 'nearest',
-                        intersect: false
+                        // 'nearest' mode se jo element sabse pass hoga wo select hoga
+                        // Hamne HitRadius badha diya hai, isliye You/Cutoff jaldi pakad me aayenge
+                        mode: 'nearest', 
+                        intersect: false,
+                        axis: 'x'
+                    },
+                    plugins: {
+                        tooltip: {
+                            enabled: true,
+                            mode: 'nearest', // Tooltip bhi nearest item ka dikhega
+                            intersect: false,
+                            position: 'nearest',
+                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                            titleFont: { size: 11 },
+                            bodyFont: { size: 11, weight: 'bold' },
+                            padding: 10,
+                            
+                            // Bottom point (y=0) ko tooltip se hatane ka filter
+                            filter: function(tooltipItem) {
+                                return tooltipItem.raw.y > 0.0001; 
+                            },
+
+                            callbacks: {
+                                // Title me Marks dikhayenge
+                                title: function(tooltipItems) {
+                                    if (!tooltipItems || tooltipItems.length === 0) return '';
+                                    const item = tooltipItems[0];
+                                    // Agar User ya Cutoff hai, to Title customize karein
+                                    if (item.dataset.label === 'You') return 'YOUR SCORE';
+                                    if (item.dataset.label === 'Cutoff') return 'CUTOFF MARK';
+                                    return 'Marks: ' + item.parsed.x.toFixed(2);
+                                },
+                                // Label me Density aur Marks details
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    const val = context.parsed.y;
+                                    const marks = context.parsed.x;
+
+                                    if (label === 'You' || label === 'Cutoff') {
+                                        // Specific requirement: Density bina decimal ke
+                                        return [
+                                            `Marks: ${marks.toFixed(2)}`,
+                                            `Density: ${Math.round(val)}` // No decimals
+                                        ];
+                                    }
+                                    // Normal Density Curve ke liye
+                                    return `Density: ${val.toFixed(4)}`;
+                                }
+                            }
+                        },
+                        legend: {
+                            display: false
+                        }
                     },
                     scales: {
                         x: {
@@ -1560,29 +1662,20 @@ function clearField(btn) {
                             title: {
                                 display: true,
                                 text: `Final Marks (${maxExamMarks} → 0)`,
-                                font: {
-                                    size: 10,
-                                    weight: 'bold'
-                                }
+                                font: { size: 9, weight: 'bold', family: 'Inter' },
+                                color: '#64748b'
                             },
-                            grid: {
-                                display: false
-                            }
+                            grid: { display: false },
+                            ticks: { font: { size: 9 } }
                         },
                         y: {
                             display: false,
                             beginAtZero: true
                         }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
                     }
                 }
             });
         }
-
         function triggerUniversalSearch() {
             try {
                 const nameEl = document.getElementById('rName');
@@ -1640,9 +1733,11 @@ function clearField(btn) {
                 toast("Something went wrong");
             }
         }
-function printResult() {
-    window.print();
-}
+
+        function printResult() {
+            window.print();
+        }
+
         function closeResult() {
             history.back();
         }
