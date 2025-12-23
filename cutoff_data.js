@@ -129,7 +129,7 @@ function updateEmptyStateContent(examId) {
         <div class="cutoff-container">
             <div class="cutoff-header">
                 ${examDisplayName} <br>
-                <span style="font-size:0.8rem; font-weight:500;">NON-TSP AREA CUTOFF MARKS</span>
+                <span style="font-size:0.8rem; font-weight:500;">NON-TSP PRE DV CUTOFF MARKS</span>
             </div>
             <table class="co-table">
                 <thead>
