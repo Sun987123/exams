@@ -1620,36 +1620,54 @@
                                 return tooltipItem.raw.y > 0.0001; 
                             },
 
-                          callbacks: {
-    // Title me Marks dikhayenge
+                        callbacks: {
+    // Title Logic
     title: function(tooltipItems) {
         if (!tooltipItems || tooltipItems.length === 0) return '';
         const item = tooltipItems[0];
-
-        // 1. Agar User ya Cutoff hai, to Title Custom Rakho
         if (item.dataset.label === 'You') return 'YOUR SCORE';
         if (item.dataset.label === 'Cutoff') return 'CUTOFF MARK';
-
-        // 2. Normal Graph ke liye Marks ko Purnank (Integer) bana diya
         return 'Marks: ' + Math.round(item.parsed.x);
     },
-    
-    // Label me Density aur Marks details
+
+    // Label Logic (Fix applied here)
     label: function(context) {
         let label = context.dataset.label || '';
-        const val = context.parsed.y;
-        const marks = context.parsed.x;
+        const currentMarks = context.parsed.x;
+        let densityVal = context.parsed.y;
+
+        // FIX: Cutoff aur You ke liye hum Original Data check karenge
+        // Kyunki Cutoff line ki height fake (bahut jyada) hoti hai
+        if (label === 'Cutoff' || label === 'You') {
+            // Data array me sabse close marks dhundo
+            // marksData aur densityData upar scope me available hain
+            let closestIndex = -1;
+            let minDiff = 9999;
+            
+            // Loop chala kar sabse pass wala mark dhund rahe hain
+            for (let i = 0; i < marksData.length; i++) {
+                let diff = Math.abs(marksData[i] - currentMarks);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    closestIndex = i;
+                }
+            }
+
+            // Agar index mil gaya to wahan se Sahi Density uthao
+            if (closestIndex !== -1) {
+                densityVal = densityData[closestIndex];
+            }
+        }
 
         if (label === 'You' || label === 'Cutoff') {
             return [
-                // 3. Yahan Special Change: Khud ke marks aur Cutoff 4 decimal tak
-                `Marks: ${marks.toFixed(4)}`,
-                `Density: ${Math.round(val)}`
+                `Marks: ${currentMarks.toFixed(4)}`, // 4 Decimal
+                `Density: ${Math.round(densityVal)}`   // Integer Density (Corrected)
             ];
         }
         
-        // 4. Normal Density Curve ke liye Density Purnank me
-        return `Density: ${Math.round(val)}`;
+        // Normal Graph Line
+        return `Density: ${Math.round(densityVal)}`;
     }
 }
                         },
