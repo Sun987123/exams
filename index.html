@@ -2,12 +2,13 @@
 <html lang="en">
 
 <head>
+    
     <meta name="theme-color" content="#1e1e2e">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=no">
     <meta name="description" content="Dream-Link Official Exam Result Portal 2026">
-    <title>Dream-Link • 2026</title>
+    <title>Dream-Link • Results</title>
     <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,9 +16,10 @@
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
     <style>
         /* --- MODERN CSS VARS SYSTEM --- */
@@ -75,7 +77,7 @@
             transition: background 0.3s, color 0.3s;
         }
 
-        /* --- HEADER --- */
+        /* --- HEADER & PROFILE --- */
         .app-header {
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
@@ -95,31 +97,172 @@
         }
 
         .brand {
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 800;
             color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 6px;
             letter-spacing: -0.02em;
             cursor: pointer;
             text-transform: uppercase;
         }
 
-        .exam-selector {
+        .profile-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-main);
+            font-size: 1.2rem;
+            transition: 0.2s;
+        }
+
+        .profile-btn:hover {
+            background: var(--surface-hover);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .profile-menu {
+            position: absolute;
+            top: 45px;
+            right: 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-float);
+            width: 150px;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideDown 0.2s ease;
+        }
+
+        .profile-menu.show {
+            display: flex;
+        }
+
+        .menu-item {
+            padding: 10px 14px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .menu-item:hover {
+            background: var(--surface-hover);
+            color: var(--danger, #ef4444);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- EXAM SELECTOR (NEW LOCATION) --- */
+        .exam-select-wrapper {
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .exam-selector-full {
+            width: 100%;
+            max-width: 100%; /* Ye line overflow rokegi */
+            box-sizing: border-box; /* Padding ko width ke andar rakhega */
             appearance: none;
             -webkit-appearance: none;
             background-color: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
-            padding: 6px 28px 6px 10px;
-            font-size: 0.8rem;
-            font-weight: 600;
+            padding: 12px;
+            font-size: 0.9rem;
+            font-weight: 700;
             color: var(--text-main);
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
             background-repeat: no-repeat;
-            background-position: right 6px center;
-            background-size: 12px;
+            background-position: right 12px center;
+            background-size: 14px;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .exam-selector-full:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        /* --- LOGIN MODAL --- */
+        #loginScreen {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-body);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--surface);
+            padding: 30px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: var(--shadow-float);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .login-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: var(--radius-md);
+            background: var(--primary);
+            color: white;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 1rem;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: var(--bg-body);
+            color: var(--text-main);
+            outline: none;
         }
 
         /* --- SEARCH SECTION --- */
@@ -478,8 +621,9 @@
         }
 
         .text-catrank {
-    color: var(--success);
+            color: var(--success);
         }
+
         .text-rank {
             color: var(--secondary);
         }
@@ -747,111 +891,127 @@
         }
 
         /* --- IMPROVED PRINT SETTINGS (RECEIPT STYLE) --- */
-   /* --- FINAL PRINT SETTINGS (FIXED OVERLAP & LAYOUT) --- */
-    @media print {
-        @page {
-            margin: 10px;
-            size: auto;
-        }
+        /* --- FINAL PRINT SETTINGS (FIXED OVERLAP & LAYOUT) --- */
+        @media print {
+            @page {
+                margin: 10px;
+                size: auto;
+            }
 
-        body {
-            background-color: #ffffff;
-            visibility: hidden;
-            height: auto !important;
-            overflow: visible !important;
-        }
+            body {
+                background-color: #ffffff;
+                visibility: hidden;
+                height: auto !important;
+                overflow: visible !important;
+            }
 
-        /* Sab kuch chupao */
-        .app-header, .search-container, .control-panel, .toast, .btn-clear, #viewUniBtnContainer {
-            display: none !important;
-        }
+            /* Sab kuch chupao */
+            .app-header,
+            .search-container,
+            .control-panel,
+            .toast,
+            .btn-clear,
+            #viewUniBtnContainer {
+                display: none !important;
+            }
 
-        /* Sirf Result dikhao */
-        #resultView, #receiptArea, #receiptArea * {
-            visibility: visible;
-        }
+            /* Sirf Result dikhao */
+            #resultView,
+            #receiptArea,
+            #receiptArea * {
+                visibility: visible;
+            }
 
-        /* Layout Container */
-        #resultView {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: auto !important;
-            min-height: 0 !important;
-            display: block !important;
-            background: white;
-            padding: 0 !important;
-            margin: 0 !important;
-            z-index: 9999;
-        }
+            /* Layout Container */
+            #resultView {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: auto !important;
+                min-height: 0 !important;
+                display: block !important;
+                background: white;
+                padding: 0 !important;
+                margin: 0 !important;
+                z-index: 9999;
+            }
 
-        /* Receipt Card Size */
-        .receipt-card {
-            width: 500px !important;
-            max-width: 100% !important;
-            margin: 5px auto !important;
-            border: 2px solid #0f172a !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-            break-inside: avoid;
-        }
+            /* Receipt Card Size */
+            .receipt-card {
+                width: 500px !important;
+                max-width: 100% !important;
+                margin: 5px auto !important;
+                border: 2px solid #0f172a !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                break-inside: avoid;
+            }
 
-        .rc-head {
-            background: #059669 !important;
-            color: white !important;
-            padding: 10px !important;
-        }
+            .rc-head {
+                background: #059669 !important;
+                color: white !important;
+                padding: 10px !important;
+            }
 
-        .ig-val { font-size: 0.85rem !important; }
-        .sp-val { font-size: 1rem !important; }
+            .ig-val {
+                font-size: 0.85rem !important;
+            }
 
-        /* --- GRAPH SECTION FIX (GAP ADDED) --- */
-        #graphSection:not(.hide) {
-            display: block !important;
-            width: 100% !important;
-            height: 170px !important; /* Height thodi badhai */
-            margin-top: 16px !important;
-            
-            /* Yeh line overlap rokegi - Bottom me gap diya */
-            margin-bottom: 30px !important; 
-            padding-bottom: 10px !important;
-            
-            border-top: 1px solid #ccc !important;
-            break-inside: avoid;
-            page-break-inside: avoid;
-        }
+            .sp-val {
+                font-size: 1rem !important;
+            }
 
-        /* --- FOOTER FIX --- */
-        .rc-footer {
-            /* Footer ke upar bhi gap ensure kiya */
-            margin-top: 20px !important;
-            padding-top: 10px !important;
-            border-top: 1px solid #ccc !important;
-            color: #64748b !important; /* Text dark kiya taaki print me saaf dikhe */
-        }
+            /* --- GRAPH SECTION FIX (GAP ADDED) --- */
+            #graphSection:not(.hide) {
+                display: block !important;
+                width: 100% !important;
+                height: 170px !important;
+                /* Height thodi badhai */
+                margin-top: 16px !important;
 
-        /* Agar JS ne hide kiya hai to print me bhi chupao */
-        .hide {
-            display: none !important;
-        }
+                /* Yeh line overlap rokegi - Bottom me gap diya */
+                margin-bottom: 30px !important;
+                padding-bottom: 10px !important;
 
-        canvas {
-            width: 100% !important;
-            height: 100% !important;
-        }
+                border-top: 1px solid #ccc !important;
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
 
-        .uni-card {
-            break-inside: avoid;
-            page-break-inside: avoid;
-            border: 1px solid #000 !important;
-            margin-bottom: 5px !important;
+            /* --- FOOTER FIX --- */
+            .rc-footer {
+                /* Footer ke upar bhi gap ensure kiya */
+                margin-top: 20px !important;
+                padding-top: 10px !important;
+                border-top: 1px solid #ccc !important;
+                color: #64748b !important;
+                /* Text dark kiya taaki print me saaf dikhe */
+            }
+
+            /* Agar JS ne hide kiya hai to print me bhi chupao */
+            .hide {
+                display: none !important;
+            }
+
+            canvas {
+                width: 100% !important;
+                height: 100% !important;
+            }
+
+            .uni-card {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                border: 1px solid #000 !important;
+                margin-bottom: 5px !important;
+            }
+
+            a[href]:after {
+                content: none !important;
+            }
         }
-        
-        a[href]:after { content: none !important; }
-    }
     </style>
 </head>
 
@@ -859,16 +1019,45 @@
 
     <header class="app-header">
         <div class="brand" onclick="toggleTheme()">DREAM-LINK</div>
-        <select id="examSelect" class="exam-selector" onchange="saveExamPref(this)">
-            <option value="patwari2025">PATWAR 2025</option>
-            <option value="vdo2025">VDO 2025</option>
-            <option value="fourthgrade2025">4TH GRADE</option>
-            <option value="all">UNIVERSAL SEARCH</option>
-        </select>
+        <div class="profile-wrap">
+            <div class="profile-btn" onclick="toggleProfileMenu()">
+                <i class="ph-bold ph-user"></i>
+            </div>
+            <div class="profile-menu" id="profileMenu">
+                <div class="menu-item">
+                    <i class="ph-bold ph-user-circle"></i> <span id="userEmailDisplay">User</span>
+                </div>
+                <div class="menu-item" onclick="handleLogout()" style="color:#ef4444;">
+                    <i class="ph-bold ph-sign-out"></i> Logout
+                </div>
+            </div>
+        </div>
     </header>
+    <div id="loginScreen">
+        <div class="login-card">
+            <div class="login-title">WELCOME BACK</div>
+            <p style="color:var(--text-muted); margin-bottom:20px; font-size:0.9rem;">Please login to access the portal</p>
 
+            <input type="email" id="txtEmail" class="login-input" placeholder="Email Address">
+            <input type="password" id="txtPwd" class="login-input" placeholder="Password">
+
+            <button class="login-btn" onclick="handleLogin()">SECURE LOGIN</button>
+            <p id="loginMsg" style="color:var(--danger); font-size:0.8rem; margin-top:10px; display:none;"></p>
+        </div>
+    </div>
     <main id="searchScreen">
         <section class="search-container">
+            <div style="max-width: 900px; margin: 0 auto 12px auto;">
+                <label style="font-size:0.7rem; font-weight:700; color:var(--text-muted); margin-bottom:6px; display:block; padding-left:4px;">
+                    SELECT EXAMINATION
+                </label>
+               <select id="examSelect" class="exam-selector-full" onchange="saveExamPref(this)">
+                    <option value="fourthgrade2025" selected>4TH GRADE</option>
+                    <option value="patwari2025">PATWAR 2025</option>
+                    <option value="vdo2025">VDO 2025</option>
+                    <option value="all">UNIVERSAL SEARCH (ALL)</option>
+                </select>
+            </div>
             <div class="search-grid">
                 <div class="inp-group">
                     <input type="number" id="inpRoll" class="inp-modern" placeholder=" " onkeydown="handleEnter(event)" oninput="toggleClearBtn(this)">
@@ -959,16 +1148,16 @@
                     <div id="uniTableSection" class="hide">
                         <div id="uniCardsContainer" class="uni-list"></div>
                     </div>
-                    <div id="graphSection" class="hide" style="margin-top: 16px; padding-top: 12px; border-top: 2px dashed #e2e8f0;">
-                        <div style="font-size: 0.8rem; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase; text-align: center;">Performance Analysis</div>
+                    <div id="graphSection" class="hide" style="margin-top: 8px; padding-top: 4px; border-top: 1px dashed #e2e8f0;">
                         <div style="position: relative; height: 160px; width: 100%;">
                             <canvas id="densityChart"></canvas>
                         </div>
                     </div>
+                    </div>
                     <div class="rc-footer">Generated: <span id="rDate"></span> • MP SALODIYA</div>
                 </div>
             </div>
-            <div id="viewUniBtnContainer" class="hide" style="width: 94%; max-width: 500px; margin-bottom: 10px; display: flex; gap: 10px;">
+           <div id="viewUniBtnContainer" class="hide" style="width: 94%; max-width: 500px; margin: 0 auto 10px auto; display: flex; gap: 10px;">
                 <button onclick="printResult()" style="flex: 1; background: #475569; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); text-transform: uppercase;">
                     <i class="ph-bold ph-printer"></i> Print PDF
                 </button>
@@ -977,7 +1166,7 @@
                     <i class="ph-bold ph-globe-hemisphere-west"></i> Check All
                 </button>
             </div>
-            <div class="control-panel">
+            <div class="control-panel" style="margin: 0 auto;">
                 <button class="btn-act act-save" onclick="downloadImage()"><i class="ph-bold ph-download-simple"></i> Save</button>
                 <button class="btn-act act-back" onclick="closeResult()"><i class="ph-bold ph-arrow-left"></i> Back</button>
             </div>
@@ -1018,6 +1207,59 @@
         };
 
         let db = null;
+      // --- ADDED AUTH VARIABLES ---
+        let auth = null; 
+
+        // --- LOGIN FUNCTION ---
+        function handleLogin() {
+            const email = document.getElementById('txtEmail').value;
+            const pwd = document.getElementById('txtPwd').value;
+            const msg = document.getElementById('loginMsg');
+            const loginScreen = document.getElementById('loginScreen');
+
+            if (!email || !pwd) {
+                msg.style.display = 'block';
+                msg.innerText = "Please enter email and password";
+                return;
+            }
+
+            msg.style.display = 'none';
+            // Firebase Auth Check
+            auth.signInWithEmailAndPassword(email, pwd)
+                .then((userCredential) => {
+                    // Login Success
+                    loginScreen.style.display = 'none';
+                    toast("Welcome Back!");
+                    updateUserUI(userCredential.user);
+                })
+                .catch((error) => {
+                    // Login Failed
+                    console.error(error);
+                    msg.style.display = 'block';
+                    msg.innerText = "Invalid Email or Password!";
+                });
+        }
+
+        // --- LOGOUT FUNCTION ---
+        function handleLogout() {
+            auth.signOut().then(() => {
+                location.reload(); // Page reload to show login screen again
+            });
+        }
+
+        // --- TOGGLE PROFILE MENU ---
+        function toggleProfileMenu() {
+             const menu = document.getElementById('profileMenu');
+             menu.classList.toggle('show');
+        }
+
+        // --- UPDATE USER UI ---
+        function updateUserUI(user) {
+            const display = document.getElementById('userEmailDisplay');
+            if(display && user) {
+                display.innerText = user.email;
+            }
+        }
         let activeSearchId = 0;
         let lastScrollY = 0;
 
@@ -1026,9 +1268,9 @@
             if (el) el.innerText = text;
         }
 
-        window.addEventListener('load', () => {
+       window.addEventListener('load', () => {
             if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
-            const savedExam = localStorage.getItem('lastExam') || 'patwari2025';
+           const savedExam = localStorage.getItem('lastExam') || 'fourthgrade2025';
             const sel = document.getElementById('examSelect');
             if (sel) {
                 sel.value = savedExam;
@@ -1038,10 +1280,25 @@
 
             try {
                 if (typeof firebase !== 'undefined') {
+                    // --- NAYA CODE YAHAN AAYA HAI ---
                     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+                    
                     db = firebase.database();
+                    auth = firebase.auth();
+
+                    auth.onAuthStateChanged((user) => {
+                        const loginScreen = document.getElementById('loginScreen');
+                        if (user) {
+                            loginScreen.style.display = 'none';
+                            if (typeof updateUserUI === "function") updateUserUI(user);
+                        } else {
+                            loginScreen.style.display = 'flex';
+                        }
+                    });
+
                     const sBtn = document.getElementById('sBtn');
                     if (sBtn) sBtn.disabled = false;
+                    // --- NAYA CODE KHATAM ---
                 }
             } catch (error) {
                 console.log("DB Error");
@@ -1367,9 +1624,9 @@
                     // --- SORTING LOGIC START ---
                     // Jiska number chhota, wo pehle dikhega
                     const examOrder = {
-                        'fourthgrade2025': 1,                          // Sabse pehle
-                        'vdo2025': 2,                                  // Beech me
-                        'patwari2025': 3                               // Last me
+                        'fourthgrade2025': 1, // Sabse pehle
+                        'vdo2025': 2, // Beech me
+                        'patwari2025': 3 // Last me
                     };
 
                     data.exams.sort((a, b) => {
@@ -1402,17 +1659,15 @@
                         card.className = 'uni-card';
 
                         let graphHtml = '';
-                        if (hasGraph) {
+                      if (hasGraph) {
                             graphHtml = `
-                                <div style="margin-top:12px; padding-top:8px; border-top:1px dashed rgba(255,255,255,0.1);">
-                                    <div style="font-size:0.7rem; color:#64748b; text-align:center; margin-bottom:4px;">PERFORMANCE GRAPH</div>
-                                    <div style="position: relative; height: 120px; width: 100%;">
+                                <div style="margin-top:2px; padding-top:2px; border-top:1px dashed #e2e8f0;">
+                                    <div style="position: relative; height: 150px; width: 100%;">
                                         <canvas id="${canvasId}"></canvas>
                                     </div>
                                 </div>
                             `;
                         }
-
                         card.innerHTML = `
                             <div class="uc-head"><span class="uc-title">${examName}</span></div>
                             <div class="uc-body">
@@ -1495,7 +1750,7 @@
 
         let activeCharts = {};
 
-     function renderDensityChart(canvasId, examId, userScore, cutoffScore) {
+      function renderDensityChart(canvasId, examId, userScore, cutoffScore) {
             const canvasElement = document.getElementById(canvasId);
             if (!canvasElement) return;
 
@@ -1524,7 +1779,7 @@
                 x: m,
                 y: densityData[i]
             }));
-            
+
             const uScoreNum = parseFloat(userScore);
             let userDensity = 0;
             const maxDensity = Math.max(...densityData);
@@ -1533,19 +1788,42 @@
             const closestIdx = marksData.findIndex(m => m <= uScoreNum);
             if (closestIdx !== -1) userDensity = densityData[closestIdx];
 
+            // --- COLOR LOGIC (NEW) ---
+            // Default Blue (#2563eb)
+            let userLineColor = '#2563eb';
+            let userBgColor = '#2563eb';
+
+            // Agar Cutoff NA nahi hai aur Score >= Cutoff hai, to GREEN (#059669)
+            if (cutoffScore !== "NA" && !isNaN(parseFloat(cutoffScore))) {
+                if (uScoreNum >= parseFloat(cutoffScore)) {
+                    userLineColor = '#059669'; // Green Success
+                    userBgColor = '#059669';
+                }
+            }
+
             // --- USER LINE DATA ---
-            const userData = [
-                { x: uScoreNum, y: 0 }, 
-                { x: uScoreNum, y: userDensity }
+            const userData = [{
+                    x: uScoreNum,
+                    y: 0
+                },
+                {
+                    x: uScoreNum,
+                    y: userDensity
+                }
             ];
 
             // --- CUTOFF LINE DATA ---
             let cutoffData = [];
             if (cutoffScore && cutoffScore !== "NA") {
                 const cScoreNum = parseFloat(cutoffScore);
-                cutoffData = [
-                    { x: cScoreNum, y: 0 },
-                    { x: cScoreNum, y: maxDensity * 1.1 }
+                cutoffData = [{
+                        x: cScoreNum,
+                        y: 0
+                    },
+                    {
+                        x: cScoreNum,
+                        y: maxDensity * 1.1
+                    }
                 ];
             }
 
@@ -1567,13 +1845,11 @@
                         {
                             label: 'You',
                             data: userData,
-                            borderColor: '#2563eb', 
-                            backgroundColor: '#2563eb',
+                            borderColor: userLineColor, // Updated Color Variable
+                            backgroundColor: userBgColor, // Updated Color Variable
                             borderWidth: 1.5,
-                            // Sirf Top Point (Index 1) ko bada dikhayenge, Bottom (Index 0) ko gayab
-                            pointRadius: ctx => ctx.dataIndex === 1 ? 5 : 0, 
+                            pointRadius: ctx => ctx.dataIndex === 1 ? 5 : 0,
                             pointHoverRadius: 7,
-                            // MAGIC: HitRadius badha diya taaki mouse dur se hi 'Catch' kar le
                             hitRadius: ctx => ctx.dataIndex === 1 ? 30 : 0,
                             showLine: true,
                             order: 1
@@ -1585,9 +1861,8 @@
                             borderWidth: 1.5,
                             borderDash: [4, 4],
                             pointRadius: 0,
-                            // Cutoff line ke top area ko bhi catch karne layk banaya
                             hitRadius: ctx => ctx.dataIndex === 1 ? 30 : 0,
-                            pointHoverRadius: 0, // Cutoff par point nahi dikhega, bas tooltip aayega
+                            pointHoverRadius: 0,
                             showLine: true,
                             fill: false,
                             order: 2
@@ -1598,82 +1873,62 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     interaction: {
-                        // 'nearest' mode se jo element sabse pass hoga wo select hoga
-                        // Hamne HitRadius badha diya hai, isliye You/Cutoff jaldi pakad me aayenge
-                        mode: 'nearest', 
+                        mode: 'nearest',
                         intersect: false,
                         axis: 'x'
                     },
                     plugins: {
                         tooltip: {
                             enabled: true,
-                            mode: 'nearest', // Tooltip bhi nearest item ka dikhega
+                            mode: 'nearest',
                             intersect: false,
                             position: 'nearest',
                             backgroundColor: 'rgba(15, 23, 42, 0.95)',
                             titleFont: { size: 11 },
                             bodyFont: { size: 11, weight: 'bold' },
                             padding: 10,
-                            
-                            // Bottom point (y=0) ko tooltip se hatane ka filter
                             filter: function(tooltipItem) {
-                                return tooltipItem.raw.y > 0.0001; 
+                                return tooltipItem.raw.y > 0.0001;
                             },
+                            callbacks: {
+                                title: function(tooltipItems) {
+                                    if (!tooltipItems || tooltipItems.length === 0) return '';
+                                    const item = tooltipItems[0];
+                                    if (item.dataset.label === 'You') return 'YOUR SCORE';
+                                    if (item.dataset.label === 'Cutoff') return 'CUTOFF MARK';
+                                    return 'Marks: ' + Math.round(item.parsed.x);
+                                },
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    const currentMarks = context.parsed.x;
+                                    let densityVal = context.parsed.y;
 
-                        callbacks: {
-    // Title Logic
-    title: function(tooltipItems) {
-        if (!tooltipItems || tooltipItems.length === 0) return '';
-        const item = tooltipItems[0];
-        if (item.dataset.label === 'You') return 'YOUR SCORE';
-        if (item.dataset.label === 'Cutoff') return 'CUTOFF MARK';
-        return 'Marks: ' + Math.round(item.parsed.x);
-    },
+                                    if (label === 'Cutoff' || label === 'You') {
+                                        let closestIndex = -1;
+                                        let minDiff = 9999;
+                                        for (let i = 0; i < marksData.length; i++) {
+                                            let diff = Math.abs(marksData[i] - currentMarks);
+                                            if (diff < minDiff) {
+                                                minDiff = diff;
+                                                closestIndex = i;
+                                            }
+                                        }
+                                        if (closestIndex !== -1) {
+                                            densityVal = densityData[closestIndex];
+                                        }
+                                    }
 
-    // Label Logic (Fix applied here)
-    label: function(context) {
-        let label = context.dataset.label || '';
-        const currentMarks = context.parsed.x;
-        let densityVal = context.parsed.y;
-
-        // FIX: Cutoff aur You ke liye hum Original Data check karenge
-        // Kyunki Cutoff line ki height fake (bahut jyada) hoti hai
-        if (label === 'Cutoff' || label === 'You') {
-            // Data array me sabse close marks dhundo
-            // marksData aur densityData upar scope me available hain
-            let closestIndex = -1;
-            let minDiff = 9999;
-            
-            // Loop chala kar sabse pass wala mark dhund rahe hain
-            for (let i = 0; i < marksData.length; i++) {
-                let diff = Math.abs(marksData[i] - currentMarks);
-                if (diff < minDiff) {
-                    minDiff = diff;
-                    closestIndex = i;
-                }
-            }
-
-            // Agar index mil gaya to wahan se Sahi Density uthao
-            if (closestIndex !== -1) {
-                densityVal = densityData[closestIndex];
-            }
-        }
-
-        if (label === 'You' || label === 'Cutoff') {
-            return [
-                `Marks: ${currentMarks.toFixed(4)}`, // 4 Decimal
-                `Density: ${Math.round(densityVal)}`   // Integer Density (Corrected)
-            ];
-        }
-        
-        // Normal Graph Line
-        return `Density: ${Math.round(densityVal)}`;
-    }
-}
+                                    if (label === 'You' || label === 'Cutoff') {
+                                        return [
+                                            `Marks: ${currentMarks.toFixed(4)}`,
+                                            `Density: ${Math.round(densityVal)}`
+                                        ];
+                                    }
+                                    return `Density: ${Math.round(densityVal)}`;
+                                }
+                            }
                         },
-                        legend: {
-                            display: false
-                        }
+                        legend: { display: false }
                     },
                     scales: {
                         x: {
@@ -1690,10 +1945,7 @@
                             grid: { display: false },
                             ticks: { font: { size: 9 } }
                         },
-                        y: {
-                            display: false,
-                            beginAtZero: true
-                        }
+                        y: { display: false, beginAtZero: true }
                     }
                 }
             });
