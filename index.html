@@ -1599,7 +1599,7 @@
             return found ? found.marks : "NA";
         }
 
-        function showReceipt(data, isUniversal) {
+       function showReceipt(data, isUniversal) {
             history.pushState({
                 view: 'result'
             }, '', '#result');
@@ -1624,9 +1624,16 @@
             const uniSec = document.getElementById('uniTableSection');
             const singleSec = document.getElementById('singleScoreSection');
             const rRollBox = document.getElementById('rRollBox');
+            
+            // --- DATE ELEMENT SELECT ---
+            const dateEl = document.getElementById('rExamDate');
 
             if (isUniversal) {
                 safeSetText('rTitle', "CANDIDATE PROFILE");
+                
+                // --- NEW LOGIC: HIDE DATE IN UNIVERSAL ---
+                if(dateEl) dateEl.style.display = 'none'; 
+
                 if (singleSec) singleSec.classList.add('hide');
                 if (uniSec) uniSec.classList.remove('hide');
                 if (rRollBox) rRollBox.classList.add('hide');
@@ -1635,15 +1642,14 @@
                 if (cont) {
                     cont.innerHTML = '';
                     // --- SORTING LOGIC START ---
-                    // Jiska number chhota, wo pehle dikhega
                     const examOrder = {
-                        'fourthgrade2025': 1, // Sabse pehle
-                        'vdo2025': 2, // Beech me
-                        'patwari2025': 3 // Last me
+                        'fourthgrade2025': 1,
+                        'vdo2025': 2,
+                        'patwari2025': 3
                     };
 
                     data.exams.sort((a, b) => {
-                        let orderA = examOrder[a.examId] || 99; // Agar ID na mile to last me dale
+                        let orderA = examOrder[a.examId] || 99;
                         let orderB = examOrder[b.examId] || 99;
                         return orderA - orderB;
                     });
@@ -1684,9 +1690,9 @@
                         }
                         card.innerHTML = `
                             <div class="uc-head">
-    <span class="uc-title">${examName}</span>
-    <span class="uc-date">${examDate}</span>
-</div>
+                                <span class="uc-title">${examName}</span>
+                                <span class="uc-date">${examDate}</span>
+                            </div>
                             <div class="uc-body">
                                 <div class="uc-cell"><span class="uc-lbl">Roll</span><span class="uc-val">${ex.roll}</span></div>
                                 <div class="uc-cell"><span class="uc-lbl">Raw</span><span class="uc-val text-raw">${raw}</span></div>
@@ -1710,7 +1716,9 @@
             } else {
                 const examObj = EXAM_LIST.find(e => e.id === data.examId);
                 safeSetText('rTitle', examObj.name);
-                // Date Logic Added
+                
+                // --- NEW LOGIC: SHOW DATE IN INDIVIDUAL ---
+                if(dateEl) dateEl.style.display = 'block'; 
                 safeSetText('rExamDate', examObj.date || '');
 
                 if (singleSec) singleSec.classList.remove('hide');
@@ -1728,7 +1736,6 @@
                 const cutoffMarks = getMyCutoff(data.examId, data.category, data.gender, data.subcat);
                 safeSetText('rCutoff', cutoffMarks);
             }
-
             const graphSec = document.getElementById('graphSection');
 
             if (!isUniversal && graphSec) {
