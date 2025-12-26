@@ -2,13 +2,13 @@
 <html lang="en">
 
 <head>
-    
+
     <meta name="theme-color" content="#1e1e2e">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=no">
     <meta name="description" content="Dream-Link Official Exam Result Portal 2026">
-    <title>Dream-Link • RESULT Login</title>
+    <title>Dream-Link • RESULTS</title>
     <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -187,8 +187,10 @@
 
         .exam-selector-full {
             width: 100%;
-            max-width: 100%; /* Ye line overflow rokegi */
-            box-sizing: border-box; /* Padding ko width ke andar rakhega */
+            max-width: 100%;
+            /* Ye line overflow rokegi */
+            box-sizing: border-box;
+            /* Padding ko width ke andar rakhega */
             appearance: none;
             -webkit-appearance: none;
             background-color: var(--surface);
@@ -1060,7 +1062,7 @@
                 <label style="font-size:0.7rem; font-weight:700; color:var(--text-muted); margin-bottom:6px; display:block; padding-left:4px;">
                     SELECT EXAMINATION
                 </label>
-               <select id="examSelect" class="exam-selector-full" onchange="saveExamPref(this)">
+                <select id="examSelect" class="exam-selector-full" onchange="saveExamPref(this)">
                     <option value="fourthgrade2025" selected>4TH GRADE</option>
                     <option value="patwari2025">PATWAR 2025</option>
                     <option value="vdo2025">VDO 2025</option>
@@ -1116,7 +1118,7 @@
                 <div class="rc-head">
                     <div class="rc-title" id="rTitle">EXAM NAME</div>
                     <div class="rc-sub">RSSB SCORE CARD</div>
-<div class="rc-sub" id="rExamDate" style="margin-top:4px; opacity:0.8; font-size:0.65rem;"></div>
+                    <div class="rc-sub" id="rExamDate" style="margin-top:4px; opacity:0.8; font-size:0.65rem;"></div>
                 </div>
                 <div class="rc-content">
                     <div class="info-grid">
@@ -1163,23 +1165,23 @@
                             <canvas id="densityChart"></canvas>
                         </div>
                     </div>
-                    </div>
-                    <div class="rc-footer">Generated: <span id="rDate"></span> • MP SALODIYA</div>
                 </div>
+                <div class="rc-footer">Generated: <span id="rDate"></span> • MP SALODIYA</div>
             </div>
-           <div id="viewUniBtnContainer" class="hide" style="width: 94%; max-width: 500px; margin: 0 auto 10px auto; display: flex; gap: 10px;">
-                <button onclick="printResult()" style="flex: 1; background: #475569; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); text-transform: uppercase;">
-                    <i class="ph-bold ph-printer"></i> Print PDF
-                </button>
+        </div>
+        <div id="viewUniBtnContainer" class="hide" style="width: 94%; max-width: 500px; margin: 0 auto 10px auto; display: flex; gap: 10px;">
+            <button onclick="printResult()" style="flex: 1; background: #475569; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); text-transform: uppercase;">
+                <i class="ph-bold ph-printer"></i> Print PDF
+            </button>
 
-                <button id="btnCheckAll" onclick="triggerUniversalSearch()" style="flex: 1; background: #3b82f6; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); text-transform: uppercase;">
-                    <i class="ph-bold ph-globe-hemisphere-west"></i> Check All
-                </button>
-            </div>
-            <div class="control-panel" style="margin: 0 auto;">
-                <button class="btn-act act-save" onclick="downloadImage()"><i class="ph-bold ph-download-simple"></i> Save</button>
-                <button class="btn-act act-back" onclick="closeResult()"><i class="ph-bold ph-arrow-left"></i> Back</button>
-            </div>
+            <button id="btnCheckAll" onclick="triggerUniversalSearch()" style="flex: 1; background: #3b82f6; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); text-transform: uppercase;">
+                <i class="ph-bold ph-globe-hemisphere-west"></i> Check All
+            </button>
+        </div>
+        <div class="control-panel" style="margin: 0 auto;">
+            <button class="btn-act act-save" onclick="downloadImage()"><i class="ph-bold ph-download-simple"></i> Save</button>
+            <button class="btn-act act-back" onclick="closeResult()"><i class="ph-bold ph-arrow-left"></i> Back</button>
+        </div>
         </div>
     </section>
 
@@ -1220,8 +1222,8 @@
         };
 
         let db = null;
-      // --- ADDED AUTH VARIABLES ---
-        let auth = null; 
+        // --- ADDED AUTH VARIABLES ---
+        let auth = null;
 
         // --- LOGIN FUNCTION ---
         function handleLogin() {
@@ -1262,14 +1264,14 @@
 
         // --- TOGGLE PROFILE MENU ---
         function toggleProfileMenu() {
-             const menu = document.getElementById('profileMenu');
-             menu.classList.toggle('show');
+            const menu = document.getElementById('profileMenu');
+            menu.classList.toggle('show');
         }
 
         // --- UPDATE USER UI ---
         function updateUserUI(user) {
             const display = document.getElementById('userEmailDisplay');
-            if(display && user) {
+            if (display && user) {
                 display.innerText = user.email;
             }
         }
@@ -1281,12 +1283,14 @@
             if (el) el.innerText = text;
         }
 
-      window.addEventListener('load', () => {
-    // [NEW] Page load hote hi ek history state add kar diya
-    history.pushState({ page: 'home' }, '', window.location.href);
+        window.addEventListener('load', () => {
+            // [NEW] Page load hote hi ek history state add kar diya
+            history.pushState({
+                page: 'home'
+            }, '', window.location.href);
 
-    if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
-           const savedExam = localStorage.getItem('lastExam') || 'fourthgrade2025';
+            if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
+            const savedExam = localStorage.getItem('lastExam') || 'fourthgrade2025';
             const sel = document.getElementById('examSelect');
             if (sel) {
                 sel.value = savedExam;
@@ -1298,7 +1302,7 @@
                 if (typeof firebase !== 'undefined') {
                     // --- NAYA CODE YAHAN AAYA HAI ---
                     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-                    
+
                     db = firebase.database();
                     auth = firebase.auth();
 
@@ -1321,38 +1325,42 @@
             }
         });
 
-       // --- NEW BACK BUTTON LOGIC ---
-window.addEventListener('popstate', function(event) {
-    const rView = document.getElementById('resultView');
-    const sScreen = document.getElementById('searchScreen');
+        // --- NEW BACK BUTTON LOGIC ---
+        window.addEventListener('popstate', function(event) {
+            const rView = document.getElementById('resultView');
+            const sScreen = document.getElementById('searchScreen');
 
-    // 1. Agar Result View khula hai (Receipt dikh rahi hai)
-    if (rView && rView.style.display === 'block') {
-        rView.style.display = 'none';
-        if (sScreen) sScreen.style.display = 'block';
-        window.scrollTo(0, lastScrollY);
-        
-        // Result band hone ke baad wapas 'home' state maintain karein
-        // Taaki agla back press home page ka logic trigger kare
-        history.replaceState({ page: 'home' }, '', window.location.pathname);
-        return;
-    }
+            // 1. Agar Result View khula hai (Receipt dikh rahi hai)
+            if (rView && rView.style.display === 'block') {
+                rView.style.display = 'none';
+                if (sScreen) sScreen.style.display = 'block';
+                window.scrollTo(0, lastScrollY);
 
-    // 2. Agar hum Home/Search Screen par hain
-    if (hasInput()) {
-        // Agar fields me data hai:
-        resetAllFields(); // Fields saaf karein
-        toast("Fields Reset"); // User ko batayein (Optional)
-        
-        // [IMPORTANT] Wapas state push karein taaki page exit na ho
-        history.pushState({ page: 'home' }, '', window.location.href);
-    } else {
-        // 3. Agar Fields khali hain:
-        // Kuch mat karo. Browser natural back lega.
-        // Kyunki humne load par state push kiya tha, pehla back us state ko hata dega.
-        // Dusra back page se exit kar dega.
-    }
-});
+                // Result band hone ke baad wapas 'home' state maintain karein
+                // Taaki agla back press home page ka logic trigger kare
+                history.replaceState({
+                    page: 'home'
+                }, '', window.location.pathname);
+                return;
+            }
+
+            // 2. Agar hum Home/Search Screen par hain
+            if (hasInput()) {
+                // Agar fields me data hai:
+                resetAllFields(); // Fields saaf karein
+                toast("Fields Reset"); // User ko batayein (Optional)
+
+                // [IMPORTANT] Wapas state push karein taaki page exit na ho
+                history.pushState({
+                    page: 'home'
+                }, '', window.location.href);
+            } else {
+                // 3. Agar Fields khali hain:
+                // Kuch mat karo. Browser natural back lega.
+                // Kyunki humne load par state push kiya tha, pehla back us state ko hata dega.
+                // Dusra back page se exit kar dega.
+            }
+        });
 
         function toggleTheme() {
             document.body.classList.toggle('dark-mode');
@@ -1627,7 +1635,7 @@ window.addEventListener('popstate', function(event) {
             return found ? found.marks : "NA";
         }
 
-       function showReceipt(data, isUniversal) {
+        function showReceipt(data, isUniversal) {
             history.pushState({
                 view: 'result'
             }, '', '#result');
@@ -1652,15 +1660,15 @@ window.addEventListener('popstate', function(event) {
             const uniSec = document.getElementById('uniTableSection');
             const singleSec = document.getElementById('singleScoreSection');
             const rRollBox = document.getElementById('rRollBox');
-            
+
             // --- DATE ELEMENT SELECT ---
             const dateEl = document.getElementById('rExamDate');
 
             if (isUniversal) {
                 safeSetText('rTitle', "CANDIDATE PROFILE");
-                
+
                 // --- NEW LOGIC: HIDE DATE IN UNIVERSAL ---
-                if(dateEl) dateEl.style.display = 'none'; 
+                if (dateEl) dateEl.style.display = 'none';
 
                 if (singleSec) singleSec.classList.add('hide');
                 if (uniSec) uniSec.classList.remove('hide');
@@ -1701,13 +1709,13 @@ window.addEventListener('popstate', function(event) {
                         );
 
                         const canvasId = `chart_uni_${index}_${ex.examId}`;
-                        const hasGraph = (ex.examId === 'patwari2025' || ex.examId === 'vdo2025');
+                        const hasGraph = (ex.examId === 'patwari2025' || ex.examId === 'vdo2025' || ex.examId === 'fourthgrade2025');
 
                         const card = document.createElement('div');
                         card.className = 'uni-card';
 
                         let graphHtml = '';
-                      if (hasGraph) {
+                        if (hasGraph) {
                             graphHtml = `
                                 <div style="margin-top:2px; padding-top:2px; border-top:1px dashed #e2e8f0;">
                                     <div style="position: relative; height: 150px; width: 100%;">
@@ -1744,9 +1752,9 @@ window.addEventListener('popstate', function(event) {
             } else {
                 const examObj = EXAM_LIST.find(e => e.id === data.examId);
                 safeSetText('rTitle', examObj.name);
-                
+
                 // --- NEW LOGIC: SHOW DATE IN INDIVIDUAL ---
-                if(dateEl) dateEl.style.display = 'block'; 
+                if (dateEl) dateEl.style.display = 'block';
                 safeSetText('rExamDate', examObj.date || '');
 
                 if (singleSec) singleSec.classList.remove('hide');
@@ -1768,7 +1776,7 @@ window.addEventListener('popstate', function(event) {
 
             if (!isUniversal && graphSec) {
                 const currentExamId = data.examId;
-                if (currentExamId === 'patwari2025' || currentExamId === 'vdo2025') {
+                if (currentExamId === 'patwari2025' || currentExamId === 'vdo2025' || currentExamId === 'fourthgrade2025') {
                     graphSec.classList.remove('hide');
 
                     let finalScore = (currentExamId === 'patwari2025') ? (data.normalized || data.raw || 0) : (data.raw || 0);
@@ -1804,7 +1812,9 @@ window.addEventListener('popstate', function(event) {
 
         let activeCharts = {};
 
-      function renderDensityChart(canvasId, examId, userScore, cutoffScore) {
+        // Is function ke starting logic ko replace karo:
+
+        function renderDensityChart(canvasId, examId, userScore, cutoffScore) {
             const canvasElement = document.getElementById(canvasId);
             if (!canvasElement) return;
 
@@ -1824,10 +1834,20 @@ window.addEventListener('popstate', function(event) {
                 marksData = VDO_DENSITY.marks;
                 densityData = VDO_DENSITY.density;
                 maxExamMarks = 200;
-            } else {
+            }
+            // --- YE PART ADD KIYA GAYA HAI ---
+            else if (examId === 'fourthgrade2025' && typeof FOURTHGRADE_DENSITY !== 'undefined') {
+                marksData = FOURTHGRADE_DENSITY.marks;
+                densityData = FOURTHGRADE_DENSITY.density;
+                maxExamMarks = 200; // 4th Grade ka paper bhi 200 marks ka hai
+            }
+            // ---------------------------------
+            else {
                 if (canvasElement.parentElement) canvasElement.parentElement.style.display = 'none';
                 return;
             }
+
+            // ... baaki function same rahega ...
 
             const scatterData = marksData.map((m, i) => ({
                 x: m,
@@ -1938,8 +1958,13 @@ window.addEventListener('popstate', function(event) {
                             intersect: false,
                             position: 'nearest',
                             backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                            titleFont: { size: 11 },
-                            bodyFont: { size: 11, weight: 'bold' },
+                            titleFont: {
+                                size: 11
+                            },
+                            bodyFont: {
+                                size: 11,
+                                weight: 'bold'
+                            },
                             padding: 10,
                             filter: function(tooltipItem) {
                                 return tooltipItem.raw.y > 0.0001;
@@ -1982,7 +2007,9 @@ window.addEventListener('popstate', function(event) {
                                 }
                             }
                         },
-                        legend: { display: false }
+                        legend: {
+                            display: false
+                        }
                     },
                     scales: {
                         x: {
@@ -1993,17 +2020,31 @@ window.addEventListener('popstate', function(event) {
                             title: {
                                 display: true,
                                 text: `Final Marks (${maxExamMarks} → 0)`,
-                                font: { size: 9, weight: 'bold', family: 'Inter' },
+                                font: {
+                                    size: 9,
+                                    weight: 'bold',
+                                    family: 'Inter'
+                                },
                                 color: '#64748b'
                             },
-                            grid: { display: false },
-                            ticks: { font: { size: 9 } }
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 9
+                                }
+                            }
                         },
-                        y: { display: false, beginAtZero: true }
+                        y: {
+                            display: false,
+                            beginAtZero: true
+                        }
                     }
                 }
             });
         }
+
         function triggerUniversalSearch() {
             try {
                 const nameEl = document.getElementById('rName');
