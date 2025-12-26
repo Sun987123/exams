@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=no">
     <meta name="description" content="Dream-Link Official Exam Result Portal 2026">
-    <title>Dream-Link • Results</title>
+    <title>Dream-Link • RESULT Login</title>
     <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -111,18 +111,18 @@
             align-items: center;
         }
 
-       .profile-btn { 
+        .profile-btn {
             background: var(--surface);
             border: 1px solid var(--border);
-            width: 24px;
-            height: 24px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             color: var(--text-main);
-            font-size: 0.8rem;
+            font-size: 1.2rem;
             transition: 0.2s;
         }
 
@@ -660,6 +660,15 @@
             text-transform: uppercase;
         }
 
+        /* NEW DATE STYLE ADDED */
+        .uc-date {
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            text-align: right;
+        }
+
         .uc-body {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
@@ -1107,6 +1116,7 @@
                 <div class="rc-head">
                     <div class="rc-title" id="rTitle">EXAM NAME</div>
                     <div class="rc-sub">RSSB SCORE CARD</div>
+<div class="rc-sub" id="rExamDate" style="margin-top:4px; opacity:0.8; font-size:0.65rem;"></div>
                 </div>
                 <div class="rc-content">
                     <div class="info-grid">
@@ -1180,19 +1190,22 @@
                 id: 'patwari2025',
                 name: 'PATWAR 2025',
                 code: 'PATWAR',
-                badge: 'b-patwar'
+                badge: 'b-patwar',
+                date: 'EXAM • 17 AUG 2025'
             },
             {
                 id: 'vdo2025',
                 name: 'VDO 2025',
                 code: 'VDO',
-                badge: 'b-vdo'
+                badge: 'b-vdo',
+                date: 'EXAM • 2 NOV 2025'
             },
             {
                 id: 'fourthgrade2025',
                 name: '4TH GRADE',
                 code: '4TH GRADE',
-                badge: 'b-grade4'
+                badge: 'b-grade4',
+                date: 'EXAM • 19-21 SEP 2025'
             }
         ];
 
@@ -1644,6 +1657,7 @@
                         const catRank = ex.catrank ? `#${ex.catrank}` : '-';
                         const examInfo = EXAM_LIST.find(x => x.id === ex.examId);
                         const examName = examInfo ? examInfo.name : ex.examId;
+                        const examDate = examInfo ? (examInfo.date || '') : '';
 
                         const uniCutoff = getMyCutoff(
                             ex.examId,
@@ -1669,7 +1683,10 @@
                             `;
                         }
                         card.innerHTML = `
-                            <div class="uc-head"><span class="uc-title">${examName}</span></div>
+                            <div class="uc-head">
+    <span class="uc-title">${examName}</span>
+    <span class="uc-date">${examDate}</span>
+</div>
                             <div class="uc-body">
                                 <div class="uc-cell"><span class="uc-lbl">Roll</span><span class="uc-val">${ex.roll}</span></div>
                                 <div class="uc-cell"><span class="uc-lbl">Raw</span><span class="uc-val text-raw">${raw}</span></div>
@@ -1693,6 +1710,8 @@
             } else {
                 const examObj = EXAM_LIST.find(e => e.id === data.examId);
                 safeSetText('rTitle', examObj.name);
+                // Date Logic Added
+                safeSetText('rExamDate', examObj.date || '');
 
                 if (singleSec) singleSec.classList.remove('hide');
                 if (uniSec) uniSec.classList.add('hide');
