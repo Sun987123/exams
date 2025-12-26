@@ -1281,8 +1281,11 @@
             if (el) el.innerText = text;
         }
 
-       window.addEventListener('load', () => {
-            if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
+      window.addEventListener('load', () => {
+    // [NEW] Page load hote hi ek history state add kar diya
+    history.pushState({ page: 'home' }, '', window.location.href);
+
+    if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
            const savedExam = localStorage.getItem('lastExam') || 'fourthgrade2025';
             const sel = document.getElementById('examSelect');
             if (sel) {
@@ -1318,13 +1321,38 @@
             }
         });
 
-        window.addEventListener('popstate', function(event) {
-            const rView = document.getElementById('resultView');
-            const sScreen = document.getElementById('searchScreen');
-            if (rView) rView.style.display = 'none';
-            if (sScreen) sScreen.style.display = 'block';
-            window.scrollTo(0, lastScrollY);
-        });
+       // --- NEW BACK BUTTON LOGIC ---
+window.addEventListener('popstate', function(event) {
+    const rView = document.getElementById('resultView');
+    const sScreen = document.getElementById('searchScreen');
+
+    // 1. Agar Result View khula hai (Receipt dikh rahi hai)
+    if (rView && rView.style.display === 'block') {
+        rView.style.display = 'none';
+        if (sScreen) sScreen.style.display = 'block';
+        window.scrollTo(0, lastScrollY);
+        
+        // Result band hone ke baad wapas 'home' state maintain karein
+        // Taaki agla back press home page ka logic trigger kare
+        history.replaceState({ page: 'home' }, '', window.location.pathname);
+        return;
+    }
+
+    // 2. Agar hum Home/Search Screen par hain
+    if (hasInput()) {
+        // Agar fields me data hai:
+        resetAllFields(); // Fields saaf karein
+        toast("Fields Reset"); // User ko batayein (Optional)
+        
+        // [IMPORTANT] Wapas state push karein taaki page exit na ho
+        history.pushState({ page: 'home' }, '', window.location.href);
+    } else {
+        // 3. Agar Fields khali hain:
+        // Kuch mat karo. Browser natural back lega.
+        // Kyunki humne load par state push kiya tha, pehla back us state ko hata dega.
+        // Dusra back page se exit kar dega.
+    }
+});
 
         function toggleTheme() {
             document.body.classList.toggle('dark-mode');
