@@ -1714,7 +1714,7 @@ async function searchSingleExam(examId, roll, name, father, mother) {
             return found ? found.marks : "NA";
         }
 
-     function showReceipt(data, isUniversal) {
+   function showReceipt(data, isUniversal) {
             try { history.pushState({ view: 'result' }, '', '#result'); } catch (e) {}
 
             lastScrollY = window.scrollY;
@@ -1759,7 +1759,6 @@ async function searchSingleExam(examId, roll, name, father, mother) {
                 const cont = document.getElementById('uniCardsContainer');
                 if (cont) {
                     cont.innerHTML = '';
-                    // Sorting Logic
                     const examOrder = { 'fourthgrade2025': 1, 'vdo2025': 2, 'patwari2025': 3 };
                     data.exams.sort((a, b) => (examOrder[a.examId] || 99) - (examOrder[b.examId] || 99));
 
@@ -1772,15 +1771,41 @@ async function searchSingleExam(examId, roll, name, father, mother) {
                         const examInfo = EXAM_LIST.find(x => x.id === ex.examId);
                         const examName = examInfo ? examInfo.name : ex.examId;
                         const examDate = examInfo ? (examInfo.date || '') : '';
-                        const uniCutoff = getMyCutoff(ex.examId, ex.category || data.category, ex.gender || data.gender, ex.subcat || data.subcat);
+                        
+                        // Cutoff Calculation
+                        const ownCutoff = getMyCutoff(ex.examId, ex.category || data.category, ex.gender || data.gender, ex.subcat || data.subcat);
+                        // Get General Cutoff for Comparison (Force Category 'GEN' with same gender/subcat)
+                        const genCutoff = getMyCutoff(ex.examId, 'GEN', ex.gender || data.gender, ex.subcat || data.subcat);
+                        
                         const canvasId = `chart_uni_${index}_${ex.examId}`;
                         const hasGraph = (ex.examId === 'patwari2025' || ex.examId === 'vdo2025' || ex.examId === 'fourthgrade2025');
 
-                       // --- UNIVERSAL DV BOX LOGIC (FULL DETAIL) ---
+                        // --- LOGIC: Patwar Selection Rule (GEN vs Category) ---
+                        let isPatwarQualified = false;
+                        let selectedCategory = ex.category || data.category; // Default to own category
+
+                        if (ex.examId === 'patwari2025') {
+                            const scoreNum = parseFloat(final);
+                            const genCutNum = parseFloat(genCutoff);
+                            const ownCutNum = parseFloat(ownCutoff);
+
+                            // 1. Check if qualified in GENERAL
+                            if (!isNaN(genCutNum) && scoreNum >= genCutNum) {
+                                isPatwarQualified = true;
+                                selectedCategory = "GEN"; // Merit mein select hua
+                            } 
+                            // 2. Check if qualified in OWN Category
+                            else if (!isNaN(ownCutNum) && scoreNum >= ownCutNum) {
+                                isPatwarQualified = true;
+                                selectedCategory = ex.category || data.category; // Apni category mein hua
+                            }
+                        }
+
+                       // --- UNIVERSAL DV BOX RENDER ---
                         let dvHtml = '';
+                        
+                        // Scenario 1: VDO (Real Data)
                         if (ex.dvData) {
-                            // Hum same 'dv-box' class use karenge jo individual me hai
-                            // Style thoda adjust kiya taaki card ke andar fit ho jaye (margin: 6px)
                             dvHtml = `
                                 <div class="dv-box active" style="margin: 6px; border: 1px solid #fbbf24;">
                                     <div class="dv-header">
@@ -1788,37 +1813,34 @@ async function searchSingleExam(examId, roll, name, father, mother) {
                                         <span class="dv-tag">QUALIFIED</span>
                                     </div>
                                     <div class="dv-grid">
-                                        <div class="dv-item">
-                                            <span class="dv-lbl">Sel. Category</span>
-                                            <span class="dv-val">${ex.dvData.selectcat || ex.dvData.cat || '-'}</span>
-                                        </div>
-                                        <div class="dv-item">
-                                            <span class="dv-lbl">Marks</span>
-                                            <span class="dv-val">${ex.dvData.finalmarks || '-'}</span>
-                                        </div>
-                                        <div class="dv-item">
-                                            <span class="dv-lbl">App No</span>
-                                            <span class="dv-val">${ex.dvData.applicationno || '-'}</span>
-                                        </div>
-                                        <div class="dv-item">
-                                            <span class="dv-lbl">DOB</span>
-                                            <span class="dv-val">${ex.dvData.dob || '-'}</span>
-                                        </div>
+                                        <div class="dv-item"><span class="dv-lbl">Sel. Category</span><span class="dv-val">${ex.dvData.selectcat || ex.dvData.cat || '-'}</span></div>
+                                        <div class="dv-item"><span class="dv-lbl">Marks</span><span class="dv-val">${ex.dvData.finalmarks || '-'}</span></div>
+                                        <div class="dv-item"><span class="dv-lbl">App No</span><span class="dv-val">${ex.dvData.applicationno || '-'}</span></div>
+                                        <div class="dv-item"><span class="dv-lbl">DOB</span><span class="dv-val">${ex.dvData.dob || '-'}</span></div>
                                     </div>
-                                </div>
-                            `;
+                                </div>`;
+                        } 
+                        // Scenario 2: Patwar (Calculated Logic)
+                        else if (isPatwarQualified) {
+                             dvHtml = `
+                                <div class="dv-box active" style="margin: 6px; border: 1px solid #fbbf24;">
+                                    <div class="dv-header">
+                                        <span><i class="ph-bold ph-seal-check"></i> PROVISIONALLY SELECTED FOR DV</span>
+                                        <span class="dv-tag">QUALIFIED</span>
+                                    </div>
+                                    <div class="dv-grid">
+                                        <div class="dv-item"><span class="dv-lbl">Sel. Category</span><span class="dv-val">${selectedCategory}</span></div>
+                                        <div class="dv-item"><span class="dv-lbl">Marks</span><span class="dv-val">${finalFmt}</span></div>
+                                        <div class="dv-item"><span class="dv-lbl">App No</span><span class="dv-val">NOT PROVIDED</span></div>
+                                        <div class="dv-item"><span class="dv-lbl">DOB</span><span class="dv-val">NOT PROVIDED</span></div>
+                                    </div>
+                                </div>`;
                         }
 
-                        // --- UNIVERSAL GRAPH LOGIC ---
+                        // Graph HTML
                         let graphHtml = '';
                         if (hasGraph) {
-                            graphHtml = `
-                                <div style="margin-top:2px; padding-top:2px; border-top:1px dashed #e2e8f0;">
-                                    <div style="position: relative; height: 150px; width: 100%;">
-                                        <canvas id="${canvasId}"></canvas>
-                                    </div>
-                                </div>
-                            `;
+                            graphHtml = `<div style="margin-top:2px; padding-top:2px; border-top:1px dashed #e2e8f0;"><div style="position: relative; height: 150px; width: 100%;"><canvas id="${canvasId}"></canvas></div></div>`;
                         }
 
                         // Create Card
@@ -1835,7 +1857,7 @@ async function searchSingleExam(examId, roll, name, father, mother) {
                                 <div class="uc-cell"><span class="uc-lbl">Final</span><span class="uc-val text-score">${finalFmt}</span></div>
                                 <div class="uc-cell"><span class="uc-lbl">Cat.Rank</span><span class="uc-val text-catrank">${catRank}</span></div>
                                 <div class="uc-cell"><span class="uc-lbl">Merit</span><span class="uc-val text-catrank">${meritVal}</span></div>
-                                <div class="uc-cell"><span class="uc-lbl" style="color:#ea580c;">Cutoff</span><span class="uc-val" style="color:#ea580c; font-weight:800;">${uniCutoff}</span></div>
+                                <div class="uc-cell"><span class="uc-lbl" style="color:#ea580c;">Cutoff</span><span class="uc-val" style="color:#ea580c; font-weight:800;">${ownCutoff}</span></div>
                             </div>
                             ${dvHtml} 
                             ${graphHtml}
@@ -1843,7 +1865,7 @@ async function searchSingleExam(examId, roll, name, father, mother) {
                         cont.appendChild(card);
 
                         if (hasGraph) {
-                            setTimeout(() => renderDensityChart(canvasId, ex.examId, final, uniCutoff), 100);
+                            setTimeout(() => renderDensityChart(canvasId, ex.examId, final, ownCutoff), 100);
                         }
                     });
                 }
@@ -1867,16 +1889,49 @@ async function searchSingleExam(examId, roll, name, father, mother) {
                 safeSetText('rFinal', parseFloat(finalScore).toFixed(4));
                 safeSetText('rRank', data.merit ? `#${data.merit}` : 'N/A');
                 safeSetText('rCatRank', data.catrank ? `#${data.catrank}` : 'N/A');
+                
+                // Cutoffs
                 const cutoffMarks = getMyCutoff(data.examId, data.category, data.gender, data.subcat);
+                const genCutoffMarks = getMyCutoff(data.examId, 'GEN', data.gender, data.subcat);
+                
                 safeSetText('rCutoff', cutoffMarks);
 
-                // --- INDIVIDUAL DV LOGIC ---
-                if (data.dvData) {
+                // --- INDIVIDUAL DV LOGIC (MODIFIED) ---
+                let isPatwarQualified = false;
+                let selectedCategory = data.category; // Default
+
+                // Check qualification
+                if (data.examId === 'patwari2025') {
+                    const fScore = parseFloat(finalScore);
+                    const gCut = parseFloat(genCutoffMarks);
+                    const oCut = parseFloat(cutoffMarks);
+
+                    if (!isNaN(gCut) && fScore >= gCut) {
+                        isPatwarQualified = true;
+                        selectedCategory = "GEN";
+                    } else if (!isNaN(oCut) && fScore >= oCut) {
+                        isPatwarQualified = true;
+                        selectedCategory = data.category;
+                    }
+                }
+
+                if (data.dvData || isPatwarQualified) {
                     dvBox.classList.add('active'); // Show DV Box
-                    safeSetText('dvSelCat', data.dvData.selectcat || data.dvData.cat || '-');
-                    safeSetText('dvMarks', data.dvData.finalmarks || '-');
-                    safeSetText('dvApp', data.dvData.applicationno || '-');
-                    safeSetText('dvDob', data.dvData.dob || '-');
+                    
+                    if (data.dvData) {
+                        // VDO Logic (Has Real Data)
+                        safeSetText('dvSelCat', data.dvData.selectcat || data.dvData.cat || '-');
+                        safeSetText('dvMarks', data.dvData.finalmarks || '-');
+                        safeSetText('dvApp', data.dvData.applicationno || '-');
+                        safeSetText('dvDob', data.dvData.dob || '-');
+                    } else {
+                        // Patwar Logic (New Request)
+                        safeSetText('dvSelCat', selectedCategory);
+                        safeSetText('dvMarks', parseFloat(finalScore).toFixed(4));
+                        safeSetText('dvApp', 'NOT PROVIDED');
+                        safeSetText('dvDob', 'NOT PROVIDED');
+                    }
+
                 } else {
                     dvBox.classList.remove('active'); // Hide DV Box
                 }
@@ -1890,7 +1945,7 @@ async function searchSingleExam(examId, roll, name, father, mother) {
                 }
             }
 
-            // Button Logic (Check All / Print)
+            // Button Logic
             const uniBtnCont = document.getElementById('viewUniBtnContainer');
             const btnCheckAll = document.getElementById('btnCheckAll');
             if (uniBtnCont) {
