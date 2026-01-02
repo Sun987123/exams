@@ -3,108 +3,118 @@
 // 1. DATA STORE
 const CUTOFF_DATA = {
     'vdo2025': [
-        { cat: 'GEN', sub: 'GEN', marks: '166.5399', rem: 'SAME MARKS' },
-        { cat: 'GEN', sub: 'FEM', marks: '161.0145', rem: '' },
-        { cat: 'GEN', sub: 'WID.', marks: '111.2681', rem: '' },
-        { cat: 'GEN', sub: 'EX',  marks: '141.6486', rem: '' },
-        { cat: 'SC',  sub: 'GEN', marks: '151.8478', rem: '' },
-        { cat: 'SC',  sub: 'FEM', marks: '144.6558', rem: '' },
-        { cat: 'SC',  sub: 'WID.', marks: '91.6848',  rem: '' },
-        { cat: 'SC',  sub: 'EX',  marks: '79.7645',  rem: '' },
-        { cat: 'ST',  sub: 'GEN', marks: '148.0978', rem: '' },
-        { cat: 'ST',  sub: 'FEM', marks: '144.1123', rem: '' },
-        { cat: 'ST',  sub: 'WID.', marks: '84.0399',  rem: '' },
-        { cat: 'ST',  sub: 'EX',  marks: '70.5797',  rem: '' },
-        { cat: 'EWS', sub: 'GEN', marks: '161.5399', rem: 'SAME MARKS' },
-        { cat: 'EWS', sub: 'FEM', marks: '158.4058', rem: '' },
-        { cat: 'EWS', sub: 'WID.', marks: '105.4167', rem: '' },
-        { cat: 'EWS', sub: 'EX',  marks: '132.7174', rem: '' },
-        { cat: 'OBC', sub: 'GEN', marks: '164.7464', rem: '' },
-        { cat: 'OBC', sub: 'FEM', marks: '157.9891', rem: '' },
-        { cat: 'OBC', sub: 'WID.', marks: '107.3732', rem: '' },
-        { cat: 'OBC', sub: 'EX',  marks: '133.5688', rem: '' },
-        { cat: 'MBC', sub: 'GEN', marks: '158.5145', rem: '' },
-        { cat: 'MBC', sub: 'FEM', marks: '157.6087', rem: '' },
-        { cat: 'BLV', sub: '', marks: '99.3297', rem: '' },
-        { cat: 'HI',  sub: '', marks: '78.2065', rem: '' },
-        { cat: 'LD/CP', sub: '', marks: '126.6123', rem: '' },
-        { cat: 'SP',  sub: '', marks: '141.3768', rem: '' },
+        { cat: 'GEN', sub: 'GEN', marks: '166.5399', final: '-' },
+        { cat: 'GEN', sub: 'FEM', marks: '161.0145', final: '-' },
+        { cat: 'GEN', sub: 'WID.', marks: '111.2681', final: '-' },
+        { cat: 'GEN', sub: 'EX',  marks: '141.6486', final: '-' },
+        { cat: 'SC',  sub: 'GEN', marks: '151.8478', final: '-' },
+        { cat: 'SC',  sub: 'FEM', marks: '144.6558', final: '-' },
+        { cat: 'SC',  sub: 'WID.', marks: '91.6848',  final: '-' },
+        { cat: 'SC',  sub: 'EX',  marks: '79.7645',  final: '-' },
+        { cat: 'ST',  sub: 'GEN', marks: '148.0978', final: '-' },
+        { cat: 'ST',  sub: 'FEM', marks: '144.1123', final: '-' },
+        { cat: 'ST',  sub: 'WID.', marks: '84.0399',  final: '-' },
+        { cat: 'ST',  sub: 'EX',  marks: '70.5797',  final: '-' },
+        { cat: 'EWS', sub: 'GEN', marks: '161.5399', final: '-' },
+        { cat: 'EWS', sub: 'FEM', marks: '158.4058', final: '-' },
+        { cat: 'EWS', sub: 'WID.', marks: '105.4167', final: '-' },
+        { cat: 'EWS', sub: 'EX',  marks: '132.7174', final: '-' },
+        { cat: 'OBC', sub: 'GEN', marks: '164.7464', final: '-' },
+        { cat: 'OBC', sub: 'FEM', marks: '157.9891', final: '-' },
+        { cat: 'OBC', sub: 'WID.', marks: '107.3732', final: '-' },
+        { cat: 'OBC', sub: 'EX',  marks: '133.5688', final: '-' },
+        { cat: 'MBC', sub: 'GEN', marks: '158.5145', final: '-' },
+        { cat: 'MBC', sub: 'FEM', marks: '157.6087', final: '-' },
+        { cat: 'BLV', sub: '', marks: '99.3297', final: '-' },
+        { cat: 'HI',  sub: '', marks: '78.2065', final: '-' },
+        { cat: 'LD/CP', sub: '', marks: '126.6123', final: '-' },
+        { cat: 'SP',  sub: '', marks: '141.3768', final: '-' },
     ],
     
     'patwari2025': [
-        { cat: 'GEN', sub: 'GEN', marks: '249.2380', rem: '' },
-        { cat: 'GEN', sub: 'FEM', marks: '235.2158', rem: '' },
-        { cat: 'GEN', sub: 'WID.', marks: '121.3939', rem: '' },
-        { cat: 'GEN', sub: 'DIV.', marks: '201.4007', rem: '' },
-        { cat: 'GEN', sub: 'EX',  marks: '184.9111', rem: '' },
-        { cat: 'EWS', sub: 'GEN', marks: '241.5566', rem: 'SAME MARKS' },
-        { cat: 'EWS', sub: 'FEM', marks: '225.8819', rem: '' },
-        { cat: 'EWS', sub: 'WID.', marks: '104.9198', rem: '' },
-        { cat: 'EWS', sub: 'EX',  marks: '138.6297', rem: '' },
-        { cat: 'SC', sub: 'GEN', marks: '226.7963', rem: '' },
-        { cat: 'SC', sub: 'FEM', marks: '204.9607', rem: '' },
-        { cat: 'SC', sub: 'WID.', marks: '72.1450', rem: '' },
-        { cat: 'SC', sub: 'DIV.', marks: '165.2664', rem: '' },
-        { cat: 'SC', sub: 'EX',  marks: '12.0149', rem: 'ALL' },
-        { cat: 'ST', sub: 'GEN', marks: '223.5950', rem: '' },
-        { cat: 'ST', sub: 'FEM', marks: '203.3621', rem: '' },
-        { cat: 'ST', sub: 'WID.', marks: '63.4914', rem: '' },
-        { cat: 'ST', sub: 'DIV.', marks: '159.6081', rem: '' },
-        { cat: 'ST', sub: 'EX',  marks: '34.6089', rem: 'ALL' },
-        { cat: 'OBC', sub: 'GEN', marks: '244.6640', rem: '' },
-        { cat: 'OBC', sub: 'FEM', marks: '229.2246', rem: '' },
-        { cat: 'OBC', sub: 'WID.', marks: '104.9505', rem: '' },
-        { cat: 'OBC', sub: 'DIV.', marks: '188.7559', rem: '' },
-        { cat: 'OBC', sub: 'EX',  marks: '166.7993', rem: '' },
-        { cat: 'MBC', sub: 'GEN', marks: '236.6958', rem: '' },
-        { cat: 'MBC', sub: 'FEM', marks: '206.0761', rem: '' },
-        { cat: 'MBC', sub: 'WID.', marks: '96.4913', rem: '' },
-        { cat: 'MBC', sub: 'EX',  marks: '141.4716', rem: '' },
-        { cat: 'SAH', sub: 'GEN', marks: '90.5457', rem: '' },
-        { cat: 'SAH', sub: 'FEM', marks: '80.8097', rem: 'AGAINST WID & DIV' },
-        { cat: 'SAH', sub: 'WID', marks: 'NA', rem: '' },
-        { cat: 'SAH', sub: 'DIV', marks: 'NA', rem: '' },
-        { cat: 'SAH', sub: 'EX',  marks: 'NA', rem: '' },
-        { cat: 'LD/CP', sub: '', marks: '162.4033', rem: '' },
-        { cat: 'SP',    sub: '', marks: '200.0665', rem: '' },
+        // DATA UPDATED FROM IMAGES
+        { cat: 'GEN', sub: 'GEN', marks: '249.2380', final: '253.4579' },
+        { cat: 'GEN', sub: 'FEM', marks: '235.2158', final: '241.0731' },
+        { cat: 'GEN', sub: 'WID.', marks: '121.3939', final: '133.1202' },
+        { cat: 'GEN', sub: 'DIV.', marks: '201.4007', final: '212.2076' },
+        { cat: 'GEN', sub: 'EX',  marks: '184.9111', final: '196.1511' },
+        
+        { cat: 'EWS', sub: 'GEN', marks: '241.5566', final: '247.2884' },
+        { cat: 'EWS', sub: 'FEM', marks: '225.8819', final: '234.1867' },
+        { cat: 'EWS', sub: 'WID.', marks: '104.9198', final: '121.0431' },
+        { cat: 'EWS', sub: 'DIV.', marks: '-',        final: '-' },
+        { cat: 'EWS', sub: 'EX',  marks: '138.6297', final: '162.2747' },
+        
+        { cat: 'SC', sub: 'GEN', marks: '226.7963', final: '233.6950' },
+        { cat: 'SC', sub: 'FEM', marks: '204.9607', final: '213.1954' },
+        { cat: 'SC', sub: 'WID.', marks: '72.1450', final: '90.4028' },
+        { cat: 'SC', sub: 'DIV.', marks: '165.2664', final: '183.7391' },
+        { cat: 'SC', sub: 'EX',  marks: '12.0149', final: '93.0183' },
+        
+        { cat: 'ST', sub: 'GEN', marks: '223.5950', final: '230.9553' },
+        { cat: 'ST', sub: 'FEM', marks: '203.3621', final: '211.9127' },
+        { cat: 'ST', sub: 'WID.', marks: '63.4914', final: '80.1050' },
+        { cat: 'ST', sub: 'DIV.', marks: '159.6081', final: '166.1268' },
+        { cat: 'ST', sub: 'EX',  marks: '34.6089', final: '43.6344' },
+        
+        { cat: 'OBC', sub: 'GEN', marks: '244.6640', final: '250.0971' },
+        { cat: 'OBC', sub: 'FEM', marks: '229.2246', final: '236.0871' },
+        { cat: 'OBC', sub: 'WID.', marks: '104.9505', final: '122.7591' },
+        { cat: 'OBC', sub: 'DIV.', marks: '188.7559', final: '199.7535' },
+        { cat: 'OBC', sub: 'EX',  marks: '166.7993', final: '181.2426' },
+        
+        { cat: 'MBC', sub: 'GEN', marks: '236.6958', final: '243.3556' },
+        { cat: 'MBC', sub: 'FEM', marks: '206.0761', final: '215.5190' },
+        { cat: 'MBC', sub: 'WID.', marks: '96.4913', final: '125.3994' },
+        { cat: 'MBC', sub: 'DIV.', marks: '-',        final: '-' },
+        { cat: 'MBC', sub: 'EX',  marks: '141.4716', final: '160.5306' },
+        
+        { cat: 'SAH', sub: 'GEN', marks: '90.5457', final: '106.7845' },
+        { cat: 'SAH', sub: 'FEM', marks: '80.8097', final: '85.9143' },
+        { cat: 'SAH', sub: 'WID', marks: 'NA', final: 'NA' },
+        { cat: 'SAH', sub: 'DIV', marks: 'NA', final: 'NA' },
+        { cat: 'SAH', sub: 'EX',  marks: 'NA', final: 'NA' },
+        
+        { cat: 'LD/CP', sub: '', marks: '162.4033', final: '162.4033' },
+        { cat: 'SP',    sub: '', marks: '200.0665', final: '205.0026' },
     ],
 
     'fourthgrade2025': [
-        { cat: 'GEN', sub: 'GEN', marks: '249.2380', rem: '' },
-        { cat: 'GEN', sub: 'FEM', marks: '235.2158', rem: '' },
-        { cat: 'GEN', sub: 'WID.', marks: '121.3939', rem: '' },
-        { cat: 'GEN', sub: 'DIV.', marks: '201.4007', rem: '' },
-        { cat: 'GEN', sub: 'EX',  marks: '184.9111', rem: '' },
-        { cat: 'EWS', sub: 'GEN', marks: '241.5566', rem: 'SAME MARKS' },
-        { cat: 'EWS', sub: 'FEM', marks: '225.8819', rem: '' },
-        { cat: 'EWS', sub: 'WID.', marks: '104.9198', rem: '' },
-        { cat: 'EWS', sub: 'EX',  marks: '138.6297', rem: '' },
-        { cat: 'SC', sub: 'GEN', marks: '226.7963', rem: '' },
-        { cat: 'SC', sub: 'FEM', marks: '204.9607', rem: '' },
-        { cat: 'SC', sub: 'WID.', marks: '72.1450', rem: '' },
-        { cat: 'SC', sub: 'DIV.', marks: '165.2664', rem: '' },
-        { cat: 'SC', sub: 'EX',  marks: '12.0149', rem: 'ALL' },
-        { cat: 'ST', sub: 'GEN', marks: '223.5950', rem: '' },
-        { cat: 'ST', sub: 'FEM', marks: '203.3621', rem: '' },
-        { cat: 'ST', sub: 'WID.', marks: '63.4914', rem: '' },
-        { cat: 'ST', sub: 'DIV.', marks: '159.6081', rem: '' },
-        { cat: 'ST', sub: 'EX',  marks: '34.6089', rem: 'ALL' },
-        { cat: 'OBC', sub: 'GEN', marks: '144.6640', rem: '' },
-        { cat: 'OBC', sub: 'FEM', marks: '229.2246', rem: '' },
-        { cat: 'OBC', sub: 'WID.', marks: '104.9505', rem: '' },
-        { cat: 'OBC', sub: 'DIV.', marks: '188.7559', rem: '' },
-        { cat: 'OBC', sub: 'EX',  marks: '166.7993', rem: '' },
-        { cat: 'MBC', sub: 'GEN', marks: '236.6958', rem: '' },
-        { cat: 'MBC', sub: 'FEM', marks: '206.0761', rem: '' },
-        { cat: 'MBC', sub: 'WID.', marks: '96.4913', rem: '' },
-        { cat: 'MBC', sub: 'EX',  marks: '141.4716', rem: '' },
-        { cat: 'SAH', sub: 'GEN', marks: '90.5457', rem: '' },
-        { cat: 'SAH', sub: 'FEM', marks: '80.8097', rem: 'AGAINST WID & DIV' },
-        { cat: 'SAH', sub: 'WID', marks: 'NA', rem: '' },
-        { cat: 'SAH', sub: 'DIV', marks: 'NA', rem: '' },
-        { cat: 'SAH', sub: 'EX',  marks: 'NA', rem: '' },
-        { cat: 'LD/CP', sub: '', marks: '162.4033', rem: '' },
-        { cat: 'SP',    sub: '', marks: '200.0665', rem: '' },
+        { cat: 'GEN', sub: 'GEN', marks: '249.2380', final: '-' },
+        { cat: 'GEN', sub: 'FEM', marks: '235.2158', final: '-' },
+        { cat: 'GEN', sub: 'WID.', marks: '121.3939', final: '-' },
+        { cat: 'GEN', sub: 'DIV.', marks: '201.4007', final: '-' },
+        { cat: 'GEN', sub: 'EX',  marks: '184.9111', final: '-' },
+        { cat: 'EWS', sub: 'GEN', marks: '241.5566', final: '-' },
+        { cat: 'EWS', sub: 'FEM', marks: '225.8819', final: '-' },
+        { cat: 'EWS', sub: 'WID.', marks: '104.9198', final: '-' },
+        { cat: 'EWS', sub: 'EX',  marks: '138.6297', final: '-' },
+        { cat: 'SC', sub: 'GEN', marks: '226.7963', final: '-' },
+        { cat: 'SC', sub: 'FEM', marks: '204.9607', final: '-' },
+        { cat: 'SC', sub: 'WID.', marks: '72.1450', final: '-' },
+        { cat: 'SC', sub: 'DIV.', marks: '165.2664', final: '-' },
+        { cat: 'SC', sub: 'EX',  marks: '12.0149', final: '-' },
+        { cat: 'ST', sub: 'GEN', marks: '223.5950', final: '-' },
+        { cat: 'ST', sub: 'FEM', marks: '203.3621', final: '-' },
+        { cat: 'ST', sub: 'WID.', marks: '63.4914', final: '-' },
+        { cat: 'ST', sub: 'DIV.', marks: '159.6081', final: '-' },
+        { cat: 'ST', sub: 'EX',  marks: '34.6089', final: '-' },
+        { cat: 'OBC', sub: 'GEN', marks: '144.6640', final: '-' },
+        { cat: 'OBC', sub: 'FEM', marks: '229.2246', final: '-' },
+        { cat: 'OBC', sub: 'WID.', marks: '104.9505', final: '-' },
+        { cat: 'OBC', sub: 'DIV.', marks: '188.7559', final: '-' },
+        { cat: 'OBC', sub: 'EX',  marks: '166.7993', final: '-' },
+        { cat: 'MBC', sub: 'GEN', marks: '236.6958', final: '-' },
+        { cat: 'MBC', sub: 'FEM', marks: '206.0761', final: '-' },
+        { cat: 'MBC', sub: 'WID.', marks: '96.4913', final: '-' },
+        { cat: 'MBC', sub: 'EX',  marks: '141.4716', final: '-' },
+        { cat: 'SAH', sub: 'GEN', marks: '90.5457', final: '-' },
+        { cat: 'SAH', sub: 'FEM', marks: '80.8097', final: '-' },
+        { cat: 'SAH', sub: 'WID', marks: 'NA', final: '-' },
+        { cat: 'SAH', sub: 'DIV', marks: 'NA', final: '-' },
+        { cat: 'SAH', sub: 'EX',  marks: 'NA', final: '-' },
+        { cat: 'LD/CP', sub: '', marks: '162.4033', final: '-' },
+        { cat: 'SP',    sub: '', marks: '200.0665', final: '-' },
     ]
 };
 
@@ -117,7 +127,7 @@ const EXAM_NAMES = {
 };
 
 
-// 3. LOGIC FUNCTION
+// 3. LOGIC FUNCTION - TABLE STRUCTURE MODIFIED HERE
 function updateEmptyStateContent(examId) {
     const container = document.getElementById('emptyState');
     if (!container) return;
@@ -157,8 +167,12 @@ function updateEmptyStateContent(examId) {
             rowsHtml += `<td class="cat-sub">${row.sub}</td>`;
         }
 
+        // --- CHANGE 1: DISPLAY MARKS ---
         rowsHtml += `<td class="val-marks">${row.marks}</td>`;
-        rowsHtml += `<td class="val-rem">${row.rem}</td>`;
+        
+        // --- CHANGE 2: DISPLAY FINAL CUTOFF INSTEAD OF REMARKS ---
+        // Added Green Color and Bold weight for emphasis
+        rowsHtml += `<td class="val-marks" style="color:#15803d; font-weight:800; font-family:'JetBrains Mono';">${row.final || '-'}</td>`;
         rowsHtml += `</tr>`;
     });
 
@@ -172,8 +186,8 @@ function updateEmptyStateContent(examId) {
                 <thead>
                     <tr>
                         <th colspan="2">CATEGORY</th>
-                        <th>Cutoff</th>
-                        <th>REMARKS</th>
+                        <th>PRE DV CUTOFF</th>
+                        <th>FINAL CUTOFF</th>
                     </tr>
                 </thead>
                 <tbody>
