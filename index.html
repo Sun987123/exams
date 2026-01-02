@@ -495,7 +495,7 @@
             flex-direction: column;
             align-items: center;
             padding-top: 16px;
-            padding-bottom: 40px;
+            padding-bottom: 10px;
         }
 
         .receipt-card {
@@ -530,11 +530,11 @@
             text-transform: uppercase;
         }
 
-        .rc-content {
-            padding: 16px;
+      .rc-content {
+            /* Top/Bottom 12px, Left/Right 24px (Thoda andar kiya) */
+            padding: 12px 12px 4px 12px; 
             background: #fff;
         }
-
         .info-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -640,19 +640,52 @@
         }
 
         .uni-card {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
+            background: #fff;
+            /* Default colors (fallback) */
+            --theme-border: #e2e8f0;
+            --theme-header-bg: #f8fafc;
+
+            /* Use variables for border */
+            border: 1px solid var(--theme-border);
+            border-radius: 8px;
             overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        /* --- EXAM COLOR THEMES --- */
+        /* VDO 2025 - Blue Theme */
+        .exam-theme-vdo2025 {
+            --theme-border: #3b82f6;
+            /* Solid Blue */
+            --theme-header-bg: #eff6ff;
+            /* Light Blue BG */
+        }
+
+        /* PATWARI 2025 - Green Theme */
+        .exam-theme-patwari2025 {
+            --theme-border: #22c55e;
+            /* Solid Green */
+            --theme-header-bg: #f0fdf4;
+            /* Light Green BG */
+        }
+
+        /* 4TH GRADE 2025 - Purple Theme */
+        .exam-theme-fourthgrade2025 {
+            --theme-border: #a855f7;
+            /* Solid Purple */
+            --theme-header-bg: #faf5ff;
+            /* Light Purple BG */
         }
 
         .uc-head {
-            background: #f1f5f9;
-            padding: 4px 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #e2e8f0;
+            padding: 8px 12px;
+            /* Use variables for background and border */
+            background: var(--theme-header-bg);
+            border-bottom: 1px solid var(--theme-border);
         }
 
         .uc-title {
@@ -1070,95 +1103,62 @@
             font-family: 'Inter', sans-serif;
         }
 
-        /* --- FINAL PRINT SETTINGS (FIXED OVERLAP & LAYOUT) --- */
+      /* --- FINAL PRINT SETTINGS (FIXED) --- */
         @media print {
             @page {
-                margin: 10px;
+                margin: 0; /* Page margin 0 kiya */
                 size: auto;
             }
 
-            body {
+            body, html {
                 background-color: #ffffff;
-                visibility: hidden;
-                height: auto !important;
+                height: 100%;
+                margin: 0 !important;
+                padding: 0 !important;
                 overflow: visible !important;
             }
 
-            /* Sab kuch chupao */
-            .app-header,
-            .search-container,
-            .control-panel,
-            .toast,
-            .btn-clear,
-            #viewUniBtnContainer {
+            /* Hide UI Elements */
+            .app-header, .search-container, .control-panel, .toast, .btn-clear, #viewUniBtnContainer {
                 display: none !important;
             }
 
-            /* Sirf Result dikhao */
-            #resultView,
-            #receiptArea,
-            #receiptArea * {
-                visibility: visible;
-            }
-
-            /* Layout Container */
+            /* Show Result */
             #resultView {
-                position: absolute;
-                left: 0;
-                top: 0;
+                display: block !important;
+                position: static !important; /* Absolute hataya */
                 width: 100%;
                 height: auto !important;
-                min-height: 0 !important;
-                display: block !important;
+                overflow: visible !important;
                 background: white;
-                padding: 0 !important;
-                margin: 0 !important;
-                z-index: 9999;
             }
 
-            /* Receipt Card Size */
+            /* Receipt Card - Full Width & Zoomed */
             .receipt-card {
-                width: 500px !important;
-                max-width: 100% !important;
-                margin: 5px auto !important;
-                border: 2px solid #0f172a !important;
-                border-radius: 0 !important;
+                width: 95% !important; /* Thoda aur badhaya */
+                max-width: none !important;
+                margin: 5px auto !important; /* Top margin kam kiya */
+                border: none !important;
                 box-shadow: none !important;
+                zoom: 1.1; /* Thoda zoom adjust kiya taaki cut na ho */
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
                 break-inside: avoid;
             }
 
-            .rc-head {
-                background: #059669 !important;
-                color: white !important;
-                padding: 10px !important;
-            }
-
-            .ig-val {
-                font-size: 0.85rem !important;
-            }
-
-            .sp-val {
-                font-size: 1rem !important;
-            }
-
-            /* --- GRAPH SECTION FIX (GAP ADDED) --- */
-            #graphSection:not(.hide) {
-                display: block !important;
-                width: 100% !important;
-                height: 170px !important;
-                /* Height thodi badhai */
-                margin-top: 16px !important;
-
-                /* Yeh line overlap rokegi - Bottom me gap diya */
-                margin-bottom: 30px !important;
-                padding-bottom: 10px !important;
-
-                border-top: 1px solid #ccc !important;
+            .uni-card {
                 break-inside: avoid;
                 page-break-inside: avoid;
+                border: 1px solid #e2e8f0 !important; /* Border color fixed */
+                margin-bottom: 5px !important;
             }
+            
+            /* Canvas Chart Fix */
+            #graphSection {
+                break-inside: avoid; 
+                page-break-inside: avoid;
+            }
+        }
 
             /* --- FOOTER FIX --- */
             .rc-footer {
@@ -1180,10 +1180,9 @@
                 height: 100% !important;
             }
 
-            .uni-card {
+           .uni-card {
                 break-inside: avoid;
                 page-break-inside: avoid;
-                border: 1px solid #000 !important;
                 margin-bottom: 5px !important;
             }
 
@@ -2009,163 +2008,193 @@
             return found.marks;
         }
 
-        function showReceipt(data, isUniversal) {
-            try {
-                history.pushState({
-                    view: 'result'
-                }, '', '#result');
-            } catch (e) {}
+     function showReceipt(data, isUniversal) {
+    try { history.pushState({ view: 'result' }, '', '#result'); } catch (e) {}
 
-            lastScrollY = window.scrollY;
-            document.getElementById('searchScreen').style.display = 'none';
-            document.getElementById('resultView').style.display = 'block';
-            window.scrollTo(0, 0);
+    lastScrollY = window.scrollY;
+    document.getElementById('searchScreen').style.display = 'none';
+    document.getElementById('resultView').style.display = 'block';
+    window.scrollTo(0, 0);
 
-            // --- BASIC DETAILS ---
-            safeSetText('rDate', new Date().toLocaleDateString('en-GB'));
-            safeSetText('rName', data.candidate || '-');
-            safeSetText('rFather', data.father || '-');
-            safeSetText('rMother', data.mother || '-');
-            safeSetText('rCat', data.category || '-');
-            safeSetText('rGender', data.gender || '-');
+    // --- BASIC DETAILS ---
+    safeSetText('rDate', new Date().toLocaleDateString('en-GB'));
+    safeSetText('rName', data.candidate || '-');
+    safeSetText('rFather', data.father || '-');
+    safeSetText('rMother', data.mother || '-');
+    safeSetText('rCat', data.category || '-');
+    safeSetText('rGender', data.gender || '-');
+    
+    if(!isUniversal) safeSetText('rGenderDisp', data.gender || '-');
 
-            // Note: rGenderDisp ab Individual view me nahi use hoga, sirf Universal me ho sakta h
+    const isTsp = (data.tsp && (data.tsp === true || String(data.tsp).toLowerCase() === 'yes'));
+    safeSetText('rArea', isTsp ? "TSP" : "NTSP");
+    safeSetText('rSubCat', (data.subcat && data.subcat.trim() !== "") ? data.subcat : "-");
 
-            const isTsp = (data.tsp && (data.tsp === true || String(data.tsp).toLowerCase() === 'yes'));
-            safeSetText('rArea', isTsp ? "TSP" : "NTSP");
-            safeSetText('rSubCat', (data.subcat && data.subcat.trim() !== "") ? data.subcat : "-");
+    // --- ELEMENT REFS ---
+    const singleSec = document.getElementById('singleScoreSection');
+    const statusWrapper = document.getElementById('statusWrapper');
+    const graphSec = document.getElementById('graphSection');
+    const uniSec = document.getElementById('uniTableSection');
+    const rRollBox = document.getElementById('rRollBox');
+    const dateEl = document.getElementById('rExamDate');
 
-            // --- ELEMENT REFS ---
-            const singleSec = document.getElementById('singleScoreSection');
-            const statusWrapper = document.getElementById('statusWrapper');
-            const graphSec = document.getElementById('graphSection');
-            const uniSec = document.getElementById('uniTableSection');
-            const rRollBox = document.getElementById('rRollBox');
-            const dateEl = document.getElementById('rExamDate');
+    // --- HELPER: COMPACT BOX (Updated for Final Fail) ---
+    const createLongBox = (type, cutoff, userMarks, dataObj, statusText) => {
+        const isFinal = type === 'final';
+        const isFailPre = type === 'fail'; 
+        const isFailFinal = type === 'fail_final'; // NEW TYPE
+        const isFail = isFailPre || isFailFinal;
 
-            // --- NEW HELPER: COMPACT & SINGLE LINE BOX ---
-            const createLongBox = (type, cutoff, userMarks, dataObj, statusText) => {
-                const isFinal = type === 'final';
+        // Colors logic
+        let borderColor, bgColor, textColor, icon;
 
-                // Colors & Theme
-                let borderColor = isFinal ? '#22c55e' : '#fbbf24';
-                let bgColor = isFinal ? '#f0fdf4' : '#fffbeb';
-                let textColor = isFinal ? '#15803d' : '#b45309';
-                let icon = isFinal ? 'ph-medal' : 'ph-seal-check';
+        if (isFail) {
+            // FAIL STYLE (Red/Gray)
+            borderColor = '#e5e7eb'; 
+            bgColor = '#f8fafc';     
+            textColor = '#64748b';   
+            icon = 'ph-x-circle';    
+            statusText = isFailFinal ? 'NOT SELECTED' : 'NOT QUALIFIED'; 
+        } else if (isFinal) {
+            // FINAL SELECTED
+            borderColor = '#22c55e';
+            bgColor = '#f0fdf4';
+            textColor = '#15803d';
+            icon = 'ph-medal';
+        } else {
+            // PRE DV QUALIFIED
+            borderColor = '#fbbf24';
+            bgColor = '#fffbeb';
+            textColor = '#b45309';
+            icon = 'ph-seal-check';
+        }
+        
+        // --- DYNAMIC LABEL LOGIC ---
+        let cutoffLabel = 'PRE DV CUTOFF';
+        if (isFinal) cutoffLabel = 'FINAL CUTOFF';
+        else if (isFailFinal) cutoffLabel = 'REQ. FINAL CUTOFF'; // Final Fail Label
+        else if (isFailPre) cutoffLabel = 'REQ. CUTOFF (PRE DV)';
+        
+        let catLabel = isFinal ? 'SELECTION CATEGORY' : 'CATEGORY';
 
-                let catLabel = isFinal ? 'SEL' : 'CAT';
-                let catValue = dataObj.selectcat || dataObj.cat || '-';
-                let appNo = dataObj.applicationno || 'NA';
-                let dob = dataObj.dob || '-';
+        let catValue = dataObj.selectcat || dataObj.cat || '-';
+        let appNo = dataObj.applicationno || 'NA';
+        let dob = dataObj.dob || '-';
 
-                // --- UPDATED: REMOVED MARKS FROM HERE ---
-                let itemsHtml = `
+        let itemsHtml = `
             <div class="cd-item">
                 <span class="cd-lbl" style="color:${textColor}">${catLabel}:</span>
                 <span class="cd-val" style="color:#0f172a">${catValue}</span>
             </div>
         `;
 
-                // Pre DV me App No aur DOB dikhayenge
-                if (!isFinal) {
-                    itemsHtml += `
-            <span class="cd-sep">|</span>
-            <div class="cd-item">
-                <span class="cd-lbl" style="color:${textColor}">APP:</span>
-                <span class="cd-val" style="color:#0f172a">${appNo}</span>
-            </div>
-            <span class="cd-sep">|</span>
-            <div class="cd-item">
-                <span class="cd-lbl" style="color:${textColor}">DOB:</span>
-                <span class="cd-val" style="color:#0f172a">${dob}</span>
-            </div>`;
-                }
+        if (!isFinal) {
+            if(!isFail || appNo !== 'NA') {
+                 itemsHtml += `
+                <span class="cd-sep">|</span>
+                <div class="cd-item">
+                    <span class="cd-lbl" style="color:${textColor}">APP:</span>
+                    <span class="cd-val" style="color:#0f172a">${appNo}</span>
+                </div>`;
+            }
+            if(!isFail) {
+                 itemsHtml += `
+                <span class="cd-sep">|</span>
+                <div class="cd-item">
+                    <span class="cd-lbl" style="color:${textColor}">DOB:</span>
+                    <span class="cd-val" style="color:#0f172a">${dob}</span>
+                </div>`;
+            }
+        }
 
-                return `
-        <div class="compact-box" style="border: 1px solid ${borderColor}; background: ${bgColor};">
+        let badgeStyle = isFail 
+            ? `color:#ef4444; border:1px solid #fca5a5; background:#fef2f2;` 
+            : `color:${textColor}; border:1px solid ${borderColor};`;
+
+        return `
+        <div class="compact-box" style="border: 1px solid ${borderColor}; background: ${bgColor}; opacity: ${isFail ? 0.9 : 1};">
             <div class="compact-header" style="border-color:${borderColor}">
                 <div class="ch-left">
-                    <span class="ch-lbl" style="color:${textColor};">${isFinal ? 'FINAL CUTOFF' : 'PRE DV CUTOFF'}</span>
-                    <span class="ch-val" style="color:${textColor};">${cutoff}</span>
+                    <span class="ch-lbl" style="color:${textColor};">${cutoffLabel}</span>
+                    <span class="ch-val" style="color:${isFail ? '#ef4444' : textColor};">${cutoff}</span>
                 </div>
-                <div class="ch-badge" style="color:${textColor}; border-color:${borderColor}">
+                <div class="ch-badge" style="${badgeStyle}">
                     <i class="ph-bold ${icon}"></i> ${statusText}
                 </div>
             </div>
-
             <div class="compact-data-row">
                 ${itemsHtml}
             </div>
         </div>`;
-            };
+    };
 
-            // ==========================================
-            //       UNIVERSAL SEARCH LOGIC
-            // ==========================================
-            if (isUniversal) {
-                safeSetText('rTitle', "CANDIDATE PROFILE");
-                if (dateEl) dateEl.style.display = 'none';
-                singleSec.classList.add('hide');
-                if (statusWrapper) statusWrapper.innerHTML = '';
-                graphSec.classList.add('hide');
-                if (rRollBox) rRollBox.classList.add('hide');
-                uniSec.classList.remove('hide');
+    // ==========================================
+    //       UNIVERSAL SEARCH LOGIC
+    // ==========================================
+    if (isUniversal) {
+        safeSetText('rTitle', "CANDIDATE PROFILE");
+        if (dateEl) dateEl.style.display = 'none';
+        singleSec.classList.add('hide');
+        if(statusWrapper) statusWrapper.innerHTML = ''; 
+        graphSec.classList.add('hide');   
+        if (rRollBox) rRollBox.classList.add('hide');
+        uniSec.classList.remove('hide');
 
-                const cont = document.getElementById('uniCardsContainer');
-                if (cont) {
-                    cont.innerHTML = '';
-                    const examOrder = {
-                        'fourthgrade2025': 1,
-                        'vdo2025': 2,
-                        'patwari2025': 3
-                    };
-                    data.exams.sort((a, b) => (examOrder[a.examId] || 99) - (examOrder[b.examId] || 99));
+        const cont = document.getElementById('uniCardsContainer');
+        if (cont) {
+            cont.innerHTML = '';
+            const examOrder = { 'fourthgrade2025': 1, 'vdo2025': 2, 'patwari2025': 3 };
+            data.exams.sort((a, b) => (examOrder[a.examId] || 99) - (examOrder[b.examId] || 99));
 
-                    data.exams.forEach((ex, index) => {
-                        const finalScore = ex.examId === 'patwari2025' ? (ex.normalized || ex.raw || 0) : (ex.raw || 0);
-                        const raw = ex.raw ? parseFloat(ex.raw).toFixed(4) : '-';
-                        const finalFmt = parseFloat(finalScore).toFixed(4);
+            data.exams.forEach((ex, index) => {
+                const themeClass = `exam-theme-${ex.examId}`;
+                const finalScore = ex.examId === 'patwari2025' ? (ex.normalized || ex.raw || 0) : (ex.raw || 0);
+                const raw = ex.raw ? parseFloat(ex.raw).toFixed(4) : '-';
+                const finalFmt = parseFloat(finalScore).toFixed(4);
+                
+                const preCutoff = getMyCutoff(ex.examId, ex.category || data.category, ex.gender || data.gender, ex.subcat || data.subcat, 'marks');
+                const finalCutoff = getMyCutoff(ex.examId, ex.category || data.category, ex.gender || data.gender, ex.subcat || data.subcat, 'final');
+                const examInfo = EXAM_LIST.find(x => x.id === ex.examId);
+                const hasGraph = (ex.examId === 'patwari2025' || ex.examId === 'vdo2025' || ex.examId === 'fourthgrade2025');
 
-                        const preCutoff = getMyCutoff(ex.examId, ex.category || data.category, ex.gender || data.gender, ex.subcat || data.subcat, 'marks');
-                        const finalCutoff = getMyCutoff(ex.examId, ex.category || data.category, ex.gender || data.gender, ex.subcat || data.subcat, 'final');
-                        const examInfo = EXAM_LIST.find(x => x.id === ex.examId);
-                        const hasGraph = (ex.examId === 'patwari2025' || ex.examId === 'vdo2025' || ex.examId === 'fourthgrade2025');
+                let boxesHtml = '';
+                
+                let isPatwarQualified = false;
+                let selectedCat = ex.category || data.category;
+                if(ex.examId === 'patwari2025') {
+                    const genCut = parseFloat(getMyCutoff(ex.examId, 'GEN', ex.gender||data.gender, ex.subcat||data.subcat, 'marks'));
+                    if(!isNaN(genCut) && parseFloat(finalScore) >= genCut) { isPatwarQualified = true; selectedCat = "GEN"; }
+                    else if(preCutoff !== 'NA' && parseFloat(finalScore) >= parseFloat(preCutoff)) { isPatwarQualified = true; }
+                }
 
-                        // Boxes
-                        let boxesHtml = '';
+                const isQualifiedPre = (ex.dvData || isPatwarQualified);
 
-                        // Patwar Check
-                        let isPatwarQualified = false;
-                        let selectedCat = ex.category || data.category;
-                        if (ex.examId === 'patwari2025') {
-                            const genCut = parseFloat(getMyCutoff(ex.examId, 'GEN', ex.gender || data.gender, ex.subcat || data.subcat, 'marks'));
-                            if (!isNaN(genCut) && parseFloat(finalScore) >= genCut) {
-                                isPatwarQualified = true;
-                                selectedCat = "GEN";
-                            } else if (preCutoff !== 'NA' && parseFloat(finalScore) >= parseFloat(preCutoff)) {
-                                isPatwarQualified = true;
-                            }
-                        }
+                // 1. DV STATUS
+                if (ex.dvData) {
+                    boxesHtml += createLongBox('dv', preCutoff, (ex.dvData.finalmarks || finalFmt), ex.dvData, "QUALIFIED");
+                } else if (isPatwarQualified) {
+                    boxesHtml += createLongBox('dv', preCutoff, finalFmt, { selectcat: selectedCat, applicationno: 'NA' }, "QUALIFIED");
+                } else {
+                    if(preCutoff !== 'NA') {
+                        boxesHtml += createLongBox('fail', preCutoff, finalFmt, { cat: ex.category || data.category }, "NOT QUALIFIED");
+                    }
+                }
 
-                        if (ex.dvData) {
-                            boxesHtml += createLongBox('dv', preCutoff, (ex.dvData.finalmarks || finalFmt), ex.dvData, "QUALIFIED");
-                        } else if (isPatwarQualified) {
-                            boxesHtml += createLongBox('dv', preCutoff, finalFmt, {
-                                selectcat: selectedCat,
-                                applicationno: 'NA'
-                            }, "QUALIFIED");
-                        }
+                // 2. FINAL STATUS (Selected OR Failed in Final)
+                if (ex.finalData) {
+                    let fM = ex.finalData.finalmarks || ex.finalData.marks || finalFmt;
+                    boxesHtml += createLongBox('final', finalCutoff, fM, ex.finalData, "SELECTED");
+                } 
+                else if (isQualifiedPre && finalCutoff !== 'NA' && finalCutoff !== '-') {
+                    // Pre Qualified but Final Failed -> Show Final Cutoff Requirements
+                    boxesHtml += createLongBox('fail_final', finalCutoff, finalFmt, { cat: ex.category || data.category }, "NOT SELECTED");
+                }
 
-                        if (ex.finalData) {
-                            let fM = ex.finalData.finalmarks || ex.finalData.marks || finalFmt;
-                            boxesHtml += createLongBox('final', finalCutoff, fM, ex.finalData, "SELECTED");
-                        }
+                let graphHtml = hasGraph ? `<div style="margin-top:6px; padding-top:4px; border-top:1px dashed #e2e8f0;"><div style="position: relative; height: 120px; width: 100%;"><canvas id="chart_uni_${index}_${ex.examId}"></canvas></div></div>` : '';
 
-                        let graphHtml = hasGraph ? `<div style="margin-top:6px; padding-top:4px; border-top:1px dashed #e2e8f0;"><div style="position: relative; height: 120px; width: 100%;"><canvas id="chart_uni_${index}_${ex.examId}"></canvas></div></div>` : '';
-
-                        const card = document.createElement('div');
-                        card.className = 'uni-card';
-                        card.innerHTML = `
+                const card = document.createElement('div');
+                card.className = `uni-card ${themeClass}`;
+                card.innerHTML = `
                     <div class="uc-head">
                         <span class="uc-title">${examInfo ? examInfo.name : ex.examId}</span>
                         <span class="uc-date">${examInfo ? examInfo.date : ''}</span>
@@ -2177,87 +2206,85 @@
                         <div class="uc-cell"><span class="uc-lbl">Merit</span><span class="uc-val text-rank">${ex.merit ? `#${ex.merit}` : '-'}</span></div>
                         <div class="uc-cell"><span class="uc-lbl">Cat.Rank</span><span class="uc-val text-catrank">${ex.catrank ? `#${ex.catrank}` : '-'}</span></div>
                     </div>
-                    
-                    <div style="padding: 0 8px 8px 8px;">
-                        ${boxesHtml}
-                    </div>
-
+                    <div style="padding: 0 8px 8px 8px;">${boxesHtml}</div>
                     ${graphHtml}
                 `;
-                        cont.appendChild(card);
-                        if (hasGraph) setTimeout(() => renderDensityChart(`chart_uni_${index}_${ex.examId}`, ex.examId, finalScore, preCutoff), 100);
-                    });
-                }
-            }
-            // ==========================================
-            //       INDIVIDUAL RESULT LOGIC
-            // ==========================================
-            else {
-                const examObj = EXAM_LIST.find(e => e.id === data.examId);
-                safeSetText('rTitle', examObj.name);
-                if (dateEl) dateEl.style.display = 'block';
-                safeSetText('rExamDate', examObj.date || '');
+                cont.appendChild(card);
+                if (hasGraph) setTimeout(() => renderDensityChart(`chart_uni_${index}_${ex.examId}`, ex.examId, finalScore, preCutoff), 100);
+            });
+        }
+    } 
+    // ==========================================
+    //       INDIVIDUAL RESULT LOGIC
+    // ==========================================
+    else {
+        const examObj = EXAM_LIST.find(e => e.id === data.examId);
+        safeSetText('rTitle', examObj.name);
+        if (dateEl) dateEl.style.display = 'block';
+        safeSetText('rExamDate', examObj.date || '');
 
-                singleSec.classList.remove('hide');
-                uniSec.classList.add('hide');
-                if (rRollBox) rRollBox.classList.remove('hide');
+        singleSec.classList.remove('hide');
+        uniSec.classList.add('hide');
+        if (rRollBox) rRollBox.classList.remove('hide');
 
-                safeSetText('rRoll', data.roll);
-                safeSetText('rRaw', data.raw ? parseFloat(data.raw).toFixed(4) : '-');
-                let finalScore = data.examId === 'patwari2025' ? (data.normalized || data.raw || 0) : (data.raw || 0);
-                let finalFmt = parseFloat(finalScore).toFixed(4);
-                safeSetText('rFinal', finalFmt);
-                safeSetText('rRank', data.merit ? `#${data.merit}` : 'N/A');
-                safeSetText('rCatRank', data.catrank ? `#${data.catrank}` : 'N/A');
+        safeSetText('rRoll', data.roll);
+        safeSetText('rRaw', data.raw ? parseFloat(data.raw).toFixed(4) : '-');
+        let finalScore = data.examId === 'patwari2025' ? (data.normalized || data.raw || 0) : (data.raw || 0);
+        let finalFmt = parseFloat(finalScore).toFixed(4);
+        safeSetText('rFinal', finalFmt);
+        safeSetText('rRank', data.merit ? `#${data.merit}` : 'N/A');
+        safeSetText('rCatRank', data.catrank ? `#${data.catrank}` : 'N/A');
+        
+        const preCutoff = getMyCutoff(data.examId, data.category, data.gender, data.subcat, 'marks');
+        const finalCutoff = getMyCutoff(data.examId, data.category, data.gender, data.subcat, 'final');
 
-                const preCutoff = getMyCutoff(data.examId, data.category, data.gender, data.subcat, 'marks');
-                const finalCutoff = getMyCutoff(data.examId, data.category, data.gender, data.subcat, 'final');
+        let isPatwarQualified = false;
+        let selectedCat = data.category;
+        if(data.examId === 'patwari2025') {
+             const genCut = parseFloat(getMyCutoff(data.examId, 'GEN', data.gender, data.subcat, 'marks'));
+             if(!isNaN(genCut) && parseFloat(finalScore) >= genCut) { isPatwarQualified = true; selectedCat = "GEN"; }
+             else if(preCutoff !== 'NA' && parseFloat(finalScore) >= parseFloat(preCutoff)) { isPatwarQualified = true; }
+        }
 
-                let isPatwarQualified = false;
-                let selectedCat = data.category;
-                if (data.examId === 'patwari2025') {
-                    const genCut = parseFloat(getMyCutoff(data.examId, 'GEN', data.gender, data.subcat, 'marks'));
-                    if (!isNaN(genCut) && parseFloat(finalScore) >= genCut) {
-                        isPatwarQualified = true;
-                        selectedCat = "GEN";
-                    } else if (preCutoff !== 'NA' && parseFloat(finalScore) >= parseFloat(preCutoff)) {
-                        isPatwarQualified = true;
-                    }
-                }
+        const isQualifiedPre = (data.dvData || isPatwarQualified);
+        let statusHtml = '';
 
-                let statusHtml = '';
-
-                if (data.dvData) {
-                    statusHtml += createLongBox('dv', preCutoff, (data.dvData.finalmarks || finalFmt), data.dvData, "QUALIFIED FOR DV");
-                } else if (isPatwarQualified) {
-                    statusHtml += createLongBox('dv', preCutoff, finalFmt, {
-                        selectcat: selectedCat,
-                        applicationno: 'NA'
-                    }, "QUALIFIED FOR DV");
-                }
-
-                if (data.finalData) {
-                    let fM = data.finalData.finalmarks || data.finalData.marks || finalFmt;
-                    statusHtml += createLongBox('final', finalCutoff, fM, data.finalData, "FINAL SELECTION");
-                }
-
-                if (statusWrapper) statusWrapper.innerHTML = statusHtml;
-
-                if (data.examId === 'patwari2025' || data.examId === 'vdo2025' || data.examId === 'fourthgrade2025') {
-                    graphSec.classList.remove('hide');
-                    setTimeout(() => renderDensityChart('densityChart', data.examId, finalScore, preCutoff), 150);
-                } else {
-                    graphSec.classList.add('hide');
-                }
-            }
-
-            const uniBtnCont = document.getElementById('viewUniBtnContainer');
-            const btnCheckAll = document.getElementById('btnCheckAll');
-            if (uniBtnCont) {
-                uniBtnCont.classList.remove('hide');
-                if (btnCheckAll) btnCheckAll.style.display = isUniversal ? 'none' : 'flex';
+        if (data.dvData) {
+            statusHtml += createLongBox('dv', preCutoff, (data.dvData.finalmarks || finalFmt), data.dvData, "QUALIFIED FOR DV");
+        } else if (isPatwarQualified) {
+            statusHtml += createLongBox('dv', preCutoff, finalFmt, { selectcat: selectedCat, applicationno: 'NA' }, "QUALIFIED FOR DV");
+        } else {
+            if(preCutoff !== 'NA') {
+               statusHtml += createLongBox('fail', preCutoff, finalFmt, { cat: data.category }, "NOT QUALIFIED");
             }
         }
+
+        if (data.finalData) {
+            let fM = data.finalData.finalmarks || data.finalData.marks || finalFmt;
+            statusHtml += createLongBox('final', finalCutoff, fM, data.finalData, "FINAL SELECTION");
+        } 
+        else if (isQualifiedPre && finalCutoff !== 'NA' && finalCutoff !== '-') {
+            // Pre Qualified but Final Failed -> Show Final Cutoff
+            statusHtml += createLongBox('fail_final', finalCutoff, finalFmt, { cat: data.category }, "NOT SELECTED");
+        }
+
+        if(statusWrapper) statusWrapper.innerHTML = statusHtml;
+
+        if (data.examId === 'patwari2025' || data.examId === 'vdo2025' || data.examId === 'fourthgrade2025') {
+            graphSec.classList.remove('hide');
+            setTimeout(() => renderDensityChart('densityChart', data.examId, finalScore, preCutoff), 150);
+        } else {
+            graphSec.classList.add('hide');
+        }
+    }
+
+    const uniBtnCont = document.getElementById('viewUniBtnContainer');
+    const btnCheckAll = document.getElementById('btnCheckAll');
+    if (uniBtnCont) {
+        uniBtnCont.classList.remove('hide');
+        if (btnCheckAll) btnCheckAll.style.display = isUniversal ? 'none' : 'flex';
+    }
+}
         let activeCharts = {};
 
         // Is function ke starting logic ko replace karo:
