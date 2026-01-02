@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta name="theme-color" content="#1e1e2e">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,7 +12,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -2008,7 +2005,7 @@
             return found.marks;
         }
 
-     function showReceipt(data, isUniversal) {
+ function showReceipt(data, isUniversal) {
     try { history.pushState({ view: 'result' }, '', '#result'); } catch (e) {}
 
     lastScrollY = window.scrollY;
@@ -2038,93 +2035,115 @@
     const rRollBox = document.getElementById('rRollBox');
     const dateEl = document.getElementById('rExamDate');
 
-    // --- HELPER: COMPACT BOX (Updated for Final Fail) ---
-    const createLongBox = (type, cutoff, userMarks, dataObj, statusText) => {
+    // --- HELPER: EXPAND CODES ---
+    const expandCode = (str) => {
+        if(!str) return '';
+        const s = String(str).toUpperCase().trim();
+        if(s.startsWith('MAL') || s === 'M') return 'MALE';
+        if(s.startsWith('FEM') || s === 'F') return 'FEMALE';
+        if(s === 'GEN') return 'GENERAL';
+        if(s === 'WID') return 'WIDOW';
+        if(s === 'DIV') return 'DIVORCEE';
+        if(s === 'EX') return 'EX-SERVICEMAN';
+        if(s === 'SP' || s === 'SPORT') return 'SPORTS';
+        return s;
+    };
+
+    // --- HELPER: COMPACT BOX (Fixed: No Error, 2 Lines Only) ---
+    const createLongBox = (type, ownCutoff, genCutoff, userMarks, dataObj, statusText) => {
         const isFinal = type === 'final';
         const isFailPre = type === 'fail'; 
-        const isFailFinal = type === 'fail_final'; // NEW TYPE
+        const isFailFinal = type === 'fail_final'; 
         const isFail = isFailPre || isFailFinal;
 
-        // Colors logic
+        // 1. COLORS & BADGE STYLE (Defined TOP to prevent ReferenceError)
         let borderColor, bgColor, textColor, icon;
-
         if (isFail) {
-            // FAIL STYLE (Red/Gray)
-            borderColor = '#e5e7eb'; 
-            bgColor = '#f8fafc';     
-            textColor = '#64748b';   
-            icon = 'ph-x-circle';    
+            borderColor = '#e5e7eb'; bgColor = '#f8fafc'; textColor = '#64748b'; icon = 'ph-x-circle';    
             statusText = isFailFinal ? 'NOT SELECTED' : 'NOT QUALIFIED'; 
         } else if (isFinal) {
-            // FINAL SELECTED
-            borderColor = '#22c55e';
-            bgColor = '#f0fdf4';
-            textColor = '#15803d';
-            icon = 'ph-medal';
+            borderColor = '#22c55e'; bgColor = '#f0fdf4'; textColor = '#15803d'; icon = 'ph-medal';
         } else {
-            // PRE DV QUALIFIED
-            borderColor = '#fbbf24';
-            bgColor = '#fffbeb';
-            textColor = '#b45309';
-            icon = 'ph-seal-check';
+            borderColor = '#fbbf24'; bgColor = '#fffbeb'; textColor = '#b45309'; icon = 'ph-seal-check';
         }
         
-        // --- DYNAMIC LABEL LOGIC ---
-        let cutoffLabel = 'PRE DV CUTOFF';
-        if (isFinal) cutoffLabel = 'FINAL CUTOFF';
-        else if (isFailFinal) cutoffLabel = 'REQ. FINAL CUTOFF'; // Final Fail Label
-        else if (isFailPre) cutoffLabel = 'REQ. CUTOFF (PRE DV)';
-        
-        let catLabel = isFinal ? 'SELECTION CATEGORY' : 'CATEGORY';
-
-        let catValue = dataObj.selectcat || dataObj.cat || '-';
-        let appNo = dataObj.applicationno || 'NA';
-        let dob = dataObj.dob || '-';
-
-        let itemsHtml = `
-            <div class="cd-item">
-                <span class="cd-lbl" style="color:${textColor}">${catLabel}:</span>
-                <span class="cd-val" style="color:#0f172a">${catValue}</span>
-            </div>
-        `;
-
-        if (!isFinal) {
-            if(!isFail || appNo !== 'NA') {
-                 itemsHtml += `
-                <span class="cd-sep">|</span>
-                <div class="cd-item">
-                    <span class="cd-lbl" style="color:${textColor}">APP:</span>
-                    <span class="cd-val" style="color:#0f172a">${appNo}</span>
-                </div>`;
-            }
-            if(!isFail) {
-                 itemsHtml += `
-                <span class="cd-sep">|</span>
-                <div class="cd-item">
-                    <span class="cd-lbl" style="color:${textColor}">DOB:</span>
-                    <span class="cd-val" style="color:#0f172a">${dob}</span>
-                </div>`;
-            }
-        }
-
+        // Fix: Defined immediately so it's available for use below
         let badgeStyle = isFail 
             ? `color:#ef4444; border:1px solid #fca5a5; background:#fef2f2;` 
             : `color:${textColor}; border:1px solid ${borderColor};`;
 
+        let cutoffLabel = isFinal ? 'FINAL CUTOFF' : (isFailFinal ? 'REQ. FINAL CUTOFF' : (isFailPre ? 'REQ. CUTOFF (PRE DV)' : 'PRE DV CUTOFF'));
+
+        // 2. CHECK GEN QUALIFICATION
+        let isGenQual = false;
+        let myCat = (dataObj.cat || dataObj.category || '').toUpperCase();
+        
+        // Condition: Not Fail AND Not Gen Category AND Score >= Gen Cutoff
+        if (!isFail && myCat !== 'GEN' && genCutoff !== 'NA' && genCutoff !== '-') {
+            const s = parseFloat(userMarks);
+            const g = parseFloat(genCutoff);
+            if(!isNaN(s) && !isNaN(g) && s >= g) {
+                isGenQual = true;
+            }
+        }
+
+        // 3. BRACKET DETAILS (Always Own Category)
+        let dCat = expandCode(myCat);
+        let dGen = dataObj.gender ? expandCode(dataObj.gender) : '';
+        let dSub = (dataObj.subcat && dataObj.subcat !== '-' && dataObj.subcat !== 'NA') ? expandCode(dataObj.subcat) : '';
+
+        let detailParts = [dCat];
+        if(dGen) detailParts.push(dGen);
+        if(dSub) detailParts.push(dSub);
+        let detailStr = detailParts.join(' • ');
+
+        // 4. BUILD BOTTOM ROW (Merge App/DOB + GEN Info here)
+        let appNo = dataObj.applicationno || 'NA';
+        let dob = dataObj.dob || '-';
+        let itemsHtml = ''; 
+
+        // A. Add App & DOB
+        if (!isFinal) {
+            if(!isFail || appNo !== 'NA') {
+                 itemsHtml += `<div class="cd-item"><span class="cd-lbl" style="color:${textColor}">APP:</span><span class="cd-val" style="color:#0f172a">${appNo}</span></div>`;
+            }
+            if(!isFail) {
+                 if(itemsHtml) itemsHtml += `<span class="cd-sep">|</span>`;
+                 itemsHtml += `<div class="cd-item"><span class="cd-lbl" style="color:${textColor}">DOB:</span><span class="cd-val" style="color:#0f172a">${dob}</span></div>`;
+            }
+        }
+
+        // B. Add GEN Info IN SAME LINE (If Qualified)
+        if (isGenQual) {
+             if(itemsHtml) itemsHtml += `<span class="cd-sep">|</span>`;
+             // Green Highlighted Text for GEN Selection
+             itemsHtml += `
+             <div class="cd-item" style="gap:6px; align-items:center;">
+                <span class="cd-lbl" style="color:#15803d; font-weight:800;">GEN CUT:</span>
+                <span class="cd-val" style="color:#15803d; font-weight:800;">${genCutoff}</span>
+                <span style="font-size:0.6rem; font-weight:800; color:#15803d; background:#dcfce7; border:1px solid #86efac; padding:1px 5px; border-radius:4px; margin-left:2px;">GEN SEL</span>
+             </div>`;
+        }
+
+        // 5. BORDER LOGIC
+        let headerStyle = `border-color:${borderColor}; border-bottom: none;`;
+        if(!itemsHtml) headerStyle += ` margin-bottom: 0; padding-bottom: 0;`;
+
         return `
         <div class="compact-box" style="border: 1px solid ${borderColor}; background: ${bgColor}; opacity: ${isFail ? 0.9 : 1};">
-            <div class="compact-header" style="border-color:${borderColor}">
-                <div class="ch-left">
+            <div class="compact-header" style="${headerStyle}">
+                <div class="ch-left" style="width:100%">
                     <span class="ch-lbl" style="color:${textColor};">${cutoffLabel}</span>
-                    <span class="ch-val" style="color:${isFail ? '#ef4444' : textColor};">${cutoff}</span>
+                    <div style="display:flex; align-items:baseline; flex-wrap:wrap; gap:6px;">
+                        <span class="ch-val" style="color:${isFail ? '#ef4444' : textColor}; line-height:1.1;">${ownCutoff}</span>
+                        <span style="font-size:0.65rem; font-weight:700; opacity:0.7; color:${textColor}; white-space:nowrap;">(${detailStr})</span>
+                    </div>
                 </div>
-                <div class="ch-badge" style="${badgeStyle}">
+                <div class="ch-badge" style="${badgeStyle}; flex-shrink:0;">
                     <i class="ph-bold ${icon}"></i> ${statusText}
                 </div>
             </div>
-            <div class="compact-data-row">
-                ${itemsHtml}
-            </div>
+            ${itemsHtml ? `<div class="compact-data-row" style="border-top: 1px dashed rgba(0,0,0,0.1); padding-top: 4px; margin-top: 4px;">${itemsHtml}</div>` : ''}
         </div>`;
     };
 
@@ -2152,42 +2171,54 @@
                 const raw = ex.raw ? parseFloat(ex.raw).toFixed(4) : '-';
                 const finalFmt = parseFloat(finalScore).toFixed(4);
                 
-                const preCutoff = getMyCutoff(ex.examId, ex.category || data.category, ex.gender || data.gender, ex.subcat || data.subcat, 'marks');
-                const finalCutoff = getMyCutoff(ex.examId, ex.category || data.category, ex.gender || data.gender, ex.subcat || data.subcat, 'final');
+                // GET CUTOFFS (OWN & GEN)
+                const ownCutPre = getMyCutoff(ex.examId, ex.category || data.category, ex.gender || data.gender, ex.subcat || data.subcat, 'marks');
+                const genCutPre = getMyCutoff(ex.examId, 'GEN', ex.gender || data.gender, ex.subcat || data.subcat, 'marks');
+                
+                const ownCutFin = getMyCutoff(ex.examId, ex.category || data.category, ex.gender || data.gender, ex.subcat || data.subcat, 'final');
+                const genCutFin = getMyCutoff(ex.examId, 'GEN', ex.gender || data.gender, ex.subcat || data.subcat, 'final');
+
                 const examInfo = EXAM_LIST.find(x => x.id === ex.examId);
                 const hasGraph = (ex.examId === 'patwari2025' || ex.examId === 'vdo2025' || ex.examId === 'fourthgrade2025');
 
                 let boxesHtml = '';
                 
+                // Patwar Check
                 let isPatwarQualified = false;
-                let selectedCat = ex.category || data.category;
                 if(ex.examId === 'patwari2025') {
-                    const genCut = parseFloat(getMyCutoff(ex.examId, 'GEN', ex.gender||data.gender, ex.subcat||data.subcat, 'marks'));
-                    if(!isNaN(genCut) && parseFloat(finalScore) >= genCut) { isPatwarQualified = true; selectedCat = "GEN"; }
-                    else if(preCutoff !== 'NA' && parseFloat(finalScore) >= parseFloat(preCutoff)) { isPatwarQualified = true; }
+                    // Check GEN
+                    if(genCutPre !== 'NA' && parseFloat(finalScore) >= parseFloat(genCutPre)) isPatwarQualified = true;
+                    // Check OWN
+                    else if(ownCutPre !== 'NA' && parseFloat(finalScore) >= parseFloat(ownCutPre)) isPatwarQualified = true;
                 }
 
                 const isQualifiedPre = (ex.dvData || isPatwarQualified);
+                const baseInfo = { 
+                    cat: ex.category || data.category, 
+                    gender: ex.gender || data.gender, 
+                    subcat: ex.subcat || data.subcat 
+                };
 
                 // 1. DV STATUS
                 if (ex.dvData) {
-                    boxesHtml += createLongBox('dv', preCutoff, (ex.dvData.finalmarks || finalFmt), ex.dvData, "QUALIFIED");
+                    const mergeData = { ...baseInfo, ...ex.dvData };
+                    boxesHtml += createLongBox('dv', ownCutPre, genCutPre, (ex.dvData.finalmarks || finalFmt), mergeData, "QUALIFIED");
                 } else if (isPatwarQualified) {
-                    boxesHtml += createLongBox('dv', preCutoff, finalFmt, { selectcat: selectedCat, applicationno: 'NA' }, "QUALIFIED");
+                    boxesHtml += createLongBox('dv', ownCutPre, genCutPre, finalFmt, { ...baseInfo, applicationno: 'NA' }, "QUALIFIED");
                 } else {
-                    if(preCutoff !== 'NA') {
-                        boxesHtml += createLongBox('fail', preCutoff, finalFmt, { cat: ex.category || data.category }, "NOT QUALIFIED");
+                    if(ownCutPre !== 'NA') {
+                        boxesHtml += createLongBox('fail', ownCutPre, genCutPre, finalFmt, baseInfo, "NOT QUALIFIED");
                     }
                 }
 
-                // 2. FINAL STATUS (Selected OR Failed in Final)
+                // 2. FINAL STATUS
                 if (ex.finalData) {
                     let fM = ex.finalData.finalmarks || ex.finalData.marks || finalFmt;
-                    boxesHtml += createLongBox('final', finalCutoff, fM, ex.finalData, "SELECTED");
+                    const mergeFinal = { ...baseInfo, ...ex.finalData };
+                    boxesHtml += createLongBox('final', ownCutFin, genCutFin, fM, mergeFinal, "SELECTED");
                 } 
-                else if (isQualifiedPre && finalCutoff !== 'NA' && finalCutoff !== '-') {
-                    // Pre Qualified but Final Failed -> Show Final Cutoff Requirements
-                    boxesHtml += createLongBox('fail_final', finalCutoff, finalFmt, { cat: ex.category || data.category }, "NOT SELECTED");
+                else if (isQualifiedPre && ownCutFin !== 'NA' && ownCutFin !== '-') {
+                    boxesHtml += createLongBox('fail_final', ownCutFin, genCutFin, finalFmt, baseInfo, "NOT SELECTED");
                 }
 
                 let graphHtml = hasGraph ? `<div style="margin-top:6px; padding-top:4px; border-top:1px dashed #e2e8f0;"><div style="position: relative; height: 120px; width: 100%;"><canvas id="chart_uni_${index}_${ex.examId}"></canvas></div></div>` : '';
@@ -2210,7 +2241,7 @@
                     ${graphHtml}
                 `;
                 cont.appendChild(card);
-                if (hasGraph) setTimeout(() => renderDensityChart(`chart_uni_${index}_${ex.examId}`, ex.examId, finalScore, preCutoff), 100);
+                if (hasGraph) setTimeout(() => renderDensityChart(`chart_uni_${index}_${ex.examId}`, ex.examId, finalScore, ownCutPre), 100);
             });
         }
     } 
@@ -2235,44 +2266,49 @@
         safeSetText('rRank', data.merit ? `#${data.merit}` : 'N/A');
         safeSetText('rCatRank', data.catrank ? `#${data.catrank}` : 'N/A');
         
-        const preCutoff = getMyCutoff(data.examId, data.category, data.gender, data.subcat, 'marks');
-        const finalCutoff = getMyCutoff(data.examId, data.category, data.gender, data.subcat, 'final');
+        // GET CUTOFFS (OWN & GEN)
+        const ownCutPre = getMyCutoff(data.examId, data.category, data.gender, data.subcat, 'marks');
+        const genCutPre = getMyCutoff(data.examId, 'GEN', data.gender, data.subcat, 'marks');
+        
+        const ownCutFin = getMyCutoff(data.examId, data.category, data.gender, data.subcat, 'final');
+        const genCutFin = getMyCutoff(data.examId, 'GEN', data.gender, data.subcat, 'final');
 
         let isPatwarQualified = false;
-        let selectedCat = data.category;
         if(data.examId === 'patwari2025') {
-             const genCut = parseFloat(getMyCutoff(data.examId, 'GEN', data.gender, data.subcat, 'marks'));
-             if(!isNaN(genCut) && parseFloat(finalScore) >= genCut) { isPatwarQualified = true; selectedCat = "GEN"; }
-             else if(preCutoff !== 'NA' && parseFloat(finalScore) >= parseFloat(preCutoff)) { isPatwarQualified = true; }
+             if(genCutPre !== 'NA' && parseFloat(finalScore) >= parseFloat(genCutPre)) isPatwarQualified = true;
+             else if(ownCutPre !== 'NA' && parseFloat(finalScore) >= parseFloat(ownCutPre)) isPatwarQualified = true;
         }
 
         const isQualifiedPre = (data.dvData || isPatwarQualified);
         let statusHtml = '';
 
+        const baseInfo = { cat: data.category, gender: data.gender, subcat: data.subcat };
+
         if (data.dvData) {
-            statusHtml += createLongBox('dv', preCutoff, (data.dvData.finalmarks || finalFmt), data.dvData, "QUALIFIED FOR DV");
+            const mergeData = { ...baseInfo, ...data.dvData };
+            statusHtml += createLongBox('dv', ownCutPre, genCutPre, (data.dvData.finalmarks || finalFmt), mergeData, "QUALIFIED FOR DV");
         } else if (isPatwarQualified) {
-            statusHtml += createLongBox('dv', preCutoff, finalFmt, { selectcat: selectedCat, applicationno: 'NA' }, "QUALIFIED FOR DV");
+            statusHtml += createLongBox('dv', ownCutPre, genCutPre, finalFmt, { ...baseInfo, applicationno: 'NA' }, "QUALIFIED FOR DV");
         } else {
-            if(preCutoff !== 'NA') {
-               statusHtml += createLongBox('fail', preCutoff, finalFmt, { cat: data.category }, "NOT QUALIFIED");
+            if(ownCutPre !== 'NA') {
+               statusHtml += createLongBox('fail', ownCutPre, genCutPre, finalFmt, baseInfo, "NOT QUALIFIED");
             }
         }
 
         if (data.finalData) {
             let fM = data.finalData.finalmarks || data.finalData.marks || finalFmt;
-            statusHtml += createLongBox('final', finalCutoff, fM, data.finalData, "FINAL SELECTION");
+            const mergeFinal = { ...baseInfo, ...data.finalData };
+            statusHtml += createLongBox('final', ownCutFin, genCutFin, fM, mergeFinal, "FINAL SELECTION");
         } 
-        else if (isQualifiedPre && finalCutoff !== 'NA' && finalCutoff !== '-') {
-            // Pre Qualified but Final Failed -> Show Final Cutoff
-            statusHtml += createLongBox('fail_final', finalCutoff, finalFmt, { cat: data.category }, "NOT SELECTED");
+        else if (isQualifiedPre && ownCutFin !== 'NA' && ownCutFin !== '-') {
+            statusHtml += createLongBox('fail_final', ownCutFin, genCutFin, finalFmt, baseInfo, "NOT SELECTED");
         }
 
         if(statusWrapper) statusWrapper.innerHTML = statusHtml;
 
         if (data.examId === 'patwari2025' || data.examId === 'vdo2025' || data.examId === 'fourthgrade2025') {
             graphSec.classList.remove('hide');
-            setTimeout(() => renderDensityChart('densityChart', data.examId, finalScore, preCutoff), 150);
+            setTimeout(() => renderDensityChart('densityChart', data.examId, finalScore, ownCutPre), 150);
         } else {
             graphSec.classList.add('hide');
         }
