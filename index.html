@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -112,20 +111,20 @@
             align-items: center;
         }
 
-      .profile-btn {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--primary);
-    font-size: 0.8rem;
-    transition: 0.2s;
-}
+        .profile-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--primary);
+            font-size: 0.8rem;
+            transition: 0.2s;
+        }
 
         .profile-btn:hover {
             background: var(--surface-hover);
@@ -574,12 +573,12 @@
             letter-spacing: -0.02em;
         }
 
-        /* --- 5 BOX SCORES SECTION (SINGLE RESULT) --- */
         .scores-wrapper {
-            margin-top: 16px;
+            margin-top: 12px;
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 4px;
+            /* Wapas 5 columns kar diye */
+            gap: 6px;
         }
 
         @media (max-width: 450px) {
@@ -674,10 +673,20 @@
 
         .uc-body {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
+            grid-template-columns: repeat(5, 1fr);
+            /* Sirf 5 Columns */
             padding: 6px 2px;
             gap: 2px;
             align-items: center;
+        }
+
+        /* Mobile ke liye adjustment taaki ghich-pich na ho */
+        @media (max-width: 550px) {
+            .uc-body {
+                grid-template-columns: repeat(4, 1fr);
+                /* Mobile par 2 lines me dikhega */
+                gap: 6px 2px;
+            }
         }
 
         .uc-cell {
@@ -901,7 +910,8 @@
         input[type=number] {
             -moz-appearance: textfield;
         }
-/* --- DV SELECTION SECTION STYLE --- */
+
+        /* --- DV SELECTION SECTION STYLE --- */
         .dv-box {
             margin-top: 12px;
             background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
@@ -910,10 +920,14 @@
             padding: 10px 12px;
             position: relative;
             box-shadow: inset 0 0 10px rgba(251, 191, 36, 0.1);
-            display: none; /* Default Hidden */
+            display: none;
+            /* Default Hidden */
         }
-        .dv-box.active { display: block; }
-        
+
+        .dv-box.active {
+            display: block;
+        }
+
         .dv-header {
             font-size: 0.75rem;
             font-weight: 900;
@@ -926,6 +940,7 @@
             align-items: center;
             justify-content: space-between;
         }
+
         .dv-tag {
             background: #b45309;
             color: white;
@@ -939,11 +954,32 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 8px 4px;
         }
-        @media (max-width: 450px) { .dv-grid { grid-template-columns: repeat(2, 1fr); } }
 
-        .dv-item { display: flex; flex-direction: column; }
-        .dv-lbl { font-size: 0.55rem; color: #92400e; font-weight: 700; text-transform: uppercase; opacity: 0.8; }
-        .dv-val { font-size: 0.8rem; color: #451a03; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+        @media (max-width: 450px) {
+            .dv-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .dv-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dv-lbl {
+            font-size: 0.55rem;
+            color: #92400e;
+            font-weight: 700;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        .dv-val {
+            font-size: 0.8rem;
+            color: #451a03;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+        }
 
         /* Universal Card Mini DV Strip */
         .uni-dv-strip {
@@ -955,10 +991,21 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 4px;
         }
-        .udv-lbl { font-size: 0.5rem; color: #b45309; font-weight: 700; }
-        .udv-val { font-size: 0.75rem; color: #78350f; font-weight: 800; font-family: 'JetBrains Mono'; }
 
-      /* --- FINAL SELECTION SECTION STYLE (GREEN) --- */
+        .udv-lbl {
+            font-size: 0.5rem;
+            color: #b45309;
+            font-weight: 700;
+        }
+
+        .udv-val {
+            font-size: 0.75rem;
+            color: #78350f;
+            font-weight: 800;
+            font-family: 'JetBrains Mono';
+        }
+
+        /* --- FINAL SELECTION SECTION STYLE (GREEN) --- */
         .final-box {
             margin-top: 8px;
             background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
@@ -967,10 +1014,14 @@
             padding: 10px 12px;
             position: relative;
             box-shadow: inset 0 0 10px rgba(34, 197, 94, 0.1);
-            display: none; /* Default Hidden */
+            display: none;
+            /* Default Hidden */
         }
-        .final-box.active { display: block; }
-        
+
+        .final-box.active {
+            display: block;
+        }
+
         .final-header {
             font-size: 0.75rem;
             font-weight: 900;
@@ -983,6 +1034,7 @@
             align-items: center;
             justify-content: space-between;
         }
+
         .final-tag {
             background: #15803d;
             color: white;
@@ -993,13 +1045,31 @@
 
         .final-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2 Columns for clean look */
+            grid-template-columns: repeat(2, 1fr);
+            /* 2 Columns for clean look */
             gap: 8px 4px;
         }
-        
-        .final-item { display: flex; flex-direction: column; }
-        .final-lbl { font-size: 0.55rem; color: #166534; font-weight: 700; text-transform: uppercase; opacity: 0.9; }
-        .final-val { font-size: 0.85rem; color: #14532d; font-weight: 800; font-family: 'Inter', sans-serif; }
+
+        .final-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .final-lbl {
+            font-size: 0.55rem;
+            color: #166534;
+            font-weight: 700;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        .final-val {
+            font-size: 0.85rem;
+            color: #14532d;
+            font-weight: 800;
+            font-family: 'Inter', sans-serif;
+        }
+
         /* --- FINAL PRINT SETTINGS (FIXED OVERLAP & LAYOUT) --- */
         @media print {
             @page {
@@ -1121,6 +1191,156 @@
                 content: none !important;
             }
         }
+
+        /* --- NEW LONG BOX STYLES (CUTOFF + STATUS) --- */
+        .split-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+            border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+        }
+
+        .sh-left {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .sh-lbl {
+            font-size: 0.65rem;
+            font-weight: 700;
+            opacity: 0.9;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .sh-val {
+            font-size: 1.2rem;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1;
+        }
+
+        .sh-right {
+            text-align: right;
+        }
+
+        .status-badge {
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* --- UPDATE DV & FINAL GRIDS --- */
+        /* Inhe override kar rahe hain taki data sahi dikhe */
+        .dv-grid,
+        .final-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            /* 2 Columns: Category & Marks */
+            gap: 8px 12px;
+        }
+
+        .dv-item,
+        .final-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- COMPACT BOX STYLES --- */
+        .compact-box {
+            margin-top: 6px;
+            border-radius: 6px;
+            padding: 6px 10px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .compact-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+            border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+        }
+
+        .ch-left {
+            display: flex;
+            flex-direction: column;
+            line-height: 1;
+        }
+
+        .ch-lbl {
+            font-size: 0.55rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            opacity: 0.8;
+            margin-bottom: 2px;
+        }
+
+        .ch-val {
+            font-size: 1rem;
+            font-weight: 800;
+            font-family: 'JetBrains Mono';
+            letter-spacing: -0.5px;
+        }
+
+        .ch-badge {
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- SINGLE LINE DATA STRIP --- */
+        .compact-data-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 12px;
+            /* Row Gap | Col Gap */
+            align-items: center;
+        }
+
+        .cd-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.7rem;
+            line-height: 1;
+        }
+
+        .cd-lbl {
+            font-weight: 600;
+            opacity: 0.7;
+            text-transform: uppercase;
+            font-size: 0.6rem;
+        }
+
+        .cd-val {
+            font-weight: 700;
+            font-family: 'JetBrains Mono';
+        }
+
+        .cd-sep {
+            color: #cbd5e1;
+            font-weight: 300;
+        }
     </style>
 </head>
 
@@ -1227,69 +1447,52 @@
                         <div class="ig-item"><span class="ig-lbl">Gender</span><span class="ig-val" id="rGender">-</span></div>
                         <div class="ig-item"><span class="ig-lbl">Area Status</span><span class="ig-val" id="rArea">-</span></div>
                         <div class="ig-item"><span class="ig-lbl">Sub Category</span><span class="ig-val" id="rSubCat">-</span></div>
-                        <div class="ig-item ig-full" id="rRollBox" style="margin-top:4px;"><span class="ig-lbl">Roll Number</span><span class="ig-val" id="rRoll" style="font-family:'JetBrains Mono'; font-size: 1rem;">-</span></div>
-                    </div>
 
-                    <div id="singleScoreSection">
-                        <div class="scores-wrapper">
-                            <div class="score-pill">
-                                <span class="sp-val text-raw" id="rRaw">0.0000</span>
-                                <span class="sp-lbl">Raw Score</span>
-                            </div>
-                            <div class="score-pill">
-                                <span class="sp-val text-score" id="rFinal">0.0000</span>
-                                <span class="sp-lbl">Final Score</span>
-                            </div>
-                            <div class="score-pill">
-                                <span class="sp-val text-catrank" id="rCatRank">#--</span>
-                                <span class="sp-lbl">Cat. Rank</span>
-                            </div>
-                            <div class="score-pill">
-                                <span class="sp-val text-rank" id="rRank">#--</span>
-                                <span class="sp-lbl">Merit Rank</span>
-                            </div>
-                            <div class="score-pill">
-                                <span class="sp-val text-raw" id="rCutoff" style="color: #ea580c;">--</span>
-                                <span class="sp-lbl">Cutoff</span>
-                            </div>
-                        </div>
                     </div>
-
-                    <div id="dvSection" class="dv-box">
-                        <div class="dv-header">
-                            <span><i class="ph-bold ph-seal-check"></i> PROVISIONALLY SELECTED FOR DV</span>
-                            <span class="dv-tag">QUALIFIED</span>
-                        </div>
-                        <div class="dv-grid">
-                            <div class="dv-item"><span class="dv-lbl">Sel. Category</span><span class="dv-val" id="dvSelCat">-</span></div>
-                            <div class="dv-item"><span class="dv-lbl">Marks</span><span class="dv-val" id="dvMarks">-</span></div>
-                            <div class="dv-item"><span class="dv-lbl">App No</span><span class="dv-val" id="dvApp">-</span></div>
-                            <div class="dv-item"><span class="dv-lbl">DOB</span><span class="dv-val" id="dvDob">-</span></div>
-                        </div>
-                    </div>
-                  <div id="finalSection" class="final-box">
-                        <div class="final-header">
-                            <span><i class="ph-bold ph-medal"></i> FINAL SELECTION DONE</span>
-                            <span class="final-tag">SELECTED</span>
-                        </div>
-                        <div class="final-grid">
-                            <div class="final-item"><span class="final-lbl">Selection Category</span><span class="final-val" id="fsCat">-</span></div>
-                            <div class="final-item"><span class="final-lbl">Final Marks</span><span class="final-val" id="fsMarks" style="font-family: 'JetBrains Mono';">-</span></div>
-                        </div>
-                    </div>
-                    </div>
-                    <div id="graphSection" class="hide" style="margin-top: 16px; padding-top: 10px; border-top: 1px dashed #e2e8f0;">
-                        <div style="position: relative; height: 160px; width: 100%;">
-                            <canvas id="densityChart"></canvas>
-                        </div>
-                    </div>
-
-                    <div id="uniTableSection" class="hide">
-                        <div id="uniCardsContainer" class="uni-list"></div>
-                    </div>
-
-                    <div class="rc-footer">Generated: <span id="rDate"></span> • MP SALODIYA</div>
                 </div>
+
+                <div id="singleScoreSection">
+                    <div class="scores-wrapper">
+                        <div class="score-pill">
+                            <span class="sp-val" id="rRoll" style="color:var(--text-main)">-</span>
+                            <span class="sp-lbl">Roll No</span>
+                        </div>
+
+                        <div class="score-pill">
+                            <span class="sp-val text-raw" id="rRaw">0.0000</span>
+                            <span class="sp-lbl">Raw Score</span>
+                        </div>
+
+                        <div class="score-pill">
+                            <span class="sp-val text-score" id="rFinal">0.0000</span>
+                            <span class="sp-lbl">Final Score</span>
+                        </div>
+
+                        <div class="score-pill">
+                            <span class="sp-val text-catrank" id="rCatRank">#--</span>
+                            <span class="sp-lbl">Cat. Rank</span>
+                        </div>
+
+                        <div class="score-pill">
+                            <span class="sp-val text-rank" id="rRank">#--</span>
+                            <span class="sp-lbl">Merit Rank</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="statusWrapper" style="margin-top: 10px;"></div>
+
+                <div id="graphSection" class="hide" style="margin-top: 16px; padding-top: 10px; border-top: 1px dashed #e2e8f0;">
+                    <div style="position: relative; height: 160px; width: 100%;">
+                        <canvas id="densityChart"></canvas>
+                    </div>
+                </div>
+
+                <div id="uniTableSection" class="hide">
+                    <div id="uniCardsContainer" class="uni-list"></div>
+                </div>
+
+                <div class="rc-footer">Generated: <span id="rDate"></span> • MP SALODIYA</div>
+            </div>
         </div>
         <div id="viewUniBtnContainer" class="hide" style="width: 94%; max-width: 500px; margin: 0 auto 10px auto; display: flex; gap: 10px;">
             <button onclick="printResult()" style="flex: 1; background: #475569; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); text-transform: uppercase;">
@@ -1405,76 +1608,84 @@
             if (el) el.innerText = text;
         }
 
-      window.addEventListener('load', () => {
-    // [FIX] Error hone par crash nahi hoga
-    try {
-        history.pushState({ page: 'home' }, '', window.location.href);
-    } catch (e) { console.log("History API blocked: Safe to ignore"); }
+        window.addEventListener('load', () => {
+            // [FIX] Error hone par crash nahi hoga
+            try {
+                history.pushState({
+                    page: 'home'
+                }, '', window.location.href);
+            } catch (e) {
+                console.log("History API blocked: Safe to ignore");
+            }
 
-    if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
-    
-    // ... baaki code same rahega (neeche ka code mat hatana) ...
-    const savedExam = localStorage.getItem('lastExam') || 'fourthgrade2025';
-    const sel = document.getElementById('examSelect');
-    if (sel) {
-        sel.value = savedExam;
-        checkUniversal(sel);
-    }
-    if (typeof updateEmptyStateContent === "function") updateEmptyStateContent(savedExam);
+            if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
 
-    try {
-        if (typeof firebase !== 'undefined') {
-            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-            db = firebase.database();
-            auth = firebase.auth();
+            // ... baaki code same rahega (neeche ka code mat hatana) ...
+            const savedExam = localStorage.getItem('lastExam') || 'fourthgrade2025';
+            const sel = document.getElementById('examSelect');
+            if (sel) {
+                sel.value = savedExam;
+                checkUniversal(sel);
+            }
+            if (typeof updateEmptyStateContent === "function") updateEmptyStateContent(savedExam);
 
-            auth.onAuthStateChanged((user) => {
-                const loginScreen = document.getElementById('loginScreen');
-                if (user) {
-                    loginScreen.style.display = 'none';
-                    if (typeof updateUserUI === "function") updateUserUI(user);
-                } else {
-                    loginScreen.style.display = 'flex';
+            try {
+                if (typeof firebase !== 'undefined') {
+                    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+                    db = firebase.database();
+                    auth = firebase.auth();
+
+                    auth.onAuthStateChanged((user) => {
+                        const loginScreen = document.getElementById('loginScreen');
+                        if (user) {
+                            loginScreen.style.display = 'none';
+                            if (typeof updateUserUI === "function") updateUserUI(user);
+                        } else {
+                            loginScreen.style.display = 'flex';
+                        }
+                    });
+
+                    const sBtn = document.getElementById('sBtn');
+                    if (sBtn) sBtn.disabled = false;
                 }
-            });
-
-            const sBtn = document.getElementById('sBtn');
-            if (sBtn) sBtn.disabled = false;
-        }
-    } catch (error) {
-        console.log("DB Error");
-    }
-});
+            } catch (error) {
+                console.log("DB Error");
+            }
+        });
 
         // --- NEW BACK BUTTON LOGIC (FIXED) ---
-window.addEventListener('popstate', function(event) {
-    const rView = document.getElementById('resultView');
-    const sScreen = document.getElementById('searchScreen');
+        window.addEventListener('popstate', function(event) {
+            const rView = document.getElementById('resultView');
+            const sScreen = document.getElementById('searchScreen');
 
-    // 1. Agar Result View khula hai
-    if (rView && rView.style.display === 'block') {
-        rView.style.display = 'none';
-        if (sScreen) sScreen.style.display = 'block';
-        window.scrollTo(0, lastScrollY);
-        
-        // [FIX] Try-Catch added
-        try {
-            history.replaceState({ page: 'home' }, '', window.location.pathname);
-        } catch (e) {}
-        return;
-    }
+            // 1. Agar Result View khula hai
+            if (rView && rView.style.display === 'block') {
+                rView.style.display = 'none';
+                if (sScreen) sScreen.style.display = 'block';
+                window.scrollTo(0, lastScrollY);
 
-    // 2. Agar hum Home/Search Screen par hain
-    if (hasInput()) {
-        resetAllFields(); 
-        toast("Fields Reset"); 
-        
-        // [FIX] Try-Catch added
-        try {
-            history.pushState({ page: 'home' }, '', window.location.href);
-        } catch (e) {}
-    } 
-});
+                // [FIX] Try-Catch added
+                try {
+                    history.replaceState({
+                        page: 'home'
+                    }, '', window.location.pathname);
+                } catch (e) {}
+                return;
+            }
+
+            // 2. Agar hum Home/Search Screen par hain
+            if (hasInput()) {
+                resetAllFields();
+                toast("Fields Reset");
+
+                // [FIX] Try-Catch added
+                try {
+                    history.pushState({
+                        page: 'home'
+                    }, '', window.location.href);
+                } catch (e) {}
+            }
+        });
 
         function toggleTheme() {
             document.body.classList.toggle('dark-mode');
@@ -1642,90 +1853,100 @@ window.addEventListener('popstate', function(event) {
                 }
             }
         }
-      
-async function searchSingleExam(examId, roll, name, father, mother) {
-    let results = [];
-    
-    // Helper: Fetch DV Data
-    const getDvData = async (r) => {
-        try {
-            const s = await db.ref(`exams/${examId}/selectfordv/${r}`).once('value');
-            return s.exists() ? s.val() : null;
-        } catch(e) { return null; }
-    };
 
-    // Helper: Fetch Final Selection Data (NEW)
-    const getFinalSelectData = async (r) => {
-        try {
-            const s = await db.ref(`exams/${examId}/finalselect/${r}`).once('value');
-            return s.exists() ? s.val() : null;
-        } catch(e) { return null; }
-    };
+        async function searchSingleExam(examId, roll, name, father, mother) {
+            let results = [];
 
-    if (roll) {
-        try {
-            const snap = await db.ref(`exams/${examId}/byroll/${roll}`).once('value');
-            if (snap.exists()) {
-                const dv = await getDvData(roll);     // Fetch DV
-                const fs = await getFinalSelectData(roll); // Fetch Final Select
-                
-                results.push({
-                    ...snap.val(),
-                    roll: roll,
-                    examId,
-                    dvData: dv,
-                    finalData: fs // Attach Final Data
-                });
+            // Helper: Fetch DV Data
+            const getDvData = async (r) => {
+                try {
+                    const s = await db.ref(`exams/${examId}/selectfordv/${r}`).once('value');
+                    return s.exists() ? s.val() : null;
+                } catch (e) {
+                    return null;
+                }
+            };
+
+            // Helper: Fetch Final Selection Data (NEW)
+            const getFinalSelectData = async (r) => {
+                try {
+                    const s = await db.ref(`exams/${examId}/finalselect/${r}`).once('value');
+                    return s.exists() ? s.val() : null;
+                } catch (e) {
+                    return null;
+                }
+            };
+
+            if (roll) {
+                try {
+                    const snap = await db.ref(`exams/${examId}/byroll/${roll}`).once('value');
+                    if (snap.exists()) {
+                        const dv = await getDvData(roll); // Fetch DV
+                        const fs = await getFinalSelectData(roll); // Fetch Final Select
+
+                        results.push({
+                            ...snap.val(),
+                            roll: roll,
+                            examId,
+                            dvData: dv,
+                            finalData: fs // Attach Final Data
+                        });
+                    }
+                } catch (e) {}
+            } else {
+                let indexRef = 'byname';
+                let queryVal = name;
+
+                if ((!name || name.length < 3) && father.length > 0) {
+                    indexRef = 'byfather';
+                    queryVal = father;
+                } else if (!name && !father && mother) {
+                    indexRef = 'bymother';
+                    queryVal = mother;
+                }
+
+                if (!queryVal) return [];
+                const dbKey = queryVal.replace(/\s+/g, '_');
+                const snap = await db.ref(`exams/${examId}/${indexRef}`).orderByKey().startAt(dbKey).endAt(dbKey + "\uf8ff").limitToFirst(1000).once('value');
+                if (snap.exists()) {
+                    let targetRolls = [];
+                    Object.values(snap.val()).forEach(val => {
+                        if (typeof val === 'object') targetRolls.push(...Object.keys(val));
+                        else targetRolls.push(val);
+                    });
+                    targetRolls = [...new Set(targetRolls)];
+
+                    // Fetch Data, DV & Final Select Parallelly
+                    const promises = targetRolls.map(async (r) => {
+                        const s = await db.ref(`exams/${examId}/byroll/${r}`).once('value');
+                        if (s.exists()) {
+                            const dv = await getDvData(r);
+                            const fs = await getFinalSelectData(r); // Fetch Final Select
+                            return {
+                                ...s.val(),
+                                roll: r,
+                                examId,
+                                dvData: dv,
+                                finalData: fs
+                            };
+                        }
+                        return null;
+                    });
+
+                    const rawRes = await Promise.all(promises);
+
+                    rawRes.forEach(d => {
+                        if (d) {
+                            const mName = !name || (d.candidate && d.candidate.toLowerCase().startsWith(name));
+                            const mFather = !father || (d.father && d.father.toLowerCase().startsWith(father));
+                            const mMother = !mother || (d.mother && d.mother.toLowerCase().startsWith(mother));
+                            if (mName && mFather && mMother) results.push(d);
+                        }
+                    });
+                }
             }
-        } catch (e) {}
-    } else {
-        let indexRef = 'byname';
-        let queryVal = name;
-
-        if ((!name || name.length < 3) && father.length > 0) {
-            indexRef = 'byfather';
-            queryVal = father;
-        } else if (!name && !father && mother) {
-            indexRef = 'bymother';
-            queryVal = mother;
+            return results;
         }
-
-        if (!queryVal) return [];
-        const dbKey = queryVal.replace(/\s+/g, '_');
-        const snap = await db.ref(`exams/${examId}/${indexRef}`).orderByKey().startAt(dbKey).endAt(dbKey + "\uf8ff").limitToFirst(1000).once('value');
-        if (snap.exists()) {
-            let targetRolls = [];
-            Object.values(snap.val()).forEach(val => {
-                if (typeof val === 'object') targetRolls.push(...Object.keys(val));
-                else targetRolls.push(val);
-            });
-            targetRolls = [...new Set(targetRolls)];
-            
-            // Fetch Data, DV & Final Select Parallelly
-            const promises = targetRolls.map(async (r) => {
-                const s = await db.ref(`exams/${examId}/byroll/${r}`).once('value');
-                if(s.exists()){
-                    const dv = await getDvData(r); 
-                    const fs = await getFinalSelectData(r); // Fetch Final Select
-                    return { ...s.val(), roll: r, examId, dvData: dv, finalData: fs };
-                }
-                return null;
-            });
-            
-            const rawRes = await Promise.all(promises);
-            
-            rawRes.forEach(d => {
-                if (d) {
-                    const mName = !name || (d.candidate && d.candidate.toLowerCase().startsWith(name));
-                    const mFather = !father || (d.father && d.father.toLowerCase().startsWith(father));
-                    const mMother = !mother || (d.mother && d.mother.toLowerCase().startsWith(mother));
-                    if (mName && mFather && mMother) results.push(d);
-                }
-            });
-        }
-    }
-    return results;
-}
 
         function renderList(data, isUniversal) {
             const list = document.getElementById('resultsList');
@@ -1741,7 +1962,8 @@ async function searchSingleExam(examId, roll, name, father, mother) {
             });
         }
 
-        function getMyCutoff(examId, category, gender, subcat) {
+        // Updated function jo 'type' accept karega (marks ya final)
+        function getMyCutoff(examId, category, gender, subcat, type = 'marks') {
             if (typeof CUTOFF_DATA === 'undefined' || !CUTOFF_DATA[examId]) return "NA";
             const list = CUTOFF_DATA[examId];
             let myCat = (category || "").toUpperCase().trim();
@@ -1775,254 +1997,267 @@ async function searchSingleExam(examId, roll, name, father, mother) {
                 }
             }
             const found = list.find(item => item.cat === myCat && item.sub === mySub);
-            return found ? found.marks : "NA";
+
+            if (!found) return "NA";
+
+            // Agar Final Cutoff mangi hai
+            if (type === 'final') {
+                return (found.final && found.final !== '-' && found.final !== '') ? found.final : "-";
+            }
+
+            // By default Pre DV Cutoff
+            return found.marks;
         }
 
- function showReceipt(data, isUniversal) {
-    try { history.pushState({ view: 'result' }, '', '#result'); } catch (e) {}
+        function showReceipt(data, isUniversal) {
+            try {
+                history.pushState({
+                    view: 'result'
+                }, '', '#result');
+            } catch (e) {}
 
-    lastScrollY = window.scrollY;
-    document.getElementById('searchScreen').style.display = 'none';
-    document.getElementById('resultView').style.display = 'block';
-    window.scrollTo(0, 0);
+            lastScrollY = window.scrollY;
+            document.getElementById('searchScreen').style.display = 'none';
+            document.getElementById('resultView').style.display = 'block';
+            window.scrollTo(0, 0);
 
-    // --- BASIC DETAILS ---
-    safeSetText('rDate', new Date().toLocaleDateString('en-GB'));
-    safeSetText('rName', data.candidate || '-');
-    safeSetText('rFather', data.father || '-');
-    safeSetText('rMother', data.mother || '-');
-    safeSetText('rCat', data.category || '-');
-    safeSetText('rGender', data.gender || '-');
+            // --- BASIC DETAILS ---
+            safeSetText('rDate', new Date().toLocaleDateString('en-GB'));
+            safeSetText('rName', data.candidate || '-');
+            safeSetText('rFather', data.father || '-');
+            safeSetText('rMother', data.mother || '-');
+            safeSetText('rCat', data.category || '-');
+            safeSetText('rGender', data.gender || '-');
 
-    const isTsp = (data.tsp && (data.tsp === true || String(data.tsp).toLowerCase() === 'yes'));
-    safeSetText('rArea', isTsp ? "TSP" : "NTSP");
-    safeSetText('rSubCat', (data.subcat && data.subcat.trim() !== "") ? data.subcat : "-");
+            // Note: rGenderDisp ab Individual view me nahi use hoga, sirf Universal me ho sakta h
 
-    // --- ELEMENT REFS ---
-    const singleSec = document.getElementById('singleScoreSection');
-    const dvBox = document.getElementById('dvSection');
-    const finalBox = document.getElementById('finalSection');
-    const graphSec = document.getElementById('graphSection');
-    const uniSec = document.getElementById('uniTableSection');
-    const rRollBox = document.getElementById('rRollBox');
-    const dateEl = document.getElementById('rExamDate');
+            const isTsp = (data.tsp && (data.tsp === true || String(data.tsp).toLowerCase() === 'yes'));
+            safeSetText('rArea', isTsp ? "TSP" : "NTSP");
+            safeSetText('rSubCat', (data.subcat && data.subcat.trim() !== "") ? data.subcat : "-");
 
-    // ==========================================
-    //       UNIVERSAL RESULT LOGIC
-    // ==========================================
-    if (isUniversal) {
-        safeSetText('rTitle', "CANDIDATE PROFILE");
-        if (dateEl) dateEl.style.display = 'none';
+            // --- ELEMENT REFS ---
+            const singleSec = document.getElementById('singleScoreSection');
+            const statusWrapper = document.getElementById('statusWrapper');
+            const graphSec = document.getElementById('graphSection');
+            const uniSec = document.getElementById('uniTableSection');
+            const rRollBox = document.getElementById('rRollBox');
+            const dateEl = document.getElementById('rExamDate');
 
-        // Hide Single View Elements
-        singleSec.classList.add('hide');
-        dvBox.classList.remove('active'); 
-        if(finalBox) finalBox.classList.remove('active');
-        graphSec.classList.add('hide');   
-        if (rRollBox) rRollBox.classList.add('hide');
-        
-        // Show Universal Section
-        uniSec.classList.remove('hide');
+            // --- NEW HELPER: COMPACT & SINGLE LINE BOX ---
+            const createLongBox = (type, cutoff, userMarks, dataObj, statusText) => {
+                const isFinal = type === 'final';
 
-        const cont = document.getElementById('uniCardsContainer');
-        if (cont) {
-            cont.innerHTML = '';
-            // Sorting Order: 4th Grade -> VDO -> Patwar
-            const examOrder = { 'fourthgrade2025': 1, 'vdo2025': 2, 'patwari2025': 3 };
-            data.exams.sort((a, b) => (examOrder[a.examId] || 99) - (examOrder[b.examId] || 99));
+                // Colors & Theme
+                let borderColor = isFinal ? '#22c55e' : '#fbbf24';
+                let bgColor = isFinal ? '#f0fdf4' : '#fffbeb';
+                let textColor = isFinal ? '#15803d' : '#b45309';
+                let icon = isFinal ? 'ph-medal' : 'ph-seal-check';
 
-            data.exams.forEach((ex, index) => {
-                // Calculation Logic
-                const final = ex.examId === 'patwari2025' ? (ex.normalized || ex.raw || 0) : (ex.raw || 0);
-                const raw = ex.raw ? parseFloat(ex.raw).toFixed(4) : '-';
-                const finalFmt = parseFloat(final).toFixed(4);
-                const meritVal = ex.merit ? `#${ex.merit}` : '-';
-                const catRank = ex.catrank ? `#${ex.catrank}` : '-';
-                
-                const examInfo = EXAM_LIST.find(x => x.id === ex.examId);
-                const examName = examInfo ? examInfo.name : ex.examId;
-                const examDate = examInfo ? (examInfo.date || '') : '';
-                
-                const ownCutoff = getMyCutoff(ex.examId, ex.category || data.category, ex.gender || data.gender, ex.subcat || data.subcat);
-                const genCutoff = getMyCutoff(ex.examId, 'GEN', ex.gender || data.gender, ex.subcat || data.subcat);
-                const canvasId = `chart_uni_${index}_${ex.examId}`;
-                const hasGraph = (ex.examId === 'patwari2025' || ex.examId === 'vdo2025' || ex.examId === 'fourthgrade2025');
+                let catLabel = isFinal ? 'SEL' : 'CAT';
+                let catValue = dataObj.selectcat || dataObj.cat || '-';
+                let appNo = dataObj.applicationno || 'NA';
+                let dob = dataObj.dob || '-';
 
-                // Patwar Qualification Check
-                let isPatwarQualified = false;
-                let selectedCategory = ex.category || data.category; 
-                if (ex.examId === 'patwari2025') {
-                    const scoreNum = parseFloat(final);
-                    const genCutNum = parseFloat(genCutoff);
-                    const ownCutNum = parseFloat(ownCutoff);
-                    if (!isNaN(genCutNum) && scoreNum >= genCutNum) {
-                        isPatwarQualified = true;
-                        selectedCategory = "GEN"; 
-                    } else if (!isNaN(ownCutNum) && scoreNum >= ownCutNum) {
-                        isPatwarQualified = true;
-                        selectedCategory = ex.category || data.category; 
-                    }
+                // --- UPDATED: REMOVED MARKS FROM HERE ---
+                let itemsHtml = `
+            <div class="cd-item">
+                <span class="cd-lbl" style="color:${textColor}">${catLabel}:</span>
+                <span class="cd-val" style="color:#0f172a">${catValue}</span>
+            </div>
+        `;
+
+                // Pre DV me App No aur DOB dikhayenge
+                if (!isFinal) {
+                    itemsHtml += `
+            <span class="cd-sep">|</span>
+            <div class="cd-item">
+                <span class="cd-lbl" style="color:${textColor}">APP:</span>
+                <span class="cd-val" style="color:#0f172a">${appNo}</span>
+            </div>
+            <span class="cd-sep">|</span>
+            <div class="cd-item">
+                <span class="cd-lbl" style="color:${textColor}">DOB:</span>
+                <span class="cd-val" style="color:#0f172a">${dob}</span>
+            </div>`;
                 }
 
-                // --- 1. UNIVERSAL DV STRIP ---
-                let dvHtml = '';
-                if (ex.dvData) {
-                    dvHtml = `
-                        <div class="dv-box active" style="margin: 4px 6px; border: 1px solid #fbbf24;">
-                            <div class="dv-header" style="font-size: 0.7rem;">
-                                <span><i class="ph-bold ph-seal-check"></i> PROV. SELECTED FOR DV</span>
-                                <span class="dv-tag">QUALIFIED</span>
-                            </div>
-                            <div class="dv-grid">
-                                <div class="dv-item"><span class="dv-lbl">Sel. Cat</span><span class="dv-val">${ex.dvData.selectcat || ex.dvData.cat || '-'}</span></div>
-                                <div class="dv-item"><span class="dv-lbl">Marks</span><span class="dv-val">${ex.dvData.finalmarks || '-'}</span></div>
-                                <div class="dv-item"><span class="dv-lbl">App No</span><span class="dv-val">${ex.dvData.applicationno || '-'}</span></div>
-                                <div class="dv-item"><span class="dv-lbl">DOB</span><span class="dv-val">${ex.dvData.dob || '-'}</span></div>
-                            </div>
-                        </div>`;
-                } else if (isPatwarQualified) {
-                     dvHtml = `
-                        <div class="dv-box active" style="margin: 4px 6px; border: 1px solid #fbbf24;">
-                            <div class="dv-header" style="font-size: 0.7rem;">
-                                <span><i class="ph-bold ph-seal-check"></i> PROV. SELECTED FOR DV</span>
-                                <span class="dv-tag">QUALIFIED</span>
-                            </div>
-                            <div class="dv-grid">
-                                <div class="dv-item"><span class="dv-lbl">Sel. Cat</span><span class="dv-val">${selectedCategory}</span></div>
-                                <div class="dv-item"><span class="dv-lbl">Marks</span><span class="dv-val">${finalFmt}</span></div>
-                                <div class="dv-item"><span class="dv-lbl">App No</span><span class="dv-val">NA</span></div>
-                            </div>
-                        </div>`;
-                }
+                return `
+        <div class="compact-box" style="border: 1px solid ${borderColor}; background: ${bgColor};">
+            <div class="compact-header" style="border-color:${borderColor}">
+                <div class="ch-left">
+                    <span class="ch-lbl" style="color:${textColor};">${isFinal ? 'FINAL CUTOFF' : 'PRE DV CUTOFF'}</span>
+                    <span class="ch-val" style="color:${textColor};">${cutoff}</span>
+                </div>
+                <div class="ch-badge" style="color:${textColor}; border-color:${borderColor}">
+                    <i class="ph-bold ${icon}"></i> ${statusText}
+                </div>
+            </div>
 
-                // --- 2. UNIVERSAL FINAL SELECTION (COMPACT & FIXED) ---
-                let finalHtml = '';
-                if (ex.finalData) {
-                    let fM = ex.finalData.finalmarks || ex.finalData.marks;
-                    let fMFormatted = fM ? parseFloat(fM).toFixed(4) : '-';
+            <div class="compact-data-row">
+                ${itemsHtml}
+            </div>
+        </div>`;
+            };
 
-                    finalHtml = `
-                        <div class="final-box active" style="margin: 4px 6px;">
-                            <div class="final-header" style="font-size: 0.7rem;">
-                                <span><i class="ph-bold ph-medal"></i> FINAL SELECTION DONE</span>
-                                <span class="final-tag">SELECTED</span>
-                            </div>
-                            <div class="final-grid">
-                                <div class="final-item"><span class="final-lbl">Sel. Cat</span><span class="final-val">${ex.finalData.selectcat || ex.finalData.cat || '-'}</span></div>
-                                <div class="final-item"><span class="final-lbl">Final Marks</span><span class="final-val" style="font-family: 'JetBrains Mono';">${fMFormatted}</span></div>
-                            </div>
-                        </div>`;
-                }
+            // ==========================================
+            //       UNIVERSAL SEARCH LOGIC
+            // ==========================================
+            if (isUniversal) {
+                safeSetText('rTitle', "CANDIDATE PROFILE");
+                if (dateEl) dateEl.style.display = 'none';
+                singleSec.classList.add('hide');
+                if (statusWrapper) statusWrapper.innerHTML = '';
+                graphSec.classList.add('hide');
+                if (rRollBox) rRollBox.classList.add('hide');
+                uniSec.classList.remove('hide');
 
-                let graphHtml = hasGraph ? `<div style="margin-top:2px; padding-top:2px; border-top:1px dashed #e2e8f0;"><div style="position: relative; height: 140px; width: 100%;"><canvas id="${canvasId}"></canvas></div></div>` : '';
+                const cont = document.getElementById('uniCardsContainer');
+                if (cont) {
+                    cont.innerHTML = '';
+                    const examOrder = {
+                        'fourthgrade2025': 1,
+                        'vdo2025': 2,
+                        'patwari2025': 3
+                    };
+                    data.exams.sort((a, b) => (examOrder[a.examId] || 99) - (examOrder[b.examId] || 99));
 
-                // --- CARD CONSTRUCTION ---
-                const card = document.createElement('div');
-                card.className = 'uni-card';
-                // Note: 'Cat.Rank' label updated below
-                card.innerHTML = `
+                    data.exams.forEach((ex, index) => {
+                        const finalScore = ex.examId === 'patwari2025' ? (ex.normalized || ex.raw || 0) : (ex.raw || 0);
+                        const raw = ex.raw ? parseFloat(ex.raw).toFixed(4) : '-';
+                        const finalFmt = parseFloat(finalScore).toFixed(4);
+
+                        const preCutoff = getMyCutoff(ex.examId, ex.category || data.category, ex.gender || data.gender, ex.subcat || data.subcat, 'marks');
+                        const finalCutoff = getMyCutoff(ex.examId, ex.category || data.category, ex.gender || data.gender, ex.subcat || data.subcat, 'final');
+                        const examInfo = EXAM_LIST.find(x => x.id === ex.examId);
+                        const hasGraph = (ex.examId === 'patwari2025' || ex.examId === 'vdo2025' || ex.examId === 'fourthgrade2025');
+
+                        // Boxes
+                        let boxesHtml = '';
+
+                        // Patwar Check
+                        let isPatwarQualified = false;
+                        let selectedCat = ex.category || data.category;
+                        if (ex.examId === 'patwari2025') {
+                            const genCut = parseFloat(getMyCutoff(ex.examId, 'GEN', ex.gender || data.gender, ex.subcat || data.subcat, 'marks'));
+                            if (!isNaN(genCut) && parseFloat(finalScore) >= genCut) {
+                                isPatwarQualified = true;
+                                selectedCat = "GEN";
+                            } else if (preCutoff !== 'NA' && parseFloat(finalScore) >= parseFloat(preCutoff)) {
+                                isPatwarQualified = true;
+                            }
+                        }
+
+                        if (ex.dvData) {
+                            boxesHtml += createLongBox('dv', preCutoff, (ex.dvData.finalmarks || finalFmt), ex.dvData, "QUALIFIED");
+                        } else if (isPatwarQualified) {
+                            boxesHtml += createLongBox('dv', preCutoff, finalFmt, {
+                                selectcat: selectedCat,
+                                applicationno: 'NA'
+                            }, "QUALIFIED");
+                        }
+
+                        if (ex.finalData) {
+                            let fM = ex.finalData.finalmarks || ex.finalData.marks || finalFmt;
+                            boxesHtml += createLongBox('final', finalCutoff, fM, ex.finalData, "SELECTED");
+                        }
+
+                        let graphHtml = hasGraph ? `<div style="margin-top:6px; padding-top:4px; border-top:1px dashed #e2e8f0;"><div style="position: relative; height: 120px; width: 100%;"><canvas id="chart_uni_${index}_${ex.examId}"></canvas></div></div>` : '';
+
+                        const card = document.createElement('div');
+                        card.className = 'uni-card';
+                        card.innerHTML = `
                     <div class="uc-head">
-                        <span class="uc-title">${examName}</span>
-                        <span class="uc-date">${examDate}</span>
+                        <span class="uc-title">${examInfo ? examInfo.name : ex.examId}</span>
+                        <span class="uc-date">${examInfo ? examInfo.date : ''}</span>
                     </div>
                     <div class="uc-body">
                         <div class="uc-cell"><span class="uc-lbl">Roll</span><span class="uc-val">${ex.roll}</span></div>
                         <div class="uc-cell"><span class="uc-lbl">Raw</span><span class="uc-val text-raw">${raw}</span></div>
                         <div class="uc-cell"><span class="uc-lbl">Final</span><span class="uc-val text-score">${finalFmt}</span></div>
-                        <div class="uc-cell"><span class="uc-lbl">Cat.Rank</span><span class="uc-val text-catrank">${catRank}</span></div>
-                        <div class="uc-cell"><span class="uc-lbl">Merit</span><span class="uc-val text-catrank">${meritVal}</span></div>
-                        <div class="uc-cell"><span class="uc-lbl" style="color:#ea580c;">Cutoff</span><span class="uc-val" style="color:#ea580c; font-weight:800;">${ownCutoff}</span></div>
+                        <div class="uc-cell"><span class="uc-lbl">Merit</span><span class="uc-val text-rank">${ex.merit ? `#${ex.merit}` : '-'}</span></div>
+                        <div class="uc-cell"><span class="uc-lbl">Cat.Rank</span><span class="uc-val text-catrank">${ex.catrank ? `#${ex.catrank}` : '-'}</span></div>
                     </div>
-                    ${dvHtml} 
-                    ${finalHtml}
+                    
+                    <div style="padding: 0 8px 8px 8px;">
+                        ${boxesHtml}
+                    </div>
+
                     ${graphHtml}
                 `;
-                cont.appendChild(card);
-                if (hasGraph) setTimeout(() => renderDensityChart(canvasId, ex.examId, final, ownCutoff), 100);
-            });
-        }
-    } 
-    // ==========================================
-    //       INDIVIDUAL RESULT LOGIC
-    // ==========================================
-    else {
-        const examObj = EXAM_LIST.find(e => e.id === data.examId);
-        safeSetText('rTitle', examObj.name);
-        if (dateEl) dateEl.style.display = 'block';
-        safeSetText('rExamDate', examObj.date || '');
-
-        singleSec.classList.remove('hide');
-        uniSec.classList.add('hide');
-        if (rRollBox) rRollBox.classList.remove('hide');
-
-        safeSetText('rRoll', data.roll);
-        safeSetText('rRaw', data.raw ? parseFloat(data.raw).toFixed(4) : '-');
-        
-        let finalScore = data.examId === 'patwari2025' ? (data.normalized || data.raw || 0) : (data.raw || 0);
-        safeSetText('rFinal', parseFloat(finalScore).toFixed(4));
-        safeSetText('rRank', data.merit ? `#${data.merit}` : 'N/A');
-        safeSetText('rCatRank', data.catrank ? `#${data.catrank}` : 'N/A');
-        
-        const cutoffMarks = getMyCutoff(data.examId, data.category, data.gender, data.subcat);
-        const genCutoffMarks = getMyCutoff(data.examId, 'GEN', data.gender, data.subcat);
-        safeSetText('rCutoff', cutoffMarks);
-
-        // --- DV & Patwar Qualify Check ---
-        let isPatwarQualified = false;
-        let selectedCategory = data.category; 
-        if (data.examId === 'patwari2025') {
-            const fScore = parseFloat(finalScore);
-            const gCut = parseFloat(genCutoffMarks);
-            const oCut = parseFloat(cutoffMarks);
-            if (!isNaN(gCut) && fScore >= gCut) { isPatwarQualified = true; selectedCategory = "GEN"; }
-            else if (!isNaN(oCut) && fScore >= oCut) { isPatwarQualified = true; selectedCategory = data.category; }
-        }
-
-        if (data.dvData || isPatwarQualified) {
-            dvBox.classList.add('active'); 
-            if (data.dvData) {
-                safeSetText('dvSelCat', data.dvData.selectcat || data.dvData.cat || '-');
-                safeSetText('dvMarks', data.dvData.finalmarks || '-');
-                safeSetText('dvApp', data.dvData.applicationno || '-');
-                safeSetText('dvDob', data.dvData.dob || '-');
-            } else {
-                safeSetText('dvSelCat', selectedCategory);
-                safeSetText('dvMarks', parseFloat(finalScore).toFixed(4));
-                safeSetText('dvApp', 'NOT PROVIDED');
-                safeSetText('dvDob', 'NOT PROVIDED');
+                        cont.appendChild(card);
+                        if (hasGraph) setTimeout(() => renderDensityChart(`chart_uni_${index}_${ex.examId}`, ex.examId, finalScore, preCutoff), 100);
+                    });
+                }
             }
-        } else {
-            dvBox.classList.remove('active');
+            // ==========================================
+            //       INDIVIDUAL RESULT LOGIC
+            // ==========================================
+            else {
+                const examObj = EXAM_LIST.find(e => e.id === data.examId);
+                safeSetText('rTitle', examObj.name);
+                if (dateEl) dateEl.style.display = 'block';
+                safeSetText('rExamDate', examObj.date || '');
+
+                singleSec.classList.remove('hide');
+                uniSec.classList.add('hide');
+                if (rRollBox) rRollBox.classList.remove('hide');
+
+                safeSetText('rRoll', data.roll);
+                safeSetText('rRaw', data.raw ? parseFloat(data.raw).toFixed(4) : '-');
+                let finalScore = data.examId === 'patwari2025' ? (data.normalized || data.raw || 0) : (data.raw || 0);
+                let finalFmt = parseFloat(finalScore).toFixed(4);
+                safeSetText('rFinal', finalFmt);
+                safeSetText('rRank', data.merit ? `#${data.merit}` : 'N/A');
+                safeSetText('rCatRank', data.catrank ? `#${data.catrank}` : 'N/A');
+
+                const preCutoff = getMyCutoff(data.examId, data.category, data.gender, data.subcat, 'marks');
+                const finalCutoff = getMyCutoff(data.examId, data.category, data.gender, data.subcat, 'final');
+
+                let isPatwarQualified = false;
+                let selectedCat = data.category;
+                if (data.examId === 'patwari2025') {
+                    const genCut = parseFloat(getMyCutoff(data.examId, 'GEN', data.gender, data.subcat, 'marks'));
+                    if (!isNaN(genCut) && parseFloat(finalScore) >= genCut) {
+                        isPatwarQualified = true;
+                        selectedCat = "GEN";
+                    } else if (preCutoff !== 'NA' && parseFloat(finalScore) >= parseFloat(preCutoff)) {
+                        isPatwarQualified = true;
+                    }
+                }
+
+                let statusHtml = '';
+
+                if (data.dvData) {
+                    statusHtml += createLongBox('dv', preCutoff, (data.dvData.finalmarks || finalFmt), data.dvData, "QUALIFIED FOR DV");
+                } else if (isPatwarQualified) {
+                    statusHtml += createLongBox('dv', preCutoff, finalFmt, {
+                        selectcat: selectedCat,
+                        applicationno: 'NA'
+                    }, "QUALIFIED FOR DV");
+                }
+
+                if (data.finalData) {
+                    let fM = data.finalData.finalmarks || data.finalData.marks || finalFmt;
+                    statusHtml += createLongBox('final', finalCutoff, fM, data.finalData, "FINAL SELECTION");
+                }
+
+                if (statusWrapper) statusWrapper.innerHTML = statusHtml;
+
+                if (data.examId === 'patwari2025' || data.examId === 'vdo2025' || data.examId === 'fourthgrade2025') {
+                    graphSec.classList.remove('hide');
+                    setTimeout(() => renderDensityChart('densityChart', data.examId, finalScore, preCutoff), 150);
+                } else {
+                    graphSec.classList.add('hide');
+                }
+            }
+
+            const uniBtnCont = document.getElementById('viewUniBtnContainer');
+            const btnCheckAll = document.getElementById('btnCheckAll');
+            if (uniBtnCont) {
+                uniBtnCont.classList.remove('hide');
+                if (btnCheckAll) btnCheckAll.style.display = isUniversal ? 'none' : 'flex';
+            }
         }
-
-        // --- FINAL SELECTION LOGIC ---
-        if (data.finalData) {
-            finalBox.classList.add('active');
-            let rawFM = data.finalData.finalmarks || data.finalData.marks;
-            let valFM = rawFM ? parseFloat(rawFM).toFixed(4) : '-';
-
-            safeSetText('fsCat', data.finalData.selectcat || data.finalData.cat || '-');
-            safeSetText('fsMarks', valFM);
-        } else {
-            finalBox.classList.remove('active');
-        }
-
-        // --- Graph Logic ---
-        if (data.examId === 'patwari2025' || data.examId === 'vdo2025' || data.examId === 'fourthgrade2025') {
-            graphSec.classList.remove('hide');
-            setTimeout(() => renderDensityChart('densityChart', data.examId, finalScore, cutoffMarks), 150);
-        } else {
-            graphSec.classList.add('hide');
-        }
-    }
-
-    const uniBtnCont = document.getElementById('viewUniBtnContainer');
-    const btnCheckAll = document.getElementById('btnCheckAll');
-    if (uniBtnCont) {
-        uniBtnCont.classList.remove('hide');
-        if (btnCheckAll) btnCheckAll.style.display = isUniversal ? 'none' : 'flex';
-    }
-}
         let activeCharts = {};
 
         // Is function ke starting logic ko replace karo:
@@ -2359,4 +2594,5 @@ async function searchSingleExam(examId, roll, name, father, mother) {
         if ('serviceWorker' in navigator) navigator.serviceWorker.register('service-worker.js');
     </script>
 </body>
+
 </html>
