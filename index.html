@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=no">
     <meta name="description" content="Dream-Link Official Exam Result Portal 2026">
-    <title>Dream-Link • RESULTS 2026</title>
+    <title>Dream-Link • RESULTS 2026 S</title>
     <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -510,11 +510,12 @@
             margin-bottom: 0;
             border: none;
         }
-        .rc-head {
+      .rc-head {
             background: var(--success);
             color: white;
             padding: 18px 16px;
             text-align: center;
+            position: relative; /* Ye line zaroori hai layout fix ke liye */
         }
 
         .rc-title {
@@ -1376,10 +1377,15 @@
 
     <header class="app-header">
         <div class="brand" onclick="toggleTheme()">DREAM-LINK</div>
-        <div class="profile-wrap">
+      <div class="profile-wrap" style="gap: 10px;">
+            <div class="profile-btn" onclick="openSavedModal()" style="border:none; background:transparent; width:auto;">
+                <i class="ph-fill ph-heart" style="color: #e11d48; font-size: 1.3rem;"></i>
+            </div>
+
             <div class="profile-btn" onclick="toggleProfileMenu()">
                 <i class="ph-bold ph-user"></i>
             </div>
+
             <div class="profile-menu" id="profileMenu">
                 <div class="menu-item">
                     <i class="ph-bold ph-user-circle"></i> <span id="userEmailDisplay">User</span>
@@ -1460,8 +1466,11 @@
 
     <section id="resultView">
         <div class="view-container">
-            <div id="receiptArea" class="receipt-card">
-                <div class="rc-head">
+            <div class="rc-head">
+                    <div id="saveIconBtn" onclick="toggleSaveCurrentResult()" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 1.4rem; color: rgba(255,255,255,0.6); cursor: pointer; z-index: 10; padding: 5px;">
+                        <i class="ph-bold ph-heart"></i>
+                    </div>
+
                     <div class="rc-title" id="rTitle">EXAM NAME</div>
                     <div class="rc-sub">RSSB SCORE CARD</div>
                     <div class="rc-sub" id="rExamDate" style="margin-top:4px; opacity:0.8; font-size:0.65rem;"></div>
@@ -1539,6 +1548,22 @@
     </section>
 
     <div id="toast" class="toast">Message</div>
+    <div id="savedModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 3000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px);">
+        <div style="background: var(--surface); width: 100%; max-width: 380px; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; max-height: 70vh; box-shadow: var(--shadow-float); animation: slideDown 0.2s ease;">
+            
+            <div style="padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--surface);">
+                <div style="font-weight: 800; font-size: 1rem; color: var(--text-main); display:flex; align-items:center; gap:8px;">
+                    <i class="ph-fill ph-heart" style="color:#e11d48;"></i> SAVED RESULTS
+                </div>
+                <div onclick="document.getElementById('savedModal').style.display='none'" style="cursor: pointer; padding: 4px; border-radius:50%; background:var(--surface-hover);">
+                    <i class="ph-bold ph-x" style="font-size: 1rem; color:var(--text-main);"></i>
+                </div>
+            </div>
+
+            <div id="savedListContainer" style="overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; flex: 1; background:var(--bg-body);">
+                </div>
+        </div>
+    </div>
     <script src="cutoff_data.js"></script>
     <script>
         const EXAM_LIST = [{
@@ -1575,9 +1600,8 @@
         };
 
         let db = null;
-        // --- ADDED AUTH VARIABLES ---
-        let auth = null;
-
+        let currentResultData = null; // To store current open result
+      
         // --- LOGIN FUNCTION ---
         function handleLogin() {
             const email = document.getElementById('txtEmail').value;
@@ -2038,6 +2062,16 @@
         }
 
  function showReceipt(data, isUniversal) {
+   // 1. Data Store logic (Universal fix included)
+    if (isUniversal) {
+        // Universal ke liye hum data ko tag karte hain
+        currentResultData = { ...data, isUniversalMode: true }; 
+    } else {
+        currentResultData = { ...data, isUniversalMode: false };
+    }
+
+    // 2. Icon State Update
+    setTimeout(updateSaveIconState, 50);
     try { history.pushState({ view: 'result' }, '', '#result'); } catch (e) {}
 
     lastScrollY = window.scrollY;
@@ -2683,6 +2717,164 @@
                 link.href = canvas.toDataURL("image/png");
                 link.click();
             });
+        }
+    // --- IMPROVED SAVED SYSTEM (Universal + UI Fix) ---
+
+        function toggleSaveCurrentResult() {
+            if (!currentResultData) return toast("No data to save");
+
+            let saved = JSON.parse(localStorage.getItem('dreamLinkSaved') || "[]");
+            
+            // Unique ID Generation
+            let uniqueId;
+            if (currentResultData.isUniversalMode) {
+                // Universal ka ID Name+Father se banega
+                uniqueId = `UNI_${currentResultData.candidate}_${currentResultData.father}`;
+            } else {
+                // Single ka ID Roll+ExamId se
+                uniqueId = `${currentResultData.roll}_${currentResultData.examId}`;
+            }
+
+            const index = saved.findIndex(item => {
+                let itemId = item.isUniversalMode 
+                    ? `UNI_${item.candidate}_${item.father}` 
+                    : `${item.roll}_${item.examId}`;
+                return itemId === uniqueId;
+            });
+
+            const btn = document.getElementById('saveIconBtn');
+
+            if (index > -1) {
+                saved.splice(index, 1);
+                toast("Removed from Saved List");
+                if(btn) {
+                    btn.style.color = "rgba(255,255,255,0.6)";
+                    btn.innerHTML = '<i class="ph-bold ph-heart"></i>';
+                }
+            } else {
+                saved.unshift(currentResultData);
+                toast("Saved Successfully!");
+                if(btn) {
+                    btn.style.color = "#ffffff"; // Bright White for active
+                    btn.innerHTML = '<i class="ph-fill ph-heart"></i>';
+                }
+            }
+            localStorage.setItem('dreamLinkSaved', JSON.stringify(saved));
+        }
+
+        function updateSaveIconState() {
+            const btn = document.getElementById('saveIconBtn');
+            if(!btn || !currentResultData) return;
+
+            let saved = JSON.parse(localStorage.getItem('dreamLinkSaved') || "[]");
+            
+            let uniqueId;
+            if (currentResultData.isUniversalMode) {
+                uniqueId = `UNI_${currentResultData.candidate}_${currentResultData.father}`;
+            } else {
+                uniqueId = `${currentResultData.roll}_${currentResultData.examId}`;
+            }
+
+            const isSaved = saved.some(item => {
+                let itemId = item.isUniversalMode 
+                    ? `UNI_${item.candidate}_${item.father}` 
+                    : `${item.roll}_${item.examId}`;
+                return itemId === uniqueId;
+            });
+
+            if (isSaved) {
+                btn.style.color = "#ffffff";
+                btn.innerHTML = '<i class="ph-fill ph-heart"></i>';
+            } else {
+                btn.style.color = "rgba(255,255,255,0.6)";
+                btn.innerHTML = '<i class="ph-bold ph-heart"></i>';
+            }
+        }
+
+        function openSavedModal() {
+            const modal = document.getElementById('savedModal');
+            const list = document.getElementById('savedListContainer');
+            modal.style.display = 'flex';
+
+            let saved = JSON.parse(localStorage.getItem('dreamLinkSaved') || "[]");
+
+            if (saved.length === 0) {
+                list.innerHTML = `
+                    <div style="text-align:center; padding:30px; opacity:0.6;">
+                        <i class="ph-duotone ph-heart-break" style="font-size:32px;"></i>
+                        <p style="margin-top:5px; font-size:0.9rem;">No saved results found</p>
+                    </div>`;
+                return;
+            }
+
+            list.innerHTML = saved.map((item, idx) => {
+                // Check if Universal or Single
+                const isUni = item.isUniversalMode;
+                
+                let badgeHtml = '';
+                let rollText = '';
+
+                if (isUni) {
+                    badgeHtml = `<span style="background:linear-gradient(135deg, #4f46e5 0%, #2563eb 100%); color:white; padding:2px 6px; border-radius:4px; font-size:0.6rem; font-weight:700;">UNIVERSAL</span>`;
+                    // Count exams
+                    const count = item.exams ? item.exams.length : 0;
+                    rollText = `All Exams (${count})`;
+                } else {
+                    const ex = EXAM_LIST.find(e => e.id === item.examId) || {code: item.examId, badge:'b-patwar'};
+                    badgeHtml = `<span class="badge ${ex.badge}" style="font-size:0.6rem;">${ex.code}</span>`;
+                    rollText = item.roll;
+                }
+                
+                return `
+                <div style="background: var(--surface); padding: 12px; border-radius: 10px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; box-shadow:0 1px 2px rgba(0,0,0,0.05);">
+                    <div onclick="loadSavedResult(${idx})" style="flex:1; cursor:pointer;">
+                        <div style="font-weight:700; color:var(--text-main); font-size:0.95rem;">${item.candidate || 'Unknown'}</div>
+                        <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+                            ${badgeHtml}
+                            <span style="font-size:0.75rem; color:var(--text-muted); font-family:'JetBrains Mono';">${rollText}</span>
+                        </div>
+                    </div>
+                    <button onclick="deleteSavedResult(${idx})" style="background:var(--surface-hover); border:1px solid var(--border); color:#ef4444; width:34px; height:34px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s;">
+                        <i class="ph-bold ph-trash"></i>
+                    </button>
+                </div>`;
+            }).join('');
+        }
+
+        function loadSavedResult(index) {
+            let saved = JSON.parse(localStorage.getItem('dreamLinkSaved') || "[]");
+            const item = saved[index];
+            if (item) {
+                document.getElementById('savedModal').style.display = 'none';
+                // Pass true if Universal, false if Single
+                showReceipt(item, item.isUniversalMode === true); 
+                toast("Result Loaded");
+            }
+        }
+
+        function deleteSavedResult(index) {
+            let saved = JSON.parse(localStorage.getItem('dreamLinkSaved') || "[]");
+            
+            // Check current ID before deleting to update icon if open
+            const item = saved[index];
+            let deletedId = item.isUniversalMode 
+                ? `UNI_${item.candidate}_${item.father}` 
+                : `${item.roll}_${item.examId}`;
+
+            saved.splice(index, 1);
+            localStorage.setItem('dreamLinkSaved', JSON.stringify(saved));
+            openSavedModal(); // Refresh UI
+            
+            // Update Icon Only if the currently open result matches the deleted one
+            if(currentResultData) {
+                 let currentId = currentResultData.isUniversalMode 
+                    ? `UNI_${currentResultData.candidate}_${currentResultData.father}` 
+                    : `${currentResultData.roll}_${currentResultData.examId}`;
+                
+                if(currentId === deletedId) {
+                    updateSaveIconState();
+                }
+            }
         }
     </script>
     <script>
