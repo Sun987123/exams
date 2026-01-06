@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta name="theme-color" content="#1e1e2e">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,6 +14,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -485,27 +488,28 @@
             min-height: 100vh;
             z-index: 200;
         }
-
+/* --- VIEW CONTAINER (UPDATED FOR FULL PAGE) --- */
         .view-container {
             width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 16px;
-            padding-bottom: 10px;
+            display: block; /* Flex हटा दिया ताकि पेज फ्लो नार्मल रहे */
+            padding: 0;     /* ऊपर-नीचे की जगह हटा दी */
+            background: #ffffff;
+            min-height: 100vh;
         }
 
+      /* --- RECEIPT CARD (UPDATED TO FULL WEBPAGE LOOK) --- */
         .receipt-card {
             background: #ffffff;
             color: #0f172a;
-            width: 94%;
-            max-width: 500px;
+            width: 100%;        /* पूरी चौड़ाई */
+            max-width: 100%;    /* 500px की लिमिट हटा दी */
+            min-height: 100vh;  /* पूरी हाइट */
             border-radius: 0;
-            overflow: hidden;
-            box-shadow: var(--shadow-float);
-            margin-bottom: 20px;
+            overflow: visible;
+            box-shadow: none;   /* शैडो हटा दी ताकि कार्ड न लगे */
+            margin-bottom: 0;
+            border: none;
         }
-
         .rc-head {
             background: var(--success);
             color: white;
@@ -531,6 +535,26 @@
             /* Top/Bottom 12px, Left/Right 24px (Thoda andar kiya) */
             padding: 12px 12px 4px 12px; 
             background: #fff;
+        }
+      /* --- PADDING FIX FOR FULL WIDTH PAGE --- */
+        /* Isse Score, Graph aur Status box side se chipkenge nahi */
+        #singleScoreSection,
+        #statusWrapper,
+        #graphSection,
+        #uniTableSection,
+        .rc-footer {
+            padding-left: 12px;  /* Left side gap */
+            padding-right: 12px; /* Right side gap */
+            box-sizing: border-box;
+        }
+
+        /* Graph Section ka Border adjust (Optional: Taaki border bhi thoda andar rahe) */
+        #graphSection {
+            margin-left: 12px;
+            margin-right: 12px;
+            padding-left: 0 !important; /* Border already margin se andar aa gya */
+            padding-right: 0 !important;
+            width: auto !important; /* Full width force ko hataya */
         }
         .info-grid {
             display: grid;
@@ -760,12 +784,20 @@
             border-top: 1px solid #f1f5f9;
         }
 
+     /* --- CONTROL PANEL (BUTTONS) FIX --- */
         .control-panel {
             display: flex;
             gap: 10px;
-            width: 94%;
-            max-width: 500px;
-            margin-top: 5px;
+            width: 100%;           /* फुल विड्थ */
+            max-width: 100%;       /* पुरानी 500px लिमिट हटाई */
+            margin-top: 20px;
+            
+            /* पैडिंग जोड़ दी ताकि बटन साइड से चिपके नहीं */
+            padding-left: 12px;
+            padding-right: 12px;
+            padding-bottom: 40px;  /* नीचे से थोड़ा ऊपर */
+            
+            box-sizing: border-box; /* पैडिंग को विड्थ के अंदर रखेगा */
         }
 
         .btn-act {
