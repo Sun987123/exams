@@ -75,8 +75,8 @@ const CUTOFF_DATA = {
         { cat: 'SAH', sub: 'DIV', marks: 'NA', final: 'NA' },
         { cat: 'SAH', sub: 'EX',  marks: 'NA', final: 'NA' },
         
-        { cat: 'LD/CP', sub: '', marks: '162.4033', final: '162.4033' },
-        { cat: 'SP',    sub: '', marks: '200.0665', final: '205.0026' },
+        { cat: 'LD/CP', sub: '', marks: '145.5365', final: '162.4033' },
+        { cat: 'SP',    sub: '', marks: '187.4905', final: '205.0026' },
     ],
 
     'fourthgrade2025': [
