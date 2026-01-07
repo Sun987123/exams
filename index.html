@@ -8,14 +8,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=no">
     <meta name="description" content="Dream-Link Official Exam Result Portal 2026">
-    <title>Dream-Link • RESULTS 2026 S</title>
+    <title>Dream-Link • RESULTS 2026</title>
     <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+   
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
@@ -1133,94 +1133,154 @@
             font-family: 'Inter', sans-serif;
         }
 
-      /* --- FINAL PRINT SETTINGS (FIXED) --- */
-        @media print {
+      @media print {
+            /* 1. पेज सेटअप: मार्जिन जीरो, A4 साइज */
             @page {
-                margin: 0; /* Page margin 0 kiya */
-                size: auto;
+                size: A4 portrait;
+                margin: 0 !important;
             }
 
+            /* 2. बॉडी रिसेट: सब कुछ Top-Left (0,0) पर */
             body, html {
-                background-color: #ffffff;
-                height: 100%;
                 margin: 0 !important;
                 padding: 0 !important;
-                overflow: visible !important;
+                background-color: #ffffff !important;
+                width: 100% !important;
+                height: 100% !important;
+                display: block !important;
             }
 
-            /* Hide UI Elements */
-            .app-header, .search-container, .control-panel, .toast, .btn-clear, #viewUniBtnContainer {
+            /* 3. फालतू बटन और UI छुपाना */
+            .app-header, 
+            .search-container, 
+            .control-panel, 
+            .toast, 
+            .btn-clear, 
+            #viewUniBtnContainer, 
+            #saveIconBtn, 
+            #loginScreen,
+            #savedModal {
                 display: none !important;
             }
 
-            /* Show Result */
+            /* 4. RESULT VIEW - इसे पेज के बिल्कुल ऊपर सेट करें */
             #resultView {
                 display: block !important;
-                position: static !important; /* Absolute hataya */
-                width: 100%;
-                height: auto !important;
-                overflow: visible !important;
-                background: white;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+                z-index: 9999;
             }
 
-            /* Receipt Card - Full Width & Zoomed */
+            .view-container {
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            /* 5. CARD WIDTH FIX - मोबाइल जैसा अनुपात (Aspect Ratio) */
             .receipt-card {
-                width: 95% !important; /* Thoda aur badhaya */
-                max-width: none !important;
-                margin: 5px auto !important; /* Top margin kam kiya */
+                width: 100% !important;
+                max-width: 600px !important; /* इसे 600px पर रोक दिया ताकि फैले नहीं */
+                margin: 0 !important; /* Top-Left Align */
                 border: none !important;
                 box-shadow: none !important;
-                zoom: 1.1; /* Thoda zoom adjust kiya taaki cut na ho */
+                /* अगर आप सेंटर में चाहते हैं तो नीचे वाली लाइन को uncomment करें */
+                /* margin: 0 auto !important; */
+            }
+
+            /* 6. EMPTY BOX FIX - जो छुपा है उसे जबरदस्ती छुपाओ */
+            .hide, 
+            #singleScoreSection.hide, 
+            #graphSection.hide, 
+            #rRollBox.hide {
+                display: none !important;
+                height: 0 !important;
+                width: 0 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                border: none !important;
+            }
+
+            /* 7. Header Styling */
+            .rc-head {
+                background: var(--success) !important;
+                color: white !important;
+                padding: 12px 15px !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
-                break-inside: avoid;
+                margin: 0 !important;
             }
 
-            .uni-card {
-                break-inside: avoid;
-                page-break-inside: avoid;
-                border: 1px solid #e2e8f0 !important; /* Border color fixed */
-                margin-bottom: 5px !important;
+            .rc-content {
+                padding: 10px 15px !important;
             }
             
-            /* Canvas Chart Fix */
-            #graphSection {
-                break-inside: avoid; 
+            .info-grid {
+                border-bottom: 2px dashed #000 !important;
+                margin-bottom: 5px !important;
+            }
+
+            /* 8. Sections Styling (Only if visible) */
+            #singleScoreSection, 
+            #statusWrapper, 
+            #uniTableSection {
+                padding: 0 15px !important;
+                margin-top: 5px !important;
+            }
+
+            .scores-wrapper {
+                display: grid !important;
+                grid-template-columns: repeat(5, 1fr) !important;
+                gap: 5px !important;
+            }
+
+            .score-pill {
+                border: 1px solid #000 !important;
+                height: 50px !important;
+            }
+
+            /* 9. GRAPH FIX - :not(.hide) का इस्तेमाल ताकि खाली डिब्बा न बने */
+            #graphSection:not(.hide) {
+                display: block !important;
+                margin: 10px 15px !important;
+                width: calc(100% - 30px) !important;
+                height: 180px !important; /* हाइट थोड़ी कम की ताकि मोबाइल जैसा दिखे */
+                border: 1px solid #000 !important;
                 page-break-inside: avoid;
-            }
-        }
-
-            /* --- FOOTER FIX --- */
-            .rc-footer {
-                /* Footer ke upar bhi gap ensure kiya */
-                margin-top: 20px !important;
-                padding-top: 10px !important;
-                border-top: 1px solid #ccc !important;
-                color: #64748b !important;
-                /* Text dark kiya taaki print me saaf dikhe */
-            }
-
-            /* Agar JS ne hide kiya hai to print me bhi chupao */
-            .hide {
-                display: none !important;
             }
 
             canvas {
                 width: 100% !important;
                 height: 100% !important;
+                object-fit: contain !important;
             }
 
-           .uni-card {
-                break-inside: avoid;
+            /* 10. Universal Cards Styling */
+            .uni-card {
+                border: 1px solid #000 !important;
+                margin-top: 10px !important;
+                margin-bottom: 10px !important;
                 page-break-inside: avoid;
-                margin-bottom: 5px !important;
+                break-inside: avoid;
+                box-shadow: none !important;
             }
 
-            a[href]:after {
-                content: none !important;
+            .uni-list {
+                gap: 0 !important;
+            }
+
+            .rc-footer {
+                padding: 10px 15px !important;
+                color: #000 !important;
+                margin-top: 15px !important;
+                border-top: 1px solid #000 !important;
             }
         }
-
         /* --- NEW LONG BOX STYLES (CUTOFF + STATUS) --- */
         .split-header {
             display: flex;
@@ -1467,10 +1527,7 @@
     <section id="resultView">
         <div class="view-container">
             <div class="rc-head">
-                    <div id="saveIconBtn" onclick="toggleSaveCurrentResult()" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 1.4rem; color: rgba(255,255,255,0.6); cursor: pointer; z-index: 10; padding: 5px;">
-                        <i class="ph-bold ph-heart"></i>
-                    </div>
-
+                   
                     <div class="rc-title" id="rTitle">EXAM NAME</div>
                     <div class="rc-sub">RSSB SCORE CARD</div>
                     <div class="rc-sub" id="rExamDate" style="margin-top:4px; opacity:0.8; font-size:0.65rem;"></div>
@@ -1541,7 +1598,9 @@
             </button>
         </div>
         <div class="control-panel" style="margin: 0 auto;">
-            <button class="btn-act act-save" onclick="downloadImage()"><i class="ph-bold ph-download-simple"></i> Save</button>
+           <button id="btnSaveAction" class="btn-act act-save" onclick="toggleSaveCurrentResult()">
+    <i class="ph-bold ph-heart"></i> SAVE
+</button>
             <button class="btn-act act-back" onclick="closeResult()"><i class="ph-bold ph-arrow-left"></i> Back</button>
         </div>
         </div>
@@ -2718,20 +2777,18 @@
                 link.click();
             });
         }
-    // --- IMPROVED SAVED SYSTEM (Universal + UI Fix) ---
+    // --- UPDATED SAVE SYSTEM (No Image Download) ---
 
         function toggleSaveCurrentResult() {
             if (!currentResultData) return toast("No data to save");
 
             let saved = JSON.parse(localStorage.getItem('dreamLinkSaved') || "[]");
             
-            // Unique ID Generation
+            // Unique ID Logic
             let uniqueId;
             if (currentResultData.isUniversalMode) {
-                // Universal ka ID Name+Father se banega
                 uniqueId = `UNI_${currentResultData.candidate}_${currentResultData.father}`;
             } else {
-                // Single ka ID Roll+ExamId se
                 uniqueId = `${currentResultData.roll}_${currentResultData.examId}`;
             }
 
@@ -2742,28 +2799,26 @@
                 return itemId === uniqueId;
             });
 
-            const btn = document.getElementById('saveIconBtn');
+            // Button Reference (Updated to Bottom Button)
+            const btn = document.getElementById('btnSaveAction');
 
             if (index > -1) {
+                // Remove
                 saved.splice(index, 1);
                 toast("Removed from Saved List");
-                if(btn) {
-                    btn.style.color = "rgba(255,255,255,0.6)";
-                    btn.innerHTML = '<i class="ph-bold ph-heart"></i>';
-                }
             } else {
+                // Add
                 saved.unshift(currentResultData);
                 toast("Saved Successfully!");
-                if(btn) {
-                    btn.style.color = "#ffffff"; // Bright White for active
-                    btn.innerHTML = '<i class="ph-fill ph-heart"></i>';
-                }
             }
             localStorage.setItem('dreamLinkSaved', JSON.stringify(saved));
+            
+            // Update UI
+            updateSaveIconState();
         }
 
         function updateSaveIconState() {
-            const btn = document.getElementById('saveIconBtn');
+            const btn = document.getElementById('btnSaveAction');
             if(!btn || !currentResultData) return;
 
             let saved = JSON.parse(localStorage.getItem('dreamLinkSaved') || "[]");
@@ -2782,12 +2837,17 @@
                 return itemId === uniqueId;
             });
 
+            // Button UI Update logic
             if (isSaved) {
-                btn.style.color = "#ffffff";
-                btn.innerHTML = '<i class="ph-fill ph-heart"></i>';
+                // SAVED STATE (Green/Success look)
+                btn.style.background = "var(--success)";
+                btn.style.color = "white";
+                btn.innerHTML = '<i class="ph-fill ph-heart"></i> SAVED';
             } else {
-                btn.style.color = "rgba(255,255,255,0.6)";
-                btn.innerHTML = '<i class="ph-bold ph-heart"></i>';
+                // NORMAL STATE
+                btn.style.background = "var(--text-main)";
+                btn.style.color = "var(--bg-body)";
+                btn.innerHTML = '<i class="ph-bold ph-heart"></i> SAVE';
             }
         }
 
