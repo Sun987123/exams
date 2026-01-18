@@ -1673,38 +1673,51 @@
             appId: "1:658962316072:web:9b78511acbe17f97a6ee1d"
         };
 
-        let db = null;
-        let currentResultData = null; // To store current open result
+        // FIX: Auth variable ko global banaya
+let db = null;
+let auth = null; 
+let currentResultData = null; // To store current open result
 
-        // --- LOGIN FUNCTION ---
-        function handleLogin() {
-            const email = document.getElementById('txtEmail').value;
-            const pwd = document.getElementById('txtPwd').value;
-            const msg = document.getElementById('loginMsg');
-            const loginScreen = document.getElementById('loginScreen');
+       function handleLogin() {
+    const email = document.getElementById('txtEmail').value;
+    const pwd = document.getElementById('txtPwd').value;
+    const msg = document.getElementById('loginMsg');
+    const loginScreen = document.getElementById('loginScreen');
 
-            if (!email || !pwd) {
-                msg.style.display = 'block';
-                msg.innerText = "Please enter email and password";
-                return;
-            }
+    // FIX: Check agar Auth load nahi hua hai (Internet Issue)
+    if (!auth) {
+        msg.style.display = 'block';
+        msg.innerText = "System Loading... Please wait or check internet!";
+        return;
+    }
 
-            msg.style.display = 'none';
-            // Firebase Auth Check
-            auth.signInWithEmailAndPassword(email, pwd)
+    if (!email || !pwd) {
+        msg.style.display = 'block';
+        msg.innerText = "Please enter email and password";
+        return;
+    }
+
+    msg.style.display = 'none';
+    
+    // FIX: Button ko disable karein taki double click na ho
+    const btn = document.querySelector('.login-btn');
+    if(btn) btn.innerText = "VERIFYING...";
+
+    // Firebase Auth Check
+    auth.signInWithEmailAndPassword(email, pwd)
                 .then((userCredential) => {
                     // Login Success
                     loginScreen.style.display = 'none';
                     toast("Welcome Back!");
                     updateUserUI(userCredential.user);
                 })
-                .catch((error) => {
-                    // Login Failed
-                    console.error(error);
-                    msg.style.display = 'block';
-                    msg.innerText = "Invalid Email or Password!";
-                });
-        }
+               .catch((error) => {
+            // Login Failed
+            console.error(error);
+            msg.style.display = 'block';
+            msg.innerText = "Invalid Email or Password!";
+        });
+}
 
         // --- LOGOUT FUNCTION ---
         function handleLogout() {
@@ -2135,28 +2148,17 @@
             return found.marks;
         }
 
-        function showReceipt(data, isUniversal) {
-            // 1. Data Store logic (Universal fix included)
+       function showReceipt(data, isUniversal) {
+            // 1. Data Store logic
             if (isUniversal) {
-                // Universal ke liye hum data ko tag karte hain
-                currentResultData = {
-                    ...data,
-                    isUniversalMode: true
-                };
+                currentResultData = { ...data, isUniversalMode: true };
             } else {
-                currentResultData = {
-                    ...data,
-                    isUniversalMode: false
-                };
+                currentResultData = { ...data, isUniversalMode: false };
             }
 
-            // 2. Icon State Update
+            // Icon state update
             setTimeout(updateSaveIconState, 50);
-            try {
-                history.pushState({
-                    view: 'result'
-                }, '', '#result');
-            } catch (e) {}
+            try { history.pushState({ view: 'result' }, '', '#result'); } catch (e) {}
 
             lastScrollY = window.scrollY;
             document.getElementById('searchScreen').style.display = 'none';
@@ -2199,69 +2201,50 @@
                 return s;
             };
 
-            // --- HELPER: COMPACT BOX (Fixed: No Error, 2 Lines Only) ---
+            // --- HELPER: COMPACT BOX ---
             const createLongBox = (type, ownCutoff, genCutoff, userMarks, dataObj, statusText) => {
                 const isFinal = type === 'final';
                 const isFailPre = type === 'fail';
                 const isFailFinal = type === 'fail_final';
                 const isFail = isFailPre || isFailFinal;
 
-                // 1. COLORS & BADGE STYLE (Defined TOP to prevent ReferenceError)
                 let borderColor, bgColor, textColor, icon;
                 if (isFail) {
-                    borderColor = '#e5e7eb';
-                    bgColor = '#f8fafc';
-                    textColor = '#64748b';
-                    icon = 'ph-x-circle';
+                    borderColor = '#e5e7eb'; bgColor = '#f8fafc'; textColor = '#64748b'; icon = 'ph-x-circle';
                     statusText = isFailFinal ? 'NOT SELECTED' : 'NOT QUALIFIED';
                 } else if (isFinal) {
-                    borderColor = '#22c55e';
-                    bgColor = '#f0fdf4';
-                    textColor = '#15803d';
-                    icon = 'ph-medal';
+                    borderColor = '#22c55e'; bgColor = '#f0fdf4'; textColor = '#15803d'; icon = 'ph-medal';
                 } else {
-                    borderColor = '#fbbf24';
-                    bgColor = '#fffbeb';
-                    textColor = '#b45309';
-                    icon = 'ph-seal-check';
+                    borderColor = '#fbbf24'; bgColor = '#fffbeb'; textColor = '#b45309'; icon = 'ph-seal-check';
                 }
 
-                // Fix: Defined immediately so it's available for use below
                 let badgeStyle = isFail ?
                     `color:#ef4444; border:1px solid #fca5a5; background:#fef2f2;` :
                     `color:${textColor}; border:1px solid ${borderColor};`;
 
                 let cutoffLabel = isFinal ? 'FINAL CUTOFF' : (isFailFinal ? 'REQ. FINAL CUTOFF' : (isFailPre ? 'REQ. CUTOFF (PRE DV)' : 'PRE DV CUTOFF'));
 
-                // 2. CHECK GEN QUALIFICATION
+                // GEN QUALIFICATION CHECK
                 let isGenQual = false;
                 let myCat = (dataObj.cat || dataObj.category || '').toUpperCase();
-
-                // Condition: Not Fail AND Not Gen Category AND Score >= Gen Cutoff
                 if (!isFail && myCat !== 'GEN' && genCutoff !== 'NA' && genCutoff !== '-') {
                     const s = parseFloat(userMarks);
                     const g = parseFloat(genCutoff);
-                    if (!isNaN(s) && !isNaN(g) && s >= g) {
-                        isGenQual = true;
-                    }
+                    if (!isNaN(s) && !isNaN(g) && s >= g) isGenQual = true;
                 }
 
-                // 3. BRACKET DETAILS (Always Own Category)
                 let dCat = expandCode(myCat);
                 let dGen = dataObj.gender ? expandCode(dataObj.gender) : '';
                 let dSub = (dataObj.subcat && dataObj.subcat !== '-' && dataObj.subcat !== 'NA') ? expandCode(dataObj.subcat) : '';
-
                 let detailParts = [dCat];
                 if (dGen) detailParts.push(dGen);
                 if (dSub) detailParts.push(dSub);
                 let detailStr = detailParts.join(' • ');
 
-                // 4. BUILD BOTTOM ROW (Merge App/DOB + GEN Info here)
                 let appNo = dataObj.applicationno || 'NA';
                 let dob = dataObj.dob || '-';
                 let itemsHtml = '';
 
-                // A. Add App & DOB
                 if (!isFinal) {
                     if (!isFail || appNo !== 'NA') {
                         itemsHtml += `<div class="cd-item"><span class="cd-lbl" style="color:${textColor}">APP:</span><span class="cd-val" style="color:#0f172a">${appNo}</span></div>`;
@@ -2272,19 +2255,15 @@
                     }
                 }
 
-                // B. Add GEN Info IN SAME LINE (If Qualified)
                 if (isGenQual) {
                     if (itemsHtml) itemsHtml += `<span class="cd-sep">|</span>`;
-                    // Green Highlighted Text for GEN Selection
-                    itemsHtml += `
-             <div class="cd-item" style="gap:6px; align-items:center;">
-                <span class="cd-lbl" style="color:#15803d; font-weight:800;">GEN CUT:</span>
-                <span class="cd-val" style="color:#15803d; font-weight:800;">${genCutoff}</span>
-                <span style="font-size:0.6rem; font-weight:800; color:#15803d; background:#dcfce7; border:1px solid #86efac; padding:1px 5px; border-radius:4px; margin-left:2px;">GEN SEL</span>
-             </div>`;
+                    itemsHtml += `<div class="cd-item" style="gap:6px; align-items:center;">
+                        <span class="cd-lbl" style="color:#15803d; font-weight:800;">GEN CUT:</span>
+                        <span class="cd-val" style="color:#15803d; font-weight:800;">${genCutoff}</span>
+                        <span style="font-size:0.6rem; font-weight:800; color:#15803d; background:#dcfce7; border:1px solid #86efac; padding:1px 5px; border-radius:4px; margin-left:2px;">GEN SEL</span>
+                     </div>`;
                 }
 
-                // 5. BORDER LOGIC
                 let headerStyle = `border-color:${borderColor}; border-bottom: none;`;
                 if (!itemsHtml) headerStyle += ` margin-bottom: 0; padding-bottom: 0;`;
 
@@ -2321,23 +2300,18 @@
                 const cont = document.getElementById('uniCardsContainer');
                 if (cont) {
                     cont.innerHTML = '';
-                    const examOrder = {
-                        'fourthgrade2025': 1,
-                        'vdo2025': 2,
-                        'patwari2025': 3
-                    };
+                    const examOrder = { 'fourthgrade2025': 1, 'vdo2025': 2, 'patwari2025': 3 };
                     data.exams.sort((a, b) => (examOrder[a.examId] || 99) - (examOrder[b.examId] || 99));
 
                     data.exams.forEach((ex, index) => {
                         const themeClass = `exam-theme-${ex.examId}`;
-                        const finalScore = (ex.examId === 'patwari2025' || ex.examId === 'fourthgrade2025') ? (ex.normalized || ex.raw || 0) : (ex.raw || 0);
+                        // LOGIC: Use Normalized for Patwari, VDO, 4th Grade
+                        const finalScore = (['patwari2025', 'vdo2025', 'fourthgrade2025'].includes(ex.examId)) ? (ex.normalized || ex.raw || 0) : (ex.raw || 0);
                         const raw = ex.raw ? parseFloat(ex.raw).toFixed(4) : '-';
                         const finalFmt = parseFloat(finalScore).toFixed(4);
 
-                        // GET CUTOFFS (OWN & GEN)
                         const ownCutPre = getMyCutoff(ex.examId, ex.category || data.category, ex.gender || data.gender, ex.subcat || data.subcat, 'marks');
                         const genCutPre = getMyCutoff(ex.examId, 'GEN', ex.gender || data.gender, ex.subcat || data.subcat, 'marks');
-
                         const ownCutFin = getMyCutoff(ex.examId, ex.category || data.category, ex.gender || data.gender, ex.subcat || data.subcat, 'final');
                         const genCutFin = getMyCutoff(ex.examId, 'GEN', ex.gender || data.gender, ex.subcat || data.subcat, 'final');
 
@@ -2345,39 +2319,21 @@
                         const hasGraph = (ex.examId === 'patwari2025' || ex.examId === 'vdo2025' || ex.examId === 'fourthgrade2025');
 
                         let boxesHtml = '';
+                        const baseInfo = { cat: ex.category || data.category, gender: ex.gender || data.gender, subcat: ex.subcat || data.subcat };
 
-                       // --- FIX START: Fourth Grade Logic Added ---
-let isMarksQualified = false; // Name changed to generic
-if (data.examId === 'patwari2025' || data.examId === 'fourthgrade2025') {
-    // Check GEN Cutoff
-    if (genCutPre !== 'NA' && parseFloat(finalScore) >= parseFloat(genCutPre)) isMarksQualified = true;
-    // Check Own Category Cutoff
-    else if (ownCutPre !== 'NA' && parseFloat(finalScore) >= parseFloat(ownCutPre)) isMarksQualified = true;
-}
-
-const isQualifiedPre = (data.dvData || isMarksQualified);
-// --- FIX END ---
-                        const baseInfo = {
-                            cat: ex.category || data.category,
-                            gender: ex.gender || data.gender,
-                            subcat: ex.subcat || data.subcat
-                        };
+                        // --- LOGIC: Check Qualification for All Exams ---
+                        let isMarksQualified = false;
+                        if (['patwari2025', 'vdo2025', 'fourthgrade2025'].includes(ex.examId)) {
+                            if (genCutPre !== 'NA' && parseFloat(finalScore) >= parseFloat(genCutPre)) isMarksQualified = true;
+                            else if (ownCutPre !== 'NA' && parseFloat(finalScore) >= parseFloat(ownCutPre)) isMarksQualified = true;
+                        }
+                        const isQualifiedPre = (ex.dvData || isMarksQualified);
 
                         // 1. DV STATUS
                         if (ex.dvData) {
-                            const mergeData = {
-                                ...baseInfo,
-                                ...ex.dvData
-                            };
-                            boxesHtml += createLongBox('dv', ownCutPre, genCutPre, (ex.dvData.finalmarks || finalFmt), mergeData, "QUALIFIED");
-                       // --- FIX START: Display Box Logic ---
-} else if (isMarksQualified) {
-    statusHtml += createLongBox('dv', ownCutPre, genCutPre, finalFmt, {
-        ...baseInfo,
-        applicationno: 'NA'
-    }, "QUALIFIED FOR DV");
-}
-// --- FIX END ---
+                            boxesHtml += createLongBox('dv', ownCutPre, genCutPre, (ex.dvData.finalmarks || finalFmt), { ...baseInfo, ...ex.dvData }, "QUALIFIED");
+                        } else if (isMarksQualified) {
+                            boxesHtml += createLongBox('dv', ownCutPre, genCutPre, finalFmt, { ...baseInfo, applicationno: 'NA' }, "QUALIFIED");
                         } else {
                             if (ownCutPre !== 'NA') {
                                 boxesHtml += createLongBox('fail', ownCutPre, genCutPre, finalFmt, baseInfo, "NOT QUALIFIED");
@@ -2387,11 +2343,7 @@ const isQualifiedPre = (data.dvData || isMarksQualified);
                         // 2. FINAL STATUS
                         if (ex.finalData) {
                             let fM = ex.finalData.finalmarks || ex.finalData.marks || finalFmt;
-                            const mergeFinal = {
-                                ...baseInfo,
-                                ...ex.finalData
-                            };
-                            boxesHtml += createLongBox('final', ownCutFin, genCutFin, fM, mergeFinal, "SELECTED");
+                            boxesHtml += createLongBox('final', ownCutFin, genCutFin, fM, { ...baseInfo, ...ex.finalData }, "SELECTED");
                         } else if (isQualifiedPre && ownCutFin !== 'NA' && ownCutFin !== '-') {
                             boxesHtml += createLongBox('fail_final', ownCutFin, genCutFin, finalFmt, baseInfo, "NOT SELECTED");
                         }
@@ -2402,14 +2354,13 @@ const isQualifiedPre = (data.dvData || isMarksQualified);
                         card.className = `uni-card ${themeClass}`;
                         card.innerHTML = `
                    <div class="uc-head">
-    <span class="uc-title">${examInfo ? examInfo.name : ex.examId}</span>
-    <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
-        <span class="uc-date" style="font-size: 0.6rem; color: #64748b;">
-            ${examInfo ? examInfo.date : ''}
-            ${ex.shift ? ` <span style="color:var(--primary); font-weight:800; margin-left:4px;">SHIFT: ${ex.shift}</span>` : ''}
-        </span>
-    </div>
-</div>
+                        <span class="uc-title">${examInfo ? examInfo.name : ex.examId}</span>
+                        <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
+                            <span class="uc-date" style="font-size: 0.6rem; color: #64748b;">
+                                ${examInfo ? examInfo.date : ''}
+                                ${ex.shift ? ` <span style="color:var(--primary); font-weight:800; margin-left:4px;">SHIFT: ${ex.shift}</span>` : ''}
+                            </span>
+                        </div>
                     </div>
                     <div class="uc-body">
                         <div class="uc-cell"><span class="uc-lbl">Roll</span><span class="uc-val">${ex.roll}</span></div>
@@ -2434,10 +2385,7 @@ const isQualifiedPre = (data.dvData || isMarksQualified);
                 safeSetText('rTitle', examObj.name);
                 if (dateEl) dateEl.style.display = 'block';
                 safeSetText('rExamDate', examObj.date || '');
-                // Shift details for Individual View
-                if (data.shift) {
-                    document.getElementById('rExamDate').innerText += ` | SHIFT: ${data.shift}`;
-                }
+                if (data.shift) document.getElementById('rExamDate').innerText += ` | SHIFT: ${data.shift}`;
 
                 singleSec.classList.remove('hide');
                 uniSec.classList.add('hide');
@@ -2445,69 +2393,53 @@ const isQualifiedPre = (data.dvData || isMarksQualified);
 
                 safeSetText('rRoll', data.roll);
                 safeSetText('rRaw', data.raw ? parseFloat(data.raw).toFixed(4) : '-');
-                let finalScore = (data.examId === 'patwari2025' || data.examId === 'fourthgrade2025') ? (data.normalized || data.raw || 0) : (data.raw || 0);
+                
+                // LOGIC: Use Normalized for Patwari, VDO, 4th Grade
+                let finalScore = (['patwari2025', 'vdo2025', 'fourthgrade2025'].includes(data.examId)) ? (data.normalized || data.raw || 0) : (data.raw || 0);
                 let finalFmt = parseFloat(finalScore).toFixed(4);
+                
                 safeSetText('rFinal', finalFmt);
                 safeSetText('rRank', data.merit ? `#${data.merit}` : 'N/A');
                 safeSetText('rCatRank', data.catrank ? `#${data.catrank}` : 'N/A');
 
-                // GET CUTOFFS (OWN & GEN)
                 const ownCutPre = getMyCutoff(data.examId, data.category, data.gender, data.subcat, 'marks');
                 const genCutPre = getMyCutoff(data.examId, 'GEN', data.gender, data.subcat, 'marks');
-
                 const ownCutFin = getMyCutoff(data.examId, data.category, data.gender, data.subcat, 'final');
                 const genCutFin = getMyCutoff(data.examId, 'GEN', data.gender, data.subcat, 'final');
 
-// --- FIX START: Universal Logic Updated ---
-let isMarksQualified = false;
-if (ex.examId === 'patwari2025' || ex.examId === 'fourthgrade2025') {
-    // Check GEN
-    if (genCutPre !== 'NA' && parseFloat(finalScore) >= parseFloat(genCutPre)) isMarksQualified = true;
-    // Check OWN
-    else if (ownCutPre !== 'NA' && parseFloat(finalScore) >= parseFloat(ownCutPre)) isMarksQualified = true;
-}
-
-const isQualifiedPre = (ex.dvData || isMarksQualified);
-// --- FIX END ---
                 let statusHtml = '';
+                const baseInfo = { cat: data.category, gender: data.gender, subcat: data.subcat };
 
-                const baseInfo = {
-                    cat: data.category,
-                    gender: data.gender,
-                    subcat: data.subcat
-                };
+                // --- LOGIC: Check Qualification ---
+                let isMarksQualified = false;
+                if (['patwari2025', 'vdo2025', 'fourthgrade2025'].includes(data.examId)) {
+                    if (genCutPre !== 'NA' && parseFloat(finalScore) >= parseFloat(genCutPre)) isMarksQualified = true;
+                    else if (ownCutPre !== 'NA' && parseFloat(finalScore) >= parseFloat(ownCutPre)) isMarksQualified = true;
+                }
+                const isQualifiedPre = (data.dvData || isMarksQualified);
 
+                // 1. DV STATUS
                 if (data.dvData) {
-                    const mergeData = {
-                        ...baseInfo,
-                        ...data.dvData
-                    };
-                    statusHtml += createLongBox('dv', ownCutPre, genCutPre, (data.dvData.finalmarks || finalFmt), mergeData, "QUALIFIED FOR DV");
-               } else if (isMarksQualified) {
-    boxesHtml += createLongBox('dv', ownCutPre, genCutPre, finalFmt, {
-        ...baseInfo,
-        applicationno: 'NA'
-    }, "QUALIFIED");
-} else {
+                    statusHtml += createLongBox('dv', ownCutPre, genCutPre, (data.dvData.finalmarks || finalFmt), { ...baseInfo, ...data.dvData }, "QUALIFIED FOR DV");
+                } else if (isMarksQualified) {
+                    statusHtml += createLongBox('dv', ownCutPre, genCutPre, finalFmt, { ...baseInfo, applicationno: 'NA' }, "QUALIFIED FOR DV");
+                } else {
                     if (ownCutPre !== 'NA') {
                         statusHtml += createLongBox('fail', ownCutPre, genCutPre, finalFmt, baseInfo, "NOT QUALIFIED");
                     }
                 }
 
+                // 2. FINAL STATUS
                 if (data.finalData) {
                     let fM = data.finalData.finalmarks || data.finalData.marks || finalFmt;
-                    const mergeFinal = {
-                        ...baseInfo,
-                        ...data.finalData
-                    };
-                    statusHtml += createLongBox('final', ownCutFin, genCutFin, fM, mergeFinal, "FINAL SELECTION");
+                    statusHtml += createLongBox('final', ownCutFin, genCutFin, fM, { ...baseInfo, ...data.finalData }, "FINAL SELECTION");
                 } else if (isQualifiedPre && ownCutFin !== 'NA' && ownCutFin !== '-') {
                     statusHtml += createLongBox('fail_final', ownCutFin, genCutFin, finalFmt, baseInfo, "NOT SELECTED");
                 }
 
                 if (statusWrapper) statusWrapper.innerHTML = statusHtml;
 
-                if (data.examId === 'patwari2025' || data.examId === 'vdo2025' || data.examId === 'fourthgrade2025') {
+                if (['patwari2025', 'vdo2025', 'fourthgrade2025'].includes(data.examId)) {
                     graphSec.classList.remove('hide');
                     setTimeout(() => renderDensityChart('densityChart', data.examId, finalScore, ownCutPre), 150);
                 } else {
