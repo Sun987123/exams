@@ -2330,7 +2330,7 @@
 
                     data.exams.forEach((ex, index) => {
                         const themeClass = `exam-theme-${ex.examId}`;
-                        const finalScore = ex.examId === 'patwari2025' ? (ex.normalized || ex.raw || 0) : (ex.raw || 0);
+                        const finalScore = (ex.examId === 'patwari2025' || ex.examId === 'fourthgrade2025') ? (ex.normalized || ex.raw || 0) : (ex.raw || 0);
                         const raw = ex.raw ? parseFloat(ex.raw).toFixed(4) : '-';
                         const finalFmt = parseFloat(finalScore).toFixed(4);
 
@@ -2441,7 +2441,7 @@
 
                 safeSetText('rRoll', data.roll);
                 safeSetText('rRaw', data.raw ? parseFloat(data.raw).toFixed(4) : '-');
-                let finalScore = data.examId === 'patwari2025' ? (data.normalized || data.raw || 0) : (data.raw || 0);
+                let finalScore = (data.examId === 'patwari2025' || data.examId === 'fourthgrade2025') ? (data.normalized || data.raw || 0) : (data.raw || 0);
                 let finalFmt = parseFloat(finalScore).toFixed(4);
                 safeSetText('rFinal', finalFmt);
                 safeSetText('rRank', data.merit ? `#${data.merit}` : 'N/A');
