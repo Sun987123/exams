@@ -2346,16 +2346,17 @@
 
                         let boxesHtml = '';
 
-                        // Patwar Check
-                        let isPatwarQualified = false;
-                        if (ex.examId === 'patwari2025') {
-                            // Check GEN
-                            if (genCutPre !== 'NA' && parseFloat(finalScore) >= parseFloat(genCutPre)) isPatwarQualified = true;
-                            // Check OWN
-                            else if (ownCutPre !== 'NA' && parseFloat(finalScore) >= parseFloat(ownCutPre)) isPatwarQualified = true;
-                        }
+                       // --- FIX START: Fourth Grade Logic Added ---
+let isMarksQualified = false; // Name changed to generic
+if (data.examId === 'patwari2025' || data.examId === 'fourthgrade2025') {
+    // Check GEN Cutoff
+    if (genCutPre !== 'NA' && parseFloat(finalScore) >= parseFloat(genCutPre)) isMarksQualified = true;
+    // Check Own Category Cutoff
+    else if (ownCutPre !== 'NA' && parseFloat(finalScore) >= parseFloat(ownCutPre)) isMarksQualified = true;
+}
 
-                        const isQualifiedPre = (ex.dvData || isPatwarQualified);
+const isQualifiedPre = (data.dvData || isMarksQualified);
+// --- FIX END ---
                         const baseInfo = {
                             cat: ex.category || data.category,
                             gender: ex.gender || data.gender,
@@ -2369,11 +2370,14 @@
                                 ...ex.dvData
                             };
                             boxesHtml += createLongBox('dv', ownCutPre, genCutPre, (ex.dvData.finalmarks || finalFmt), mergeData, "QUALIFIED");
-                        } else if (isPatwarQualified) {
-                            boxesHtml += createLongBox('dv', ownCutPre, genCutPre, finalFmt, {
-                                ...baseInfo,
-                                applicationno: 'NA'
-                            }, "QUALIFIED");
+                       // --- FIX START: Display Box Logic ---
+} else if (isMarksQualified) {
+    statusHtml += createLongBox('dv', ownCutPre, genCutPre, finalFmt, {
+        ...baseInfo,
+        applicationno: 'NA'
+    }, "QUALIFIED FOR DV");
+}
+// --- FIX END ---
                         } else {
                             if (ownCutPre !== 'NA') {
                                 boxesHtml += createLongBox('fail', ownCutPre, genCutPre, finalFmt, baseInfo, "NOT QUALIFIED");
@@ -2454,13 +2458,17 @@
                 const ownCutFin = getMyCutoff(data.examId, data.category, data.gender, data.subcat, 'final');
                 const genCutFin = getMyCutoff(data.examId, 'GEN', data.gender, data.subcat, 'final');
 
-                let isPatwarQualified = false;
-                if (data.examId === 'patwari2025') {
-                    if (genCutPre !== 'NA' && parseFloat(finalScore) >= parseFloat(genCutPre)) isPatwarQualified = true;
-                    else if (ownCutPre !== 'NA' && parseFloat(finalScore) >= parseFloat(ownCutPre)) isPatwarQualified = true;
-                }
+// --- FIX START: Universal Logic Updated ---
+let isMarksQualified = false;
+if (ex.examId === 'patwari2025' || ex.examId === 'fourthgrade2025') {
+    // Check GEN
+    if (genCutPre !== 'NA' && parseFloat(finalScore) >= parseFloat(genCutPre)) isMarksQualified = true;
+    // Check OWN
+    else if (ownCutPre !== 'NA' && parseFloat(finalScore) >= parseFloat(ownCutPre)) isMarksQualified = true;
+}
 
-                const isQualifiedPre = (data.dvData || isPatwarQualified);
+const isQualifiedPre = (ex.dvData || isMarksQualified);
+// --- FIX END ---
                 let statusHtml = '';
 
                 const baseInfo = {
@@ -2475,12 +2483,12 @@
                         ...data.dvData
                     };
                     statusHtml += createLongBox('dv', ownCutPre, genCutPre, (data.dvData.finalmarks || finalFmt), mergeData, "QUALIFIED FOR DV");
-                } else if (isPatwarQualified) {
-                    statusHtml += createLongBox('dv', ownCutPre, genCutPre, finalFmt, {
-                        ...baseInfo,
-                        applicationno: 'NA'
-                    }, "QUALIFIED FOR DV");
-                } else {
+               } else if (isMarksQualified) {
+    boxesHtml += createLongBox('dv', ownCutPre, genCutPre, finalFmt, {
+        ...baseInfo,
+        applicationno: 'NA'
+    }, "QUALIFIED");
+} else {
                     if (ownCutPre !== 'NA') {
                         statusHtml += createLongBox('fail', ownCutPre, genCutPre, finalFmt, baseInfo, "NOT QUALIFIED");
                     }
