@@ -81,62 +81,62 @@ const CUTOFF_DATA = {
 
     'fourthgrade2025': [
 
-        { cat: 'GEN', sub: 'GEN', marks: '146.3279', final: '-' },
-        { cat: 'GEN', sub: 'FEM', marks: '135.6506', final: '-' },
-        { cat: 'GEN', sub: 'WID.', marks: '32.6964', final: '-' },
+        // GEN Category
+        { cat: 'GEN', sub: 'GEN', marks: '144.2955', final: '-' },
+        { cat: 'GEN', sub: 'FEM', marks: '134.9021', final: '-' },
+        { cat: 'GEN', sub: 'WID.', marks: '30.6569', final: '-' },
         { cat: 'GEN', sub: 'DIV.', marks: '86.0888', final: '-' },
-        { cat: 'GEN', sub: 'EX',  marks: '0.0033', final: '-' },
+        { cat: 'GEN', sub: 'EX',  marks: '0.0035', final: '-' },
 
-   
-        { cat: 'SC', sub: 'GEN', marks: '126.0259', final: '-' },
-        { cat: 'SC', sub: 'FEM', marks: '114.4693', final: '-' },
-        { cat: 'SC', sub: 'WID.', marks: '0.0033', final: '-' },
-        { cat: 'SC', sub: 'DIV.', marks: '51.5655', final: '-' },
+        // SC Category
+        { cat: 'SC', sub: 'GEN', marks: '123.8287', final: '-' },
+        { cat: 'SC', sub: 'FEM', marks: '112.248', final: '-' },
+        { cat: 'SC', sub: 'WID.', marks: '0.0035', final: '-' },
+        { cat: 'SC', sub: 'DIV.', marks: '50.5545', final: '-' },
         { cat: 'SC', sub: 'EX',  marks: 'NA', final: '-' },
 
-       
-        { cat: 'ST', sub: 'GEN', marks: '117.0626', final: '-' },
-        { cat: 'ST', sub: 'FEM', marks: '110.8956', final: '-' },
-        { cat: 'ST', sub: 'WID.', marks: '0.0033', final: '-' },
-        { cat: 'ST', sub: 'DIV.', marks: '38.7189', final: '-' },
+        // ST Category
+        { cat: 'ST', sub: 'GEN', marks: '114.6136', final: '-' },
+        { cat: 'ST', sub: 'FEM', marks: '108.8068', final: '-' },
+        { cat: 'ST', sub: 'WID.', marks: '0.0035', final: '-' },
+        { cat: 'ST', sub: 'DIV.', marks: '38.2753', final: '-' },
         { cat: 'ST', sub: 'EX',  marks: 'NA', final: '-' },
 
-       
-        { cat: 'EWS', sub: 'GEN', marks: '131.6337', final: '-' },
-        { cat: 'EWS', sub: 'FEM', marks: '122.0484', final: '-' },
-        { cat: 'EWS', sub: 'WID.', marks: '0.2585', final: '-' },
-        { cat: 'EWS', sub: 'DIV.', marks: '47.0655', final: '-' },
+        // EWS Category
+        { cat: 'EWS', sub: 'GEN', marks: '129.1103', final: '-' },
+        { cat: 'EWS', sub: 'FEM', marks: '119.7978', final: '-' },
+        { cat: 'EWS', sub: 'WID.', marks: '0.017', final: '-' },
+        { cat: 'EWS', sub: 'DIV.', marks: '16.7286', final: '-' },
         { cat: 'EWS', sub: 'EX',  marks: 'NA', final: '-' },
 
-       
-        { cat: 'OBC', sub: 'GEN', marks: '138.2739', final: '-' },
-        { cat: 'OBC', sub: 'FEM', marks: '128.3747', final: '-' },
-        { cat: 'OBC', sub: 'WID.', marks: '0.0033', final: '-' },
-        { cat: 'OBC', sub: 'DIV.', marks: '62.9038', final: '-' },
+        // OBC Category
+        { cat: 'OBC', sub: 'GEN', marks: '136.1224', final: '-' },
+        { cat: 'OBC', sub: 'FEM', marks: '126.1377', final: '-' },
+        { cat: 'OBC', sub: 'WID.', marks: '0.0035', final: '-' },
+        { cat: 'OBC', sub: 'DIV.', marks: '61.4786', final: '-' },
         { cat: 'OBC', sub: 'EX',  marks: 'NA', final: '-' },
 
-    
-        { cat: 'MBC', sub: 'GEN', marks: '132.7357', final: '-' },
-        { cat: 'MBC', sub: 'FEM', marks: '116.6476', final: '-' },
+        // MBC Category
+        { cat: 'MBC', sub: 'GEN', marks: '130.2844', final: '-' },
+        { cat: 'MBC', sub: 'FEM', marks: '115.2445', final: '-' },
         { cat: 'MBC', sub: 'WID.', marks: '0.0033', final: '-' },
-        { cat: 'MBC', sub: 'DIV.', marks: '57.8038', final: '-' },
+        { cat: 'MBC', sub: 'DIV.', marks: '56.5488', final: '-' },
         { cat: 'MBC', sub: 'EX',  marks: 'NA', final: '-' },
 
-        
-        { cat: 'SAH', sub: 'GEN', marks: '0.0143', final: '-' },
-        { cat: 'SAH', sub: 'FEM', marks: '0.0033', final: '-' },
-        { cat: 'SAH', sub: 'WID.', marks: '0.0033', final: '-' },
-        { cat: 'SAH', sub: 'DIV.', marks: '0.0033', final: '-' },
-        { cat: 'SAH', sub: 'EX',  marks: 'NA', final: '-' },
+        // SAH Category
+        { cat: 'SAH', sub: 'GEN', marks: '0.0307', final: '-' },
+        { cat: 'SAH', sub: 'FEM', marks: '0.0035', final: '-' },
+        { cat: 'SAH', sub: 'WID.', marks: '3.8805', final: '-' },
+        { cat: 'SAH', sub: 'DIV.', marks: '16.0842', final: '-' },
+        { cat: 'SAH', sub: 'EX',  marks: '-', final: '-' },
 
-       
-        { cat: 'B/LV',  sub: '', marks: '0.0033', final: '-' },
-        { cat: 'HI',    sub: '', marks: '0.0033', final: '-' },
-        { cat: 'LD/CP', sub: '', marks: '73.1223', final: '-' },
-        { cat: 'MI/MD', sub: '', marks: '0.0033', final: '-' },
-        { cat: 'SP',    sub: '', marks: '0.0033', final: '-' },
+        // Horizontal Reservations
+        { cat: 'B/LV',  sub: '', marks: '0.0035', final: '-' },
+        { cat: 'HI',    sub: '', marks: '0.0035', final: '-' },
+        { cat: 'LD/CP', sub: '', marks: '70.833', final: '-' },
+        { cat: 'MI/MD', sub: '', marks: '0.0035', final: '-' },
+        { cat: 'SP',    sub: '', marks: '0.0035', final: '-' },
     ]
-        };
 
 // 2. EXAM NAMES MAP
 const EXAM_NAMES = {
