@@ -138,6 +138,7 @@ const CUTOFF_DATA = {
         { cat: 'SP',    sub: '', marks: '0.0035', final: '-' },
     ]
 };
+
 // 2. EXAM NAMES MAP
 const EXAM_NAMES = {
     'vdo2025': 'VDO EXAM 2025',
