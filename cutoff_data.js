@@ -137,6 +137,7 @@ const CUTOFF_DATA = {
         { cat: 'MI/MD', sub: '', marks: '0.0035', final: '-' },
         { cat: 'SP',    sub: '', marks: '0.0035', final: '-' },
     ]
+};
 
 // 2. EXAM NAMES MAP
 const EXAM_NAMES = {
